@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is part of the Meeds project (https://meeds.io/).
+Copyright (C) 2020 Meeds Association
+contact@meeds.io
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public License
+along with this program; if not, write to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+-->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_2.xsd http://www.exoplaform.org/xml/ns/kernel_1_2.xsd" xmlns="http://www.exoplaform.org/xml/ns/kernel_1_2.xsd">
+  <component>
+    <type>org.exoplatform.timetracker.dao.ActivityDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.ActivityRecordDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.ClientDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.FeatureDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.ProjectDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.SalesOrderDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.ActivityCodeDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.SubActivityCodeDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.TypeDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.SubTypeDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.ActivityStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.ActivityRecordStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.ClientStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.ProjectStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.SalesOrderStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.FeatureStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.CodesStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.ActivityService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.ActivityRecordService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.ClientService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.ProjectService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.SalesOrderService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.FeatureService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.service.CodesService</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.ActivitiesManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.ActivityRecordsManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.ClientsManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.ProjectsManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.FeaturesManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.SalesOrdersManagementREST</type>
+  </component>
+
+  <component>
+    <type>org.exoplatform.timetracker.rest.CodesManagementREST</type>
+  </component>
+
+
+
+</configuration>

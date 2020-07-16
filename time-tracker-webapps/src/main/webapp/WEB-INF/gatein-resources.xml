@@ -1,0 +1,116 @@
+<gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_resources_1_4 http://www.exoplatform.org/xml/ns/gatein_resources_1_4"
+                  xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
+
+    <portal-skin>
+        <skin-name>${exo.skin.name}</skin-name>
+        <skin-module>time-tracker</skin-module>
+        <css-path>/css/platform.css</css-path>
+        <css-priority>10</css-priority>
+    </portal-skin>
+
+
+    <portal-skin>
+        <skin-name>${exo.skin.name}</skin-name>
+        <skin-module>customModuleVuetify</skin-module>
+        <css-path>/../EnterpriseSkin/skin/css/vuetify/vuetify-all.css</css-path>
+        <css-priority>10</css-priority>
+    </portal-skin>
+
+
+    <portal-skin>
+        <skin-name>${exo.skin.name}</skin-name>
+        <skin-module>customModuleTimeTracker</skin-module>
+        <css-path>/css/activityManagement.css</css-path>
+        <css-priority>11</css-priority>
+    </portal-skin>
+
+    <portlet>
+        <name>activityManagement</name>
+        <module>
+            <depends>
+                <module>activityManagementjs</module>
+            </depends>
+        </module>
+    </portlet>
+    <portlet>
+        <name>TimeTrackingPortlet</name>
+        <module>
+            <depends>
+                <module>timeTrackingjs</module>
+            </depends>
+        </module>
+    </portlet>
+
+    <portlet>
+        <name>TimeSheetPortlet</name>
+        <module>
+            <depends>
+                <module>timeSheetjs</module>
+            </depends>
+        </module>
+    </portlet>
+
+    <module>
+        <name>activityManagementjs</name>
+        <script>
+            <minify>false</minify>
+            <path>/js/activityManagement.bundle.js</path>
+        </script>
+        <depends>
+            <module>commonVueComponents</module>
+        </depends>
+        <depends>
+            <module>jquery</module>
+            <as>$</as>
+        </depends>
+        <depends>
+            <module>vuetify</module>
+        </depends>
+        <depends>
+            <module>eXoVueI18n</module>
+        </depends>
+    </module>
+
+    <module>
+        <name>timeTrackingjs</name>
+        <script>
+            <minify>false</minify>
+            <path>/js/timeTracking.bundle.js</path>
+        </script>
+        <depends>
+            <module>commonVueComponents</module>
+        </depends>
+        <depends>
+            <module>jquery</module>
+            <as>$</as>
+        </depends>
+        <depends>
+            <module>vuetify</module>
+        </depends>
+        <depends>
+            <module>eXoVueI18n</module>
+        </depends>
+    </module>
+    <module>
+        <name>timeSheetjs</name>
+        <script>
+            <minify>false</minify>
+            <path>/js/timeSheet.bundle.js</path>
+        </script>
+        <depends>
+            <module>commonVueComponents</module>
+        </depends>
+        <depends>
+            <module>jquery</module>
+            <as>$</as>
+        </depends>
+        <depends>
+            <module>vuetify</module>
+        </depends>
+        <depends>
+            <module>eXoVueI18n</module>
+        </depends>
+    </module>
+</gatein-resources>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+             version="2.0"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+
+
+    <portlet>
+        <portlet-name>activityManagement</portlet-name>
+        <display-name xml:lang="EN">Time Activity Management Portlet</display-name>
+        <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+        <init-param>
+            <name>portlet-view-dispatched-file-path</name>
+            <value>/activityManagement.html</value>
+        </init-param>
+        <expiration-cache>-1</expiration-cache>
+        <cache-scope>PUBLIC</cache-scope>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+        <supported-locale>en</supported-locale>
+        <portlet-info>
+            <title>Activity management</title>
+            <keywords>time-tracker</keywords>
+        </portlet-info>
+    </portlet>
+    <portlet>
+        <portlet-name>TimeTrackingPortlet</portlet-name>
+        <display-name xml:lang="EN">Time Tracking Portlet</display-name>
+        <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+        <init-param>
+            <name>portlet-view-dispatched-file-path</name>
+            <value>/timeTracking.html</value>
+        </init-param>
+        <expiration-cache>-1</expiration-cache>
+        <cache-scope>PUBLIC</cache-scope>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+        <supported-locale>en</supported-locale>
+        <portlet-info>
+            <title>Time Tracking</title>
+            <keywords>time-tracker</keywords>
+        </portlet-info>
+    </portlet>
+    <portlet>
+        <portlet-name>TimeSheetPortlet</portlet-name>
+        <display-name xml:lang="EN">Time Sheet Portlet</display-name>
+        <portlet-class>org.exoplatform.commons.api.portlet.GenericDispatchedViewPortlet</portlet-class>
+        <init-param>
+            <name>portlet-view-dispatched-file-path</name>
+            <value>/timeSheet.html</value>
+        </init-param>
+        <expiration-cache>-1</expiration-cache>
+        <cache-scope>PUBLIC</cache-scope>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+        <supported-locale>en</supported-locale>
+        <portlet-info>
+            <title>Time Sheet</title>
+            <keywords>time-tracker</keywords>
+        </portlet-info>
+    </portlet>
+  
+</portlet-app>

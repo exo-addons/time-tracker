@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is part of the Meeds project (https://meeds.io/).
+Copyright (C) 2020 Meeds AsSALES_ORDERciation
+contact@meeds.io
+This program is free SALES_ORDERftware; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free SALES_ORDERftware Foundation; either
+version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public License
+along with this program; if not, write to the Free SALES_ORDERftware Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Managing both DB that use sequences and db that use auto increment -->
+  <property name="autoIncrement" value="true" dbms="mysql,mssql,h2,sybase,db2,hsqldb" />
+  <property name="autoIncrement" value="false" dbms="oracle,postgresql" />
+
+    <!-- Managing auto generation of timestamp by Database -->
+  <property name="now" value="now()" dbms="mysql,hsqldb,postgresql,h2" />
+  <property name="now" value="sysdate" dbms="oracle" />
+  <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql" />
+
+  <changeSet author="timeTracker" id="1.0.0-1">
+  
+  
+    <createTable tableName="ADDONS_TT_TYPE">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TYPE_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+    </createTable>
+
+    <createTable tableName="ADDONS_TT_SUB_TYPE">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_SUB_TYPE_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+      <column name="TYPE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_SUB_TYPE_SUB_TYPE"
+                     references="ADDONS_TT_TYPE(ID)"/>
+      </column>
+    </createTable>
+
+
+    <createTable tableName="ADDONS_TT_ACTIVITY_CODE">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_ACTIVITY_CODE_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+    </createTable>
+
+    <createTable tableName="ADDONS_TT_SUB_ACTIVITY_CODE">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_SUB_ACTIVITY_CODE_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+      <column name="ACTIVITY_CODE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_SUB_ACTIVITY_CODE"
+                     references="ADDONS_TT_ACTIVITY_CODE(ID)"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="ADDONS_TT_CLIENT">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_CLIENT_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(200)">
+        <constraints nullable="false" />
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+    </createTable>
+    
+    <createTable tableName="ADDONS_TT_SALES_ORDER">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_SALES_ORDER_ID" />
+      </column>
+      <column name="NAME" type="VARCHAR(200)">
+        <constraints nullable="false" />
+      </column>
+      <column name="DESCRIPTION" type="VARCHAR(200)">
+      </column>
+      <column name="CLIENT_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_SALES_ORDER_CLIENT"
+                     references="ADDONS_TT_CLIENT(ID)"/>
+      </column>
+    </createTable>
+  
+    <createTable tableName="ADDONS_TT_FEATURE">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_FEATURE_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+      <column name="SPEC" type="VARCHAR(200)">
+      </column>
+      <column name="EXO" type="VARCHAR(200)">
+      </column>
+    </createTable>
+	
+    <createTable tableName="ADDONS_TT_PROJECT">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_PROJECT_ID" />
+      </column>
+      <column name="CODE" type="VARCHAR(50)">
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+      <column name="CLIENT_ID" type="BIGINT">
+		<constraints nullable="false" foreignKeyName="FK_TT_PROJECT_CLIENT"
+                             references="ADDONS_TT_CLIENT(ID)"/>
+      </column>
+    </createTable>	
+	
+    <createTable tableName="ADDONS_TT_ACTIVITY">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_ACTIVITY_ID" />
+      </column>
+
+      <column name="PROJECT_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_ACTIVITY_PROJECT"
+                             references="ADDONS_TT_PROJECT(ID)"/>
+      </column>
+      <column name="FEATURE_ID" type="BIGINT">
+        <constraints foreignKeyName="FK_TT_ACTIVITY_FEATURE"
+                             references="ADDONS_TT_FEATURE(ID)"/>
+      </column>
+      <column name="ACTIVITY_LABEL" type="VARCHAR(200)">
+      </column>
+
+      <column name="ACTIVITY_CODE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_ACTIVITY_CODE_ACTIVITY"
+                     references="ADDONS_TT_ACTIVITY_CODE(ID)"/>
+      </column>
+      <column name="SUB_ACTIVITY_CODE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_SUB_ACTIVITY_CODE_ACTIVITY"
+                     references="ADDONS_TT_SUB_ACTIVITY_CODE(ID)"/>
+      </column>
+      <column name="TYPE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_TYPE_ACTIVITY"
+                     references="ADDONS_TT_TYPE(ID)"/>
+      </column>
+      <column name="SUB_TYPE_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_SUB_TYPE_ACTIVITY"
+                     references="ADDONS_TT_SUB_TYPE(ID)"/>
+      </column>
+    </createTable>	
+	
+    <createTable tableName="ADDONS_TT_ACTIVITY_RECORD">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_ACTIVITY_RECORD_ID" />
+      </column>
+      <column name="USER_NAME" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="ACTIVITY_DATE" type="VARCHAR(100)">
+	  <constraints nullable="false" />
+      </column>
+	  <column name="CREATED_DATE" type="TIMESTAMP">
+	  <constraints nullable="false" />
+            </column>
+      <column name="FROM" type="TIMESTAMP">
+      </column>
+      <column name="TO" type="TIMESTAMP">
+      </column>
+      <column name="DESCRIPTION" type="VARCHAR(250)">
+      </column>
+      <column name="LOCATION" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="OFFICE" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="TIME" type="int">
+        <constraints nullable="false" />
+      </column>
+      <column name="ACTIVITY_ID" type="BIGINT">
+        <constraints nullable="false" foreignKeyName="FK_TT_ACTIVITY_RECORD"
+                             references="ADDONS_TT_ACTIVITY(ID)"/>
+      </column>
+      <column name="CLIENT_ID" type="BIGINT">
+	  <constraints foreignKeyName="FK_TT_ACTIVITY_CLIENT"
+                             references="ADDONS_TT_CLIENT(ID)"/>
+      </column>
+      <column name="SALES_ORDER_ID" type="BIGINT">
+	  <constraints foreignKeyName="FK_TT_ACTIVITY_SALES_ORDER"
+                             references="ADDONS_TT_SALES_ORDER(ID)"/>
+      </column>
+      <column name="PROJECT_VERSION" type="VARCHAR(250)">
+      </column>
+    </createTable>
+
+
+
+
+    <modifySql dbms="mysql">
+      <append value=" ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_general_ci" />
+    </modifySql>
+  </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-2" dbms="oracle,postgresql">
+    <createSequence sequenceName="SEQ_ACTIVITY_RECORD" startValue="1"/>
+    <createSequence sequenceName="SEQ_ACTIVITY_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_CLIENT_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_SALES_ORDER_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_PROJECT_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_FEATURE_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_ACTIVITY_CODE_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_SUB_ACTIVITY_CODE_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_TYPE_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_SUB_TYPE_ID" startValue="1"/>
+  </changeSet>z
+</databaseChangeLog>
