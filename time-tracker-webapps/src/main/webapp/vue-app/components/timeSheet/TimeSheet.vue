@@ -20,13 +20,23 @@
                                 <download-excel :fetch="exportData" :fields="json_fields" name="timeSheet.xls">
                                     <button class="btn btn-export" type="button">
                                         <i class="uiIconExport"></i> Export
-                                    </button> 
-                                    </download-excel>
+                                    </button>
+                                </download-excel>
 
                                 <v-spacer />
                                 <!-- <v-col cols="12" md="3" sm="6">
                                     <v-text-field placeholder="Look for Activities" prepend-inner-icon="mdi-filter" single-line label="" v-model="search"></v-text-field>
                                 </v-col> -->
+                                <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date" transition="scale-transition" offset-y min-width="290px">
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field v-model="dateRangeText" prepend-icon="event" readonly v-on="on"></v-text-field>
+                                    </template>
+                                    <v-date-picker v-model="date" range no-title scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                    </v-date-picker>
+                                </v-menu>
 
                                 <a class="caption primary--text drawersBtn" @click="toggleFilterDrawer">
                                     <v-icon color="primary" left>mdi-tune</v-icon> Filter
@@ -35,21 +45,21 @@
                             </template>
                         </v-toolbar>
                     </template>
-                     <template v-slot:item.action="{ item }">
-                     <v-icon small class="mr-2" @click="editActivityRecord(item)">
-                        edit
-                    </v-icon>
-                    <v-icon small @click="deleteItem(item)">
-                        delete
-                    </v-icon>
-                </template>
+                    <template v-slot:item.action="{ item }">
+                        <v-icon small class="mr-2" @click="editActivityRecord(item)">
+                            edit
+                        </v-icon>
+                        <v-icon small @click="deleteItem(item)">
+                            delete
+                        </v-icon>
+                    </template>
 
                     <template v-slot:no-data>No Activities</template>
                 </v-data-table>
             </v-layout>
 
         </v-card-text>
-    </v-card>     
+    </v-card>
     <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
     <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" v-on:addFilter="addFilter" />
@@ -72,7 +82,7 @@ export default {
 
     data: () => ({
         json_fields: {
-            
+
             'Date': 'activityDate',
             'Activity label': 'activity.label',
             'description': 'description',
@@ -88,9 +98,12 @@ export default {
             'Sales Order': 'salesOrder',
             'Project Version': 'projectVersion',
             'User Name': 'userName',
-          
+
         },
         //filtered: "grey-color",
+        date: [],
+        dateRangeText: '',
+        menu: false,
         totalRecords: 0,
         loading: true,
         options: {},
@@ -149,6 +162,16 @@ export default {
         },
         dialog(val) {
             return val === true || this.close() === true;
+        },
+
+        date(val) {
+            console.log(val)
+            this.dateRangeText = this.date.join(' ~ ')
+            this.fromDate = this.date[0]
+            this.toDate = this.date[0]
+            if (typeof this.date[1] !== 'undefined') {
+                this.toDate = this.date[1]
+            }
         },
 
         search: function (val) {
@@ -247,11 +270,11 @@ export default {
                     value: 'activity.subActivityCode.label',
                 },
                 {
-                text: 'Actions',
-                align: 'center',
-                sortable: true,
-                value: 'action',
-            },
+                    text: 'Actions',
+                    align: 'center',
+                    sortable: true,
+                    value: 'action',
+                },
             ]
         }
 
@@ -266,8 +289,6 @@ export default {
             this.client = val.client
             this.project = val.project
             this.feature = val.feature
-            this.fromDate = val.fromDate
-            this.toDate = val.toDate
             this.location = val.location
             this.office = val.office
             this.getActivityRecords().then(data => {
@@ -283,6 +304,14 @@ export default {
         },
 
         initialize() {
+            const date = new Date();
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            this.date = [firstDay.toISOString().substr(0, 10), lastDay.toISOString().substr(0, 10)]
+            this.dateRangeText = this.date.join(' ~ ')
+            this.fromDate = this.date[0]
+            this.toDate = this.date[1]
+
             this.getClients()
             this.getProjects();
             this.getActivityCodes();
@@ -459,9 +488,7 @@ export default {
             this.$refs.timeTrackingDrawer.open()
         },
 
-        
         save(activityRecord) {
-
 
             fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`, {
                     method: 'post',
@@ -478,10 +505,10 @@ export default {
                 })
                 .then((response) => {
                     this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+                        .then(data => {
+                            this.activityRecordsList = data.items
+                            this.totalRecords = data.total
+                        })
 
                     //this.activities.push(activity)
                     this.displaySusccessMessage('activity added');
@@ -511,19 +538,19 @@ export default {
                 })
                 .then((response) => {
                     this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+                        .then(data => {
+                            this.activityRecordsList = data.items
+                            this.totalRecords = data.total
+                        })
 
                     this.displaySusccessMessage('activity added');
                 })
                 .catch((result) => {
                     this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+                        .then(data => {
+                            this.activityRecordsList = data.items
+                            this.totalRecords = data.total
+                        })
 
                     result.text().then((body) => {
                         this.displayErrorMessage(body);
@@ -531,8 +558,7 @@ export default {
                 });
         },
 
-        
-          deleteItem(item) {
+        deleteItem(item) {
             fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/` + item.id, {
                     method: 'delete',
                     credentials: 'include',
@@ -548,20 +574,20 @@ export default {
                 .then((response) => {
                     this.confirmDialog = false;
                     this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+                        .then(data => {
+                            this.activityRecordsList = data.items
+                            this.totalRecords = data.total
+                        })
 
                     this.displaySusccessMessage('client deleted');
                 })
                 .catch((result) => {
                     this.confirmDialog = false;
                     this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+                        .then(data => {
+                            this.activityRecordsList = data.items
+                            this.totalRecords = data.total
+                        })
 
                     result.text().then((body) => {
                         this.displayErrorMessage(body);
@@ -583,7 +609,6 @@ export default {
             this.activityRecord = item
             this.$refs.editTTEntryDrawer.open()
         },
-
 
         async exportData() {
             const response = await this.getActivityRecords(true, false);

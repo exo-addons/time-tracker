@@ -7,41 +7,7 @@
         <div>
             <form ref="form1">
 
-                
-                <v-row>
-                    <v-menu ref="menu1" v-model="menu1" :close-on-content-click="false" :return-value.sync="fromDate" transition="scale-transition" offset-y min-width="290px">
-                        <template v-slot:activator="{ on }">
-                            <v-label for="fromDate">
-                                From date
-                            </v-label>
-                            <input ref="fromDate" v-model="fromDate" type="text" name="fromDate" v-on="on" class="input-block-level ignore-vuetify-classes my-3" />
-                        </template>
-                        <v-date-picker v-model="fromDate" no-title scrollable>
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="menu1 = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="$refs.menu1.save(fromDate)">OK</v-btn>
-                        </v-date-picker>
-                    </v-menu>
-                </v-row>
-                <v-row>
-                    <v-menu ref="menu2" v-model="menu2" :close-on-content-click="false" :return-value.sync="toDate" transition="scale-transition" offset-y min-width="290px">
-                        <template v-slot:activator="{ on }">
-
-                            <v-label for="toDate">
-                                To date
-                            </v-label>
-                            <input ref="toDate" v-model="toDate" type="text" name="toDate" v-on="on" class="input-block-level ignore-vuetify-classes my-3" />
-
-                        </template>
-                        <v-date-picker v-model="toDate" no-title scrollable>
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
-                            <v-btn text color="primary" @click="$refs.menu2.save(toDate)">OK</v-btn>
-                        </v-date-picker>
-                    </v-menu>
-                </v-row>
-
-                <v-row>
+                 <v-row>
                     <v-label for="activity">
                         Activity
                     </v-label>
@@ -181,8 +147,6 @@ export default {
     props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features'],
 
     data: () => ({
-        fromDate: "",
-        toDate: "",
         menu1: null,
         menu2: null,
         activity: "",
@@ -199,8 +163,6 @@ export default {
 
     methods: {
         reset() {
-            this.fromDate = ""
-            this.toDate = ""
             this.menu1 = null
             this.menu2 = null
             this.activity = ""
@@ -216,8 +178,6 @@ export default {
         },
         aplyFilter() {
             const filter_ = {
-                fromDate: this.fromDate,
-                toDate: this.toDate,
                 activity: this.activity,
                 type: this.type,
                 subType: this.subType,
