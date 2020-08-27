@@ -20,8 +20,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
@@ -77,13 +79,32 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
       @ApiResponse(code = 500, message = "Internal server error") })
-  public Response getActivityRecordsList() {
+  public Response getActivityRecordsList(@Context UriInfo uriInfo,
+                                         @QueryParam("search") String search,
+                                         @QueryParam("activity") long activity,
+                                         @QueryParam("type") long type,
+                                         @QueryParam("subType") long subType,
+                                         @QueryParam("activityCode") long activityCode,
+                                         @QueryParam("subActivityCode") long subActivityCode,
+                                         @QueryParam("client") long client,
+                                         @QueryParam("project") long project,
+                                         @QueryParam("feature") long feature,
+                                         @QueryParam("fromDate") String fromDate,
+                                         @QueryParam("toDate") String toDate,
+                                         @QueryParam("userName") String userName,
+                                         @QueryParam("location") String location,
+                                         @QueryParam("office") String office,
+                                         @QueryParam("sortby") String sortBy,
+                                         @QueryParam("sortdesc") Boolean sortDesc,
+                                         @QueryParam("page") int page,
+                                         @QueryParam("limit") int limit,
+                                         @QueryParam("export") Boolean export) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      return Response.ok(activityRecordService.getActivityRecordsList()).build();
+      return Response.ok(activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, page, limit, sortBy, sortDesc)).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);
       return Response.serverError().build();
@@ -103,7 +124,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      return Response.ok(activityRecordService.getActivityRecordsList(day,sourceIdentity.getRemoteId())).build();
+      return Response.ok(activityRecordService.getUserActivityRecordsList(day,sourceIdentity.getRemoteId())).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);
       return Response.serverError().build();

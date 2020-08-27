@@ -34,7 +34,7 @@
                                     <v-date-picker v-model="date" range no-title scrollable>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                        <v-btn text color="primary" @click="$refs.menu.save(date),setDates()">OK</v-btn>
                                     </v-date-picker>
                                 </v-menu>
 
@@ -62,7 +62,7 @@
     </v-card>
     <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
     <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
-    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" v-on:addFilter="addFilter" />
+    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features"  :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter"  v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
 
@@ -108,14 +108,14 @@ export default {
         loading: true,
         options: {},
         activityRecord: {},
-        activity: '',
-        type: '',
-        subType: '',
-        activityCode: '',
-        subActivityCode: '',
-        client: '',
-        project: '',
-        feature: '',
+        activity: 0,
+        type: 0,
+        subType: 0,
+        activityCode: 0,
+        subActivityCode: 0,
+        client: 0,
+        project: 0,
+        feature: 0,
         fromDate: '',
         toDate: '',
         location: '',
@@ -142,6 +142,7 @@ export default {
         subActivityCodes: [],
         clients: [],
         features: [],
+        filters: [],
 
     }),
 
@@ -279,6 +280,7 @@ export default {
         }
 
     },
+
     methods: {
         addFilter(val) {
             this.activity = val.activity
@@ -291,7 +293,7 @@ export default {
             this.feature = val.feature
             this.location = val.location
             this.office = val.office
-            this.getActivityRecords().then(data => {
+            this.getActivityRecords(true).then(data => {
                 this.activityRecordsList = data.items
                 this.totalRecords = data.total
             })
@@ -319,12 +321,13 @@ export default {
             this.getTypes();
             this.getSubTypes();
             this.getActivities();
+            this.getFilters();
 
-            this.getActivityRecords()
-                .then(data => {
-                    this.activityRecordsList = data.items
-                    this.totalRecords = data.total
-                })
+            /*             this.getActivityRecords()
+                            .then(data => {
+                                this.activityRecordsList = data.items
+                                this.totalRecords = data.total
+                            }) */
 
         },
 
@@ -345,6 +348,13 @@ export default {
             }, 300);
         },
 
+        setDates() {
+            this.getActivityRecords(true)
+                .then(data => {
+                    this.activityRecordsList = data.items
+                    this.totalRecords = data.total
+                })
+        },
         displaySusccessMessage(message) {
             this.message = message;
             this.alert_type = 'alert-success';
@@ -362,7 +372,7 @@ export default {
             this.alert = true;
             setTimeout(() => (this.alert = false), 5000);
         },
-        getActivityRecords() {
+        getActivityRecords(init) {
             this.loading = true
             return new Promise((resolve, reject) => {
                 const {
@@ -373,6 +383,8 @@ export default {
                 } = this.options
                 let sort = ""
                 let desc = false
+                let offset = page
+                let limit_ = itemsPerPage
                 const toExport = false
                 if (typeof sortBy !== 'undefined' && sortBy.length > 0) {
                     sort = sortBy[0]
@@ -380,7 +392,18 @@ export default {
                         desc = sortDesc[0]
                     }
                 }
-                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${page}&limit=${itemsPerPage}&export=${toExport}`, {
+                if (init) {
+                    this.options.page = 1
+                }
+                if (typeof page === 'undefined') {
+                    offset = 0
+                } else {
+                    offset = (page - 1) * itemsPerPage
+                }
+                if (typeof itemsPerPage === 'undefined') {
+                    limit_ = 10
+                }
+                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
@@ -484,6 +507,74 @@ export default {
 
         },
 
+
+        getFilters() {
+            fetch(`/portal/rest/timetracker/filtersmgn/filter`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.filters = resp;
+                });
+
+        },
+
+
+        saveFilter(val) {
+            this.activity = val.activity
+            this.type = val.type
+            this.subType = val.subType
+            this.activityCode = val.activityCode
+            this.subActivityCode = val.subActivityCode
+            this.client = val.client
+            this.project = val.project
+            this.feature = val.feature
+            this.location = val.location
+            this.office = val.office
+
+            const fields = [];
+            fields.push({name:"activity", value:val.activity})
+            fields.push({name:"type", value:val.type})
+            fields.push({name:"subType", value:val.subType})
+            fields.push({name:"activityCode", value:val.activityCode})
+            fields.push({name:"subActivityCode", value:val.subActivityCode})
+            fields.push({name:"client", value:val.client})
+            fields.push({name:"project", value:val.project})
+            fields.push({name:"feature", value:val.feature})
+            fields.push({name:"location", value:val.location})
+            fields.push({name:"office", value:val.office})
+
+            const filter = {
+                filter:{name:val.name}, 
+                filterFields:fields
+            }
+
+            fetch(`/portal/rest/timetracker/filtersmgn/filter`, {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(filter),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.filters.push(response)
+                    this.displaySusccessMessage('filter added');
+                })
+                .catch((result) => {
+                    this.getActivityRecords();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+
         openTimeTrackingDrawer() {
             this.$refs.timeTrackingDrawer.open()
         },
@@ -558,6 +649,36 @@ export default {
                 });
         },
 
+        deleteFilter(item) {
+            fetch(`/portal/rest/timetracker/filtersmgn/filter/` + item.filter.id, {
+                    method: 'delete',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.confirmDialog = false;
+                    this.getFeatures()
+            
+
+                    this.displaySusccessMessage('filter deleted');
+                })
+                .catch((result) => {
+                    this.confirmDialog = false;
+                     this.getFeatures()
+
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        }, 
+        
         deleteItem(item) {
             fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/` + item.id, {
                     method: 'delete',
@@ -594,6 +715,7 @@ export default {
                     });
                 });
         },
+
         cancel() {
             this.$refs.timeTrackerDrawer.close()
         },
@@ -611,7 +733,7 @@ export default {
         },
 
         async exportData() {
-            const response = await this.getActivityRecords(true, false);
+            const response = await this.getActivityRecords(true);
             console.log(response);
             return response.items;
         },

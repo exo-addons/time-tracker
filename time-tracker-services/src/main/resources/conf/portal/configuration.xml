@@ -48,6 +48,12 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <type>org.exoplatform.timetracker.dao.SubTypeDAO</type>
   </component>
   <component>
+    <type>org.exoplatform.timetracker.dao.FilterFieldDAO</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.dao.FilterDAO</type>
+  </component>
+  <component>
     <type>org.exoplatform.timetracker.storage.ActivityStorage</type>
   </component>
   <component>
@@ -67,6 +73,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </component>
   <component>
     <type>org.exoplatform.timetracker.storage.CodesStorage</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.storage.FilterStorage</type>
   </component>
   <component>
     <type>org.exoplatform.timetracker.service.ActivityService</type>
@@ -90,6 +99,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <type>org.exoplatform.timetracker.service.CodesService</type>
   </component>
   <component>
+    <type>org.exoplatform.timetracker.service.FilterService</type>
+  </component>
+  <component>
     <type>org.exoplatform.timetracker.rest.ActivitiesManagementREST</type>
   </component>
   <component>
@@ -107,9 +119,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <component>
     <type>org.exoplatform.timetracker.rest.SalesOrdersManagementREST</type>
   </component>
-
   <component>
     <type>org.exoplatform.timetracker.rest.CodesManagementREST</type>
+  </component>
+  <component>
+    <type>org.exoplatform.timetracker.rest.FiltersManagementREST</type>
   </component>
 
 

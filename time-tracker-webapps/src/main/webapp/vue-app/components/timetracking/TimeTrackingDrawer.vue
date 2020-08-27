@@ -75,7 +75,6 @@ export default {
         date: function () {
             console.log(this.date)
             this.getActivityRecords()
-
         }
     },
 

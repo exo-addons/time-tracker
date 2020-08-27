@@ -42,7 +42,7 @@ public class Activity implements Serializable {
 
   private ActivityCode            activityCode;
 
-  private SubActivityCode            activityCode;
+  private SubActivityCode            subActivityCode;
 
   private String            label;
 

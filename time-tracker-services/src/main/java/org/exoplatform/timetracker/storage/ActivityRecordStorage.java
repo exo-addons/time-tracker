@@ -34,135 +34,167 @@ import org.exoplatform.timetracker.entity.ActivityRecordEntity;
  */
 public class ActivityRecordStorage {
 
-  private final ActivityRecordDAO activityRecordDAO;
+    private final ActivityRecordDAO activityRecordDAO;
 
-  private final ClientStorage     clientStorage;
+    private final ClientStorage clientStorage;
 
-  private final ActivityStorage   activityStorage;
+    private final ActivityStorage activityStorage;
 
-  private final SalesOrderStorage salesOrderStorage;
+    private final SalesOrderStorage salesOrderStorage;
 
-  private  final String           DATE_FORMAT                     = "yyyy-MM-dd";
+    private final String DATE_FORMAT = "yyyy-MM-dd";
 
-  private  final SimpleDateFormat formatter                            = new SimpleDateFormat(DATE_FORMAT);
+    private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 
 
-  public ActivityRecordStorage(ActivityRecordDAO activityRecordDAO,
-                               ClientStorage clientStorage,
-                               ActivityStorage activityStorage,
-                               SalesOrderStorage salesOrderStorage) {
-    this.activityRecordDAO = activityRecordDAO;
-    this.clientStorage = clientStorage;
-    this.activityStorage = activityStorage;
-    this.salesOrderStorage = salesOrderStorage;
-  }
-
-  public ActivityRecord createActivityRecord(ActivityRecord activityRecord) throws Exception {
-    if (activityRecord == null) {
-      throw new IllegalArgumentException("ActivityRecord is mandatory");
-    }
-    ActivityRecordEntity activityRecordEntity = toEntity(activityRecord);
-    activityRecordEntity.setId(null);
-    activityRecordEntity.setCreatedDate(new Date());
-    activityRecordEntity.setFrom(formatter.parse(activityRecordEntity.getActivityDate()));
-    activityRecordEntity = activityRecordDAO.create(activityRecordEntity);
-    return toDTO(activityRecordEntity);
-  }
-
-  public ActivityRecord updateActivityRecord(ActivityRecord activityRecord) throws Exception {
-    if (activityRecord == null) {
-      throw new IllegalArgumentException("ActivityRecord is mandatory");
-    }
-    Long activityRecordId = activityRecord.getId();
-    ActivityRecordEntity activityRecordEntity = activityRecordDAO.find(activityRecord.getId());
-    if (activityRecordEntity == null) {
-      throw new EntityNotFoundException("ActivityRecord with id " + activityRecordId + " wasn't found");
+    public ActivityRecordStorage(ActivityRecordDAO activityRecordDAO,
+                                 ClientStorage clientStorage,
+                                 ActivityStorage activityStorage,
+                                 SalesOrderStorage salesOrderStorage) {
+        this.activityRecordDAO = activityRecordDAO;
+        this.clientStorage = clientStorage;
+        this.activityStorage = activityStorage;
+        this.salesOrderStorage = salesOrderStorage;
     }
 
-    activityRecordEntity = toEntity(activityRecord);
-    activityRecordEntity = activityRecordDAO.update(activityRecordEntity);
-
-    return toDTO(activityRecordEntity);
-  }
-
-  public void deleteActivityRecord(long activityRecordId) throws EntityNotFoundException {
-    if (activityRecordId <= 0) {
-      throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
+    public ActivityRecord createActivityRecord(ActivityRecord activityRecord) throws Exception {
+        if (activityRecord == null) {
+            throw new IllegalArgumentException("ActivityRecord is mandatory");
+        }
+        ActivityRecordEntity activityRecordEntity = toEntity(activityRecord);
+        activityRecordEntity.setId(null);
+        activityRecordEntity.setCreatedDate(new Date());
+        activityRecordEntity.setFrom(formatter.parse(activityRecordEntity.getActivityDate()));
+        activityRecordEntity = activityRecordDAO.create(activityRecordEntity);
+        return toDTO(activityRecordEntity);
     }
-    ActivityRecordEntity activityRecordEntity = activityRecordDAO.find(activityRecordId);
-    if (activityRecordEntity == null) {
-      throw new EntityNotFoundException("ActivityRecord with id " + activityRecordId + " not found");
+
+    public ActivityRecord updateActivityRecord(ActivityRecord activityRecord) throws Exception {
+        if (activityRecord == null) {
+            throw new IllegalArgumentException("ActivityRecord is mandatory");
+        }
+        Long activityRecordId = activityRecord.getId();
+        ActivityRecordEntity activityRecordEntity = activityRecordDAO.find(activityRecord.getId());
+        if (activityRecordEntity == null) {
+            throw new EntityNotFoundException("ActivityRecord with id " + activityRecordId + " wasn't found");
+        }
+
+        activityRecordEntity = toEntity(activityRecord);
+        activityRecordEntity = activityRecordDAO.update(activityRecordEntity);
+
+        return toDTO(activityRecordEntity);
     }
-    activityRecordDAO.delete(activityRecordEntity);
-  }
 
-  public ActivityRecord getActivityRecordById(long ActivityRecordId) {
-    if (ActivityRecordId <= 0) {
-      throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
+    public void deleteActivityRecord(long activityRecordId) throws EntityNotFoundException {
+        if (activityRecordId <= 0) {
+            throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
+        }
+        ActivityRecordEntity activityRecordEntity = activityRecordDAO.find(activityRecordId);
+        if (activityRecordEntity == null) {
+            throw new EntityNotFoundException("ActivityRecord with id " + activityRecordId + " not found");
+        }
+        activityRecordDAO.delete(activityRecordEntity);
     }
-    ActivityRecordEntity ActivityRecordEntity = activityRecordDAO.find(ActivityRecordId);
-    return toDTO(ActivityRecordEntity);
-  }
 
-  public List<ActivityRecord> getActivityRecords() {
-    List<ActivityRecordEntity> applicatiions = activityRecordDAO.findAll();
-    return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
-  }
-
-  public RecordsAccessList getActivityRecordsList() {
-    List<ActivityRecordEntity> applicatiions = activityRecordDAO.findAll();
-    RecordsAccessList recordsAccessList = new RecordsAccessList();
-    recordsAccessList.setActivityRecords(applicatiions.stream().map(this::toDTO).collect(Collectors.toList()));
-    recordsAccessList.setSize(Integer.toUnsignedLong(applicatiions.size()));
-    return recordsAccessList;
-  }
-
-  public List<ActivityRecord> getActivityRecords(String day, String userName) {
-    List<ActivityRecordEntity> applicatiions = activityRecordDAO.getActivityRecordsList(day, userName);
-    return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
-  }
-
-  public long countActivityRecords() {
-    return activityRecordDAO.count();
-  }
-
-  public ActivityRecord toDTO(ActivityRecordEntity activityRecordEntity) {
-    if (activityRecordEntity == null) {
-      return null;
+    public ActivityRecord getActivityRecordById(long ActivityRecordId) {
+        if (ActivityRecordId <= 0) {
+            throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
+        }
+        ActivityRecordEntity ActivityRecordEntity = activityRecordDAO.find(ActivityRecordId);
+        return toDTO(ActivityRecordEntity);
     }
-    return new ActivityRecord(activityRecordEntity.getId(),
-                              activityRecordEntity.getUserName(),
-                              activityRecordEntity.getActivityDate(),
-                              activityRecordEntity.getFrom(),
-                              activityRecordEntity.getTo(),
-                              activityRecordEntity.getDescription(),
-                              activityRecordEntity.getLocation(),
-                              activityRecordEntity.getOffice(),
-                              activityRecordEntity.getTime(),
-                              activityRecordEntity.getProjectVersion(),
-                              clientStorage.toDTO(activityRecordEntity.getClientEntity()),
-                              activityStorage.toDTO(activityRecordEntity.getActivityEntity()),
-                              salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity()),
-                              activityRecordEntity.getCreatedDate());
-  }
 
-  public ActivityRecordEntity toEntity(ActivityRecord activityRecord) {
-    if (activityRecord == null) {
-      return null;
+    public List<ActivityRecord> getActivityRecords() {
+        List<ActivityRecordEntity> applicatiions = activityRecordDAO.findAll();
+        return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
     }
-    return new ActivityRecordEntity(activityRecord.getId(),
-                                    activityRecord.getUserName(),
-                                    activityRecord.getActivityDate(),
-                                    activityRecord.getFrom(),
-                                    activityRecord.getTo(),
-                                    activityRecord.getDescription(),
-                                    activityRecord.getLocation(),
-                                    activityRecord.getOffice(),
-                                    activityRecord.getTime(),
-                                    activityRecord.getProjectVersion(),
-                                    clientStorage.toEntity(activityRecord.getClient()),
-                                    activityStorage.toEntity(activityRecord.getActivity()),
-                                    salesOrderStorage.toEntity(activityRecord.getSalesOrder()),
-                                    activityRecord.getCreatedDate());
-  }
+
+    public List<ActivityRecord> getUserActivityRecords(String day, String userName) {
+        List<ActivityRecordEntity> applicatiions = activityRecordDAO.getUserActivityRecordsList(day, userName);
+        return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+
+    public RecordsAccessList getActivityRecordsList(String search,
+                                                    Long activity,
+                                                    Long type,
+                                                    Long subType,
+                                                    Long activityCode,
+                                                    Long subActivityCode,
+                                                    Long client,
+                                                    Long project,
+                                                    Long feature,
+                                                    String fromDate,
+                                                    String toDate,
+                                                    String userName,
+                                                    String location,
+                                                    String office,
+                                                    int offset,
+                                                    int limit,
+                                                    String sortBy,
+                                                    boolean sortDesc) {
+        List<ActivityRecordEntity> applicatiions = activityRecordDAO.getActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, offset, limit, sortBy, sortDesc);
+        RecordsAccessList recordsAccessList = new RecordsAccessList();
+        recordsAccessList.setActivityRecords(applicatiions.stream().map(this::toDTO).collect(Collectors.toList()));
+        recordsAccessList.setSize(activityRecordDAO.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office));
+        return recordsAccessList;
+    }
+
+
+    public long countActivityRecords(String search,
+                                     Long activity,
+                                     Long type,
+                                     Long subType,
+                                     Long activityCode,
+                                     Long subActivityCode,
+                                     Long client,
+                                     Long project,
+                                     Long feature,
+                                     String fromDate,
+                                     String toDate,
+                                     String userName,
+                                     String location,
+                                     String office) {
+        return activityRecordDAO.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location,office);
+    }
+
+    public ActivityRecord toDTO(ActivityRecordEntity activityRecordEntity) {
+        if (activityRecordEntity == null) {
+            return null;
+        }
+        return new ActivityRecord(activityRecordEntity.getId(),
+                activityRecordEntity.getUserName(),
+                activityRecordEntity.getActivityDate(),
+                activityRecordEntity.getFrom(),
+                activityRecordEntity.getTo(),
+                activityRecordEntity.getDescription(),
+                activityRecordEntity.getLocation(),
+                activityRecordEntity.getOffice(),
+                activityRecordEntity.getTime(),
+                activityRecordEntity.getProjectVersion(),
+                clientStorage.toDTO(activityRecordEntity.getClientEntity()),
+                activityStorage.toDTO(activityRecordEntity.getActivityEntity()),
+                salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity()),
+                activityRecordEntity.getCreatedDate());
+    }
+
+    public ActivityRecordEntity toEntity(ActivityRecord activityRecord) {
+        if (activityRecord == null) {
+            return null;
+        }
+        return new ActivityRecordEntity(activityRecord.getId(),
+                activityRecord.getUserName(),
+                activityRecord.getActivityDate(),
+                activityRecord.getFrom(),
+                activityRecord.getTo(),
+                activityRecord.getDescription(),
+                activityRecord.getLocation(),
+                activityRecord.getOffice(),
+                activityRecord.getTime(),
+                activityRecord.getProjectVersion(),
+                clientStorage.toEntity(activityRecord.getClient()),
+                activityStorage.toEntity(activityRecord.getActivity()),
+                salesOrderStorage.toEntity(activityRecord.getSalesOrder()),
+                activityRecord.getCreatedDate());
+    }
 }

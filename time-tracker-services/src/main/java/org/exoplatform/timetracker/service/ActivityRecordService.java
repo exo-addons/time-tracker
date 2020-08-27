@@ -126,8 +126,48 @@ public class ActivityRecordService {
    *
    * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
    */
-  public RecordsAccessList getActivityRecordsList() {
-    return activityRecordstorage.getActivityRecordsList();
+  public RecordsAccessList getActivityRecordsList(String search,
+                                                  Long activity,
+                                                  Long type,
+                                                  Long subType,
+                                                  Long activityCode,
+                                                  Long subActivityCode,
+                                                  Long client,
+                                                  Long project,
+                                                  Long feature,
+                                                  String fromDate,
+                                                  String toDate,
+                                                  String userName,
+                                                  String location,
+                                                  String office,
+                                                  int offset,
+                                                  int limit,
+                                                  String sortBy,
+                                                  boolean sortDesc) {
+    return activityRecordstorage.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, offset, limit, sortBy, sortDesc);
+  }
+
+  /**
+   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
+   * empty
+   *
+   * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
+   */
+  public long countActivityRecords(String search,
+                                   Long activity,
+                                   Long type,
+                                   Long subType,
+                                   Long activityCode,
+                                   Long subActivityCode,
+                                   Long client,
+                                   Long project,
+                                   Long feature,
+                                   String fromDate,
+                                   String toDate,
+                                   String userName,
+                                   String location,
+                                   String office) {
+    return activityRecordstorage.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location,office);
   }
 
   /**
@@ -136,8 +176,8 @@ public class ActivityRecordService {
    *
    * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
    */
-  public List<ActivityRecord> getActivityRecordsList(String day,String userName) {
-    return activityRecordstorage.getActivityRecords(day,userName);
+  public List<ActivityRecord> getUserActivityRecordsList(String day,String userName) {
+    return activityRecordstorage.getUserActivityRecords(day,userName);
   }
 
 }
