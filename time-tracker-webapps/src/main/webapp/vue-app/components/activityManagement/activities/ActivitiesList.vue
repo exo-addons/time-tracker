@@ -27,8 +27,8 @@
                 <template v-slot:no-data>No activities</template>
             </v-data-table>
         </v-flex>
-        <add-activity-drawer ref="addActivityDrawer"  :projects="projects" :features="features"  :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" v-on:save="save" />
-        <edit-activity-drawer ref="editActivityDrawer" :activity="editedItem" :projects="projects" :features="features"   :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" v-on:save="saveLead" />
+        <add-activity-drawer ref="addActivityDrawer"  :projects="projects" :features="features"  :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" v-on:save="save" />
+        <edit-activity-drawer ref="editActivityDrawer" :activity="editedItem" :projects="projects" :features="features"   :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" v-on:save="update" />
     </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
         addActivityDrawer,
 editActivityDrawer,
     },
-    props:['projects','features','activityCodes','subActivityCodes','types','subTypes'],
+    props:['projects','features','activityCodes','subActivityCodes','types','subTypes','teams'],
     data: () => ({
         alert: false,
         message: '',
@@ -148,7 +148,7 @@ editActivityDrawer,
     methods: {
 
         initialize() {
-            fetch(`/portal/rest/timetracker/activitymgn/activity`, {
+            fetch(`/portal/rest/timetracker/activitymgn/activity/all`, {
                     credentials: 'include',
                 })
                 .then((resp) => resp.json())

@@ -125,4 +125,15 @@ public class ActivityService {
     return activitiestorage.getActivities();
   }
 
+  /**
+   * Retrieves the list of Activities with offset, limit and a keyword that can be
+   * empty
+   *
+   * @return List of {@link Activity} that contains the list of Activities
+   */
+  public List<Activity> getActivitiesforUser(List<Long> teams) {
+
+    return activitiestorage.getActivitiesByTeams(teams);
+  }
+
 }

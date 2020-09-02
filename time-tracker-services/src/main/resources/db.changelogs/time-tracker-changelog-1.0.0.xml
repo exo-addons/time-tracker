@@ -299,4 +299,18 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <createSequence sequenceName="SEQ_TEAM_ID" startValue="1"/>
     <createSequence sequenceName="SEQ_TEAM_MEMBER_ID" startValue="1"/>
   </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-5">
+    <createTable tableName="ADDONS_TT_ACTIVITY_TEAM">
+
+      <column name="TEAM_ID" type="BIGINT">
+        <constraints foreignKeyName="FK_TT_TEAM_ACTIVITY_TEAM"
+                     references="ADDONS_TT_TEAM(ID)" nullable="false"/>
+      </column>
+      <column name="ACTIVITY_ID" type="BIGINT">
+        <constraints foreignKeyName="FK_TT_TEAM_ACTIVITY_ACTIVITY"
+                     references="ADDONS_TT_ACTIVITY(ID)" nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
 </databaseChangeLog>

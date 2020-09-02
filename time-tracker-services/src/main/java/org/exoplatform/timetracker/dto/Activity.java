@@ -17,6 +17,7 @@
 package org.exoplatform.timetracker.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.exoplatform.timetracker.entity.FeatureEntity;
 import org.exoplatform.timetracker.entity.ProjectEntity;
@@ -50,6 +51,8 @@ public class Activity implements Serializable {
 
   private Feature    feature;
 
+  private List<Team> teams;
+
   public Activity() {
   }
 
@@ -60,7 +63,8 @@ public class Activity implements Serializable {
                   SubActivityCode subActivityCode,
                   String label,
                   Project project,
-                  Feature feature) {
+                  Feature feature,
+                  List<Team> teams) {
     this.id = id;
     this.type = type;
     this.subType = subType;
@@ -69,6 +73,7 @@ public class Activity implements Serializable {
     this.label = label;
     this.project = project;
     this.feature = feature;
+    this.teams = teams;
   }
 
 }

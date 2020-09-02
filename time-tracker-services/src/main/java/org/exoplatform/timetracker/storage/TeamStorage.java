@@ -129,6 +129,9 @@ public class TeamStorage {
             team.getDescription());
   }
 
+  public List<Team> toDtos(List<TeamEntity> teams){
+    return teams.stream().map(this::toDTO).collect(Collectors.toList());
+  }
 
 /////////////////////////Team Fields storage /////////////////////////////////////////
 

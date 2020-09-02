@@ -6,7 +6,7 @@
     <template slot="content">
         <div>
             <v-form ref="form" v-model="valid">
-              <v-row>
+                <v-row>
                     <v-label for="type">
                         Type
                     </v-label>
@@ -16,7 +16,7 @@
                         </option>
                     </select>
                 </v-row>
-                 <v-row>
+                <v-row>
                     <v-label for="subType">
                         Sub Type
                     </v-label>
@@ -26,9 +26,9 @@
                         </option>
                     </select>
                 </v-row>
-                 <v-row>
+                <v-row>
                     <v-label for="activityCode">
-                        Activity 
+                        Activity
                     </v-label>
                     <select v-model="activity.activityCode" name="activityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in activityCodes" :key="item.id" :value="item">
@@ -36,9 +36,9 @@
                         </option>
                     </select>
                 </v-row>
-                 <v-row>
+                <v-row>
                     <v-label for="subActivityCode">
-                       Sub Activity
+                        Sub Activity
                     </v-label>
                     <select v-model="activity.subActivityCode" name="subActivityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in subActivityCodes" :key="item.id" :value="item">
@@ -54,7 +54,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="project">
-                       Project
+                        Project
                     </v-label>
                     <select v-model="activity.project" name="project" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in projects" :key="item.id" :value="item">
@@ -64,13 +64,20 @@
                 </v-row>
                 <v-row>
                     <v-label for="feature">
-                       Feature
+                        Feature
                     </v-label>
                     <select v-model="activity.feature" name="feature" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in features" :key="item.id" :value="item">
                             {{ item.label}}
                         </option>
                     </select>
+                </v-row>
+
+                <v-row>
+                    <v-label for="teals">
+                        Teams
+                    </v-label>
+                    <v-autocomplete v-model="teamIds" :items="teams" outlined dense chips small-chips multiple menu-props="closeOnClick" item-text="name" item-value="id"></v-autocomplete>
                 </v-row>
 
             </v-form>
@@ -81,7 +88,7 @@
             <v-spacer />
             <v-btn class="btn mr-2" @click="cancel()">
                 <template>
-                   Cancel
+                    Cancel
                 </template>
             </v-btn>
             <v-btn class="btn btn-primary" @click="save()">
@@ -96,7 +103,7 @@
 
 <script>
 export default {
-    props: ['activity', 'projects', 'features', 'activityCodes','subActivityCodes','types','subTypes'],
+    props: ['activity', 'projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams'],
     data: () => ({
         defaultItem: {
             type: '',
@@ -112,11 +119,20 @@ export default {
                 id: '',
                 label: ''
             },
-        }
+        },
+        teamIds: []
     }),
 
     methods: {
         save() {
+            const teams = []
+            for (const team of this.teamIds) {
+                const t_ = {
+                    id: team,
+                }
+                teams.push(t_)
+            }
+            this.activity.teams = teams
             this.$emit('save', this.activity)
             this.$refs.editActivityDrawer.close()
         },
@@ -124,6 +140,10 @@ export default {
             this.$refs.editActivityDrawer.close()
         },
         open() {
+            this.teamIds=[]
+            if (this.activity.teams!== undefined && this.activity.teams.length > 0) {
+                this.teamIds = this.activity.teams.map(a => a.id);
+            }
             this.$refs.editActivityDrawer.open()
         },
 
