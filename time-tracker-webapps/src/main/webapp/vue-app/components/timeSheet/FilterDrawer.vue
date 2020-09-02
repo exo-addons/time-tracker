@@ -202,19 +202,6 @@ export default {
     props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'filters'],
 
     data: () => ({
-        items: [{
-                title: 'Click Me'
-            },
-            {
-                title: 'Click Me'
-            },
-            {
-                title: 'Click Me'
-            },
-            {
-                title: 'Click Me 2'
-            },
-        ],
         showName: false,
         menu: null,
         activity: 0,

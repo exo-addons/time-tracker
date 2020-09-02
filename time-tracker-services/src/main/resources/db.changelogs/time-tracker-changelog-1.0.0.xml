@@ -265,4 +265,38 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <createSequence sequenceName="SEQ_FILTER_ID" startValue="1"/>
     <createSequence sequenceName="SEQ_FILTER_VALUE_ID" startValue="1"/>
   </changeSet>
+
+
+
+  <changeSet author="timeTracker" id="1.0.0-4">
+    <createTable tableName="ADDONS_TT_TEAM">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TEAM_ID" />
+      </column>
+      <column name="NAME" type="NVARCHAR(250)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="DESCRIPTION" type="NVARCHAR(250)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="ADDONS_TT_TEAM_MEMBER">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TEAM_MEMBER_ID" />
+      </column>
+      <column name="USER_NAME" type="NVARCHAR(250)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ROLE" type="NVARCHAR(250)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="TEAM_ID" type="BIGINT">
+        <constraints foreignKeyName="FK_TT_TEAM_EMPLOYEE"
+                     references="ADDONS_TT_TEAM(ID)"/>
+      </column>
+    </createTable>
+    <createSequence sequenceName="SEQ_TEAM_ID" startValue="1"/>
+    <createSequence sequenceName="SEQ_TEAM_MEMBER_ID" startValue="1"/>
+  </changeSet>
 </databaseChangeLog>

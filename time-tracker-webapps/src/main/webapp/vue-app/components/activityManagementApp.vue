@@ -14,11 +14,12 @@
                 <v-tab href="#projects" key="projects">Projects</v-tab>
                 <v-tab href="#features" key="features">Features</v-tab>
                 .<v-tab href="#codes" key="codes">Codes</v-tab>
+                .<v-tab href="#teams" key="teams">Teams</v-tab>
             </v-tabs>
 
             <v-tabs-items class="infoContent" v-model="selectedTab">
                 <v-tab-item class="tabContent" eager id="activities" value="activities">
-                    <activities-list :projects="projects" :features="features"   :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes"/>
+                    <activities-list :projects="projects" :features="features" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :types="types" :subTypes="subTypes" />
                 </v-tab-item>
                 <v-tab-item class="tabContent" eager id="clients" value="clients">
                     <clients-list :clients="clients" v-on:addClient="addClient" v-on:editClient="editClient" v-on:delete="deleteClient" />
@@ -29,11 +30,14 @@
                 </v-tab-item>
                 <v-tab-item class="tabContent" eager id="features" value="features">
                     <features-list :features="features" v-on:addFeature="addFeature" v-on:editFeature="editFeature" v-on:delete="deleteFeature" />
-
                 </v-tab-item>
 
                 <v-tab-item class="tabContent" eager id="codes" value="codes">
-<codes-list :activityCodes="activityCodes" v-on:addActivityCode="addActivityCode" v-on:editActivityCode="editActivityCode" v-on:deleteActivityCode="deleteActivityCode" :subActivityCodes="subActivityCodes" v-on:addSubActivityCode="addSubActivityCode" v-on:editSubActivityCode="editSubActivityCode" v-on:deleteSubActivityCode="deleteSubActivityCode" :types="types" v-on:addType="addType" v-on:editType="editType" v-on:deleteType="deleteType" :subTypes="subTypes" v-on:addSubType="addSubType" v-on:editSubType="editSubType" v-on:deleteSubType="deleteSubType" />
+                    <codes-list :activityCodes="activityCodes" v-on:addActivityCode="addActivityCode" v-on:editActivityCode="editActivityCode" v-on:deleteActivityCode="deleteActivityCode" :subActivityCodes="subActivityCodes" v-on:addSubActivityCode="addSubActivityCode" v-on:editSubActivityCode="editSubActivityCode" v-on:deleteSubActivityCode="deleteSubActivityCode" :types="types" v-on:addType="addType" v-on:editType="editType" v-on:deleteType="deleteType" :subTypes="subTypes" v-on:addSubType="addSubType" v-on:editSubType="editSubType" v-on:deleteSubType="deleteSubType" />
+                </v-tab-item>
+
+                <v-tab-item class="tabContent" eager id="teams" value="teams">
+                    <teams-list :teams="teams" v-on:addTeam="addTeam" v-on:editTeam="editTeam" v-on:deleteTeam="deleteTeam" />
                 </v-tab-item>
             </v-tabs-items>
         </template>
@@ -48,6 +52,7 @@ import ClientsList from './activityManagement/clients/ClientsList.vue';
 import ProjectsList from './activityManagement/projects/ProjectsList.vue';
 import FeaturesList from './activityManagement/features/FeaturesList.vue';
 import CodesList from './activityManagement/codes/CodesList.vue';
+import TeamsList from './activityManagement/teams/TeamsList.vue';
 export default {
     components: {
         ActivitiesList,
@@ -55,6 +60,7 @@ export default {
         ProjectsList,
         FeaturesList,
         CodesList,
+        TeamsList,
     },
     data: () => ({
         alert: false,
@@ -69,6 +75,7 @@ export default {
         subActivityCodes: [],
         types: [],
         subTypes: [],
+        teams: [],
     }),
 
     created() {
@@ -84,6 +91,7 @@ export default {
             this.getSubActivityCodes();
             this.getTypes();
             this.getSubTypes();
+            this.getTeams();
         },
 
         getClients() {
@@ -358,8 +366,6 @@ export default {
                     });
                 });
         },
-        
-
 
         getActivityCodes() {
             fetch(`/portal/rest/timetracker/codesmgn/activityCode`, {
@@ -452,9 +458,6 @@ export default {
                 });
         },
 
-
-
-
         getSubActivityCodes() {
             fetch(`/portal/rest/timetracker/codesmgn/subActivityCode`, {
                     credentials: 'include',
@@ -545,8 +548,6 @@ export default {
                     });
                 });
         },
-
-
 
         getTypes() {
             fetch(`/portal/rest/timetracker/codesmgn/type`, {
@@ -639,7 +640,6 @@ export default {
                 });
         },
 
-
         getSubTypes() {
             fetch(`/portal/rest/timetracker/codesmgn/subType`, {
                     credentials: 'include',
@@ -725,6 +725,98 @@ export default {
                 })
                 .catch((result) => {
                     this.getSubTypes();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+
+        getTeams() {
+            fetch(`/portal/rest/timetracker/teamsmgn/team/all`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.teams = resp;
+                });
+
+        },
+
+        deleteTeam(item) {
+            fetch(`/portal/rest/timetracker/teamsmgn/team/` + item.id, {
+                    method: 'delete',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.confirmDialog = false;
+                    this.getTeams();
+                    this.displaySusccessMessage('team deleted');
+                })
+                .catch((result) => {
+                    this.confirmDialog = false;
+                    this.getTeams();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        addTeam(team) {
+            this.teams.push(team)
+            fetch(`/portal/rest/timetracker/teamsmgn/team`, {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(team),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getTeams();
+                    this.displaySusccessMessage('team added');
+                })
+                .catch((result) => {
+                    this.getTeams();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        editTeam(team) {
+            fetch(`/portal/rest/timetracker/teamsmgn/team`, {
+                    method: 'put',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(team),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getTeams();
+                    this.displaySusccessMessage('team updated');
+                })
+                .catch((result) => {
+                    this.getTeams();
                     result.text().then((body) => {
                         this.displayErrorMessage(body);
                     });

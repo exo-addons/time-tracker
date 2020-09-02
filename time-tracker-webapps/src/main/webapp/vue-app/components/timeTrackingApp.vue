@@ -4,7 +4,7 @@
             <v-container px-0 py-0>
       <v-layout class="transparent">
         <v-btn icon small color="transparent" class="uiApplicationIconButton" @click="openTimeTrackingDrawer()">
-          <v-icon left>mdi-timer</v-icon>
+          <v-icon left>mdi-apps</v-icon>
         </v-btn>
       </v-layout>
     </v-container>
