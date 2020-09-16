@@ -29,5 +29,6 @@
     <import>war:/conf/time-tracker/bundle/bundle-configuration.xml</import>
     <import>war:/conf/time-tracker/organization/organization-configuration.xml</import>
     <import>war:/conf/time-tracker/portal/dynamic-container-configuration.xml</import>
+    <import>war:/conf/time-tracker/app-center-configuration.xml</import>
 
 </configuration>

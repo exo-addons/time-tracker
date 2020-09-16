@@ -20,7 +20,6 @@ import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.ActivityTeamEntity;
-import org.exoplatform.timetracker.entity.TeamMemberEntity;
 import org.exoplatform.timetracker.entity.TypeEntity;
 
 import javax.persistence.NoResultException;
@@ -35,7 +34,7 @@ import java.util.List;
 public class ActivityTeamDAO extends GenericDAOJPAImpl<ActivityTeamEntity, Serializable> {
   private static final Log LOG = ExoLogger.getLogger(ActivityTeamDAO.class);
 
-  public List<ActivityTeamEntity> getActivitiesByTeams(List<Long> teams) {
+  public List<ActivityTeamEntity> getActivitiesByTeams(List<String> teams) {
 
     TypedQuery<ActivityTeamEntity> query = getEntityManager().createNamedQuery("ActivityTeamEntity.getActivitiesByTeams", ActivityTeamEntity.class)
             .setParameter("teams", teams);

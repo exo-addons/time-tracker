@@ -303,9 +303,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <changeSet author="timeTracker" id="1.0.0-5">
     <createTable tableName="ADDONS_TT_ACTIVITY_TEAM">
 
-      <column name="TEAM_ID" type="BIGINT">
-        <constraints foreignKeyName="FK_TT_TEAM_ACTIVITY_TEAM"
-                     references="ADDONS_TT_TEAM(ID)" nullable="false"/>
+      <column name="TEAM_ID" type="NVARCHAR(250)">
       </column>
       <column name="ACTIVITY_ID" type="BIGINT">
         <constraints foreignKeyName="FK_TT_TEAM_ACTIVITY_ACTIVITY"

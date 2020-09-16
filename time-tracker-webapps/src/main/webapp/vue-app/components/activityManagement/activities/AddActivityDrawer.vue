@@ -77,7 +77,7 @@
                     <v-label for="teals">
                         Teams
                     </v-label>
-                    <v-autocomplete v-model="editedActivity.teams" :items="teams" menu-props="closeOnClick"  outlined dense chips small-chips multiple item-text=" name" item-value="id"></v-autocomplete>
+                    <v-autocomplete v-model="editedActivity.teams" :items="teams" menu-props="closeOnClick"  outlined dense chips small-chips multiple item-text="name" item-value="id"></v-autocomplete>
                 </v-row>
 
             </v-form>

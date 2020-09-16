@@ -30,7 +30,7 @@ import java.io.Serializable;
 @Table(name = "ADDONS_TT_ACTIVITY_TEAM")
 @Data
 @NamedQueries({
-        @NamedQuery(name = "ActivityTeamEntity.getActivitiesByTeams", query = "SELECT activity FROM ActivityTeamEntity activity where activity.teamEntity.id in :teams"),
+        @NamedQuery(name = "ActivityTeamEntity.getActivitiesByTeams", query = "SELECT activity FROM ActivityTeamEntity activity where activity.teamId in :teams"),
         @NamedQuery(name = "ActivityTeamEntity.getTeamsByActivity", query = "SELECT team FROM ActivityTeamEntity team where team.activityEntity.id = :activityId"),
 
 })
@@ -40,16 +40,15 @@ public class ActivityTeamEntity implements Serializable {
   @JoinColumn(name = "ACTIVITY_ID")
   private ActivityEntity activityEntity;
   @Id
-  @ManyToOne
-  @JoinColumn(name = "TEAM_ID")
-  private TeamEntity teamEntity;
+  @Column(name = "TEAM_ID")
+  private String teamId;
 
   public ActivityTeamEntity() {
   }
 
-  public ActivityTeamEntity(ActivityEntity activityEntity, TeamEntity teamEntity) {
+  public ActivityTeamEntity(ActivityEntity activityEntity, String teamId) {
     this.activityEntity = activityEntity;
-    this.teamEntity = teamEntity;
+    this.teamId = teamId;
   }
 
 }

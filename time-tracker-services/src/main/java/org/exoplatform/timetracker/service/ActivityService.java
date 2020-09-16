@@ -131,7 +131,7 @@ public class ActivityService {
    *
    * @return List of {@link Activity} that contains the list of Activities
    */
-  public List<Activity> getActivitiesforUser(List<Long> teams) {
+  public List<Activity> getActivitiesforUser(List<String> teams) {
 
     return activitiestorage.getActivitiesByTeams(teams);
   }

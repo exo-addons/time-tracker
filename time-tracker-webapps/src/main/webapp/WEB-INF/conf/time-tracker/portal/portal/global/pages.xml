@@ -32,4 +32,19 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <show-info-bar>false</show-info-bar>
     </portlet-application>
   </page>
+  <page>
+    <name>time_sheet</name>
+    <title>Time Sheet</title>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>manager:/platform/administrators</edit-permission>
+    <portlet-application>
+      <portlet>
+        <application-ref>time-tracker</application-ref>
+        <portlet-ref>TimeSheetPortlet</portlet-ref>
+      </portlet>
+      <title>Time Sheet Portlet</title>
+      <access-permissions>*:/platform/users</access-permissions>
+      <show-info-bar>false</show-info-bar>
+    </portlet-application>
+  </page>
 </page-set>

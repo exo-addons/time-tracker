@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class TeamMember implements Serializable {
 
 
-    private Long id;
+    private String id;
 
     private String userName;
 
@@ -42,7 +42,7 @@ public class TeamMember implements Serializable {
     public TeamMember() {
     }
 
-    public TeamMember(Long id, String userName, String role, Team team) {
+    public TeamMember(String id, String userName, String role, Team team) {
         this.id = id;
         this.userName = userName;
         this.team = team;

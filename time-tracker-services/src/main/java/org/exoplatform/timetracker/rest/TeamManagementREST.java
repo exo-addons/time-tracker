@@ -145,13 +145,13 @@ public class TeamManagementREST implements ResourceContainer {
   }
 
   @DELETE
-  @Path("team/{teamId}")
+  @Path("team")
   @RolesAllowed("administrators")
   @ApiOperation(value = "Deletes an existing Team identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteTeam(@ApiParam(value = "Team technical id to delete", required = true) @PathParam("teamId") Long teamId) {
+  public Response deleteTeam(@ApiParam(value = "Team technical id to delete", required = true) @QueryParam("teamId") String teamId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -173,13 +173,13 @@ public class TeamManagementREST implements ResourceContainer {
 
 
   @GET
-  @Path("teamMember/{teamId}")
+  @Path("teamMember")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
           @ApiResponse(code = 500, message = "Internal server error") })
-  public Response getTeamMembers(@ApiParam(value = "Team technical id", required = true) @PathParam("teamId") Long teamId) {
+  public Response getTeamMembers(@ApiParam(value = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
@@ -243,41 +243,14 @@ public class TeamManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
-  @PUT
-  @Path("teamMember")
-  @RolesAllowed("administrators")
-  @ApiOperation(value = "Updates an existing TeamMember identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateTeamMember(@ApiParam(value = "TeamMember to update", required = true) TeamMember teamMember) {
-    Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
-    if (sourceIdentity == null) {
-      return Response.status(Response.Status.UNAUTHORIZED).build();
-    }
-    try {
-      teamService.updateTeamMember(teamMember);
-    } catch (IllegalAccessException e) {
-      LOG.warn(e);
-      return Response.status(HTTPStatus.UNAUTHORIZED).build();
-    } catch (EntityExistsException e) {
-      LOG.warn(e);
-      return Response.serverError().build();
-    } catch (Exception e) {
-      LOG.error("Unknown error occurred while updating TeamMember", e);
-      return Response.serverError().build();
-    }
-    return Response.noContent().build();
-  }
-
   @DELETE
-  @Path("teamMember/{teamMemberId}")
+  @Path("teamMember")
   @RolesAllowed("administrators")
   @ApiOperation(value = "Deletes an existing TeamMember identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
           @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteTeamMember(@ApiParam(value = "TeamMember technical id to delete", required = true) @PathParam("teamMemberId") Long teamMemberId) {
+  public Response deleteTeamMember(@ApiParam(value = "TeamMember technical id to delete", required = true) @QueryParam("teamMemberId") String teamMemberId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();

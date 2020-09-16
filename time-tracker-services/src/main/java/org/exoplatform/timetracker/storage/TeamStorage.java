@@ -16,17 +16,20 @@
  */
 package org.exoplatform.timetracker.storage;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.component.ComponentRequestLifecycle;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.*;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.timetracker.dao.TeamDAO;
-import org.exoplatform.timetracker.dao.TeamMemberDAO;
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.dto.TeamMember;
-import org.exoplatform.timetracker.entity.TeamEntity;
-import org.exoplatform.timetracker.entity.TeamMemberEntity;
+import org.exoplatform.timetracker.service.TeamService;
 import org.gatein.api.EntityNotFoundException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +39,18 @@ import java.util.stream.Collectors;
  */
 public class TeamStorage {
 
-  private final TeamDAO teamDAO;
-  private final TeamMemberDAO teamMemberDAO;
+  private final String PARENT_GROUP = "/organization/teams";
   private final IdentityManager identityManager;
+  private final OrganizationService organizationService;
+  private final GroupHandler groupHandler;
+  private final MembershipHandler membershipHandler;
+  private static Boolean requestStarted = false;
+  private static final Log log = ExoLogger.getLogger(TeamStorage.class);
 
-  public TeamStorage(TeamDAO teamDAO, TeamMemberDAO teamMemberDAO, IdentityManager identityManager) {
-    this.teamDAO = teamDAO;
-    this.teamMemberDAO = teamMemberDAO;
+  public TeamStorage(OrganizationService organizationService, IdentityManager identityManager) {
+    this.organizationService = organizationService;
+    this.groupHandler = organizationService.getGroupHandler();
+    this.membershipHandler = organizationService.getMembershipHandler();
     this.identityManager = identityManager;
   }
 
@@ -53,157 +61,208 @@ public class TeamStorage {
     if (team == null) {
       throw new IllegalArgumentException("Team is mandatory");
     }
-    TeamEntity teamEntity = toEntity(team);
-    team.setId(null);
-    teamEntity = teamDAO.create(teamEntity);
-    return toDTO(teamEntity);
+    try {
+    startRequest();
+      Group groupParent = groupHandler.findGroupById(PARENT_GROUP);
+    Group group = groupHandler.createGroupInstance();
+    group.setId(team.getName().replaceAll(" ","_"));
+    group.setLabel(team.getName());
+    group.setGroupName(team.getName());
+    group.setDescription(team.getDescription());
+    group.setParentId(PARENT_GROUP);
+    groupHandler.addChild(groupParent, group, true);
+      endRequest();
+      return toDTO(group);
+    } catch (Exception e) {
+      //todo
+    } finally {
+      endRequest();
+    }
+
+    return null;
   }
 
-  public Team updateTeam(Team team) throws Exception {
+  public Team updateTeam(Team team) {
     if (team == null) {
       throw new IllegalArgumentException("Team is mandatory");
     }
-    Long teamId = team.getId();
-    TeamEntity teamEntity = teamDAO.find(team.getId());
-    if (teamEntity == null) {
-      throw new EntityNotFoundException("Team with id " + teamId + " wasn't found");
+    String teamId = team.getId();
+    Group group = null;
+    try {
+      group = groupHandler.findGroupById(teamId);
+      if (group == null) {
+        throw new EntityNotFoundException("Group with id " + teamId + " wasn't found");
+      }
+      startRequest();
+      group.setLabel(team.getName());
+      group.setGroupName(team.getName());
+      group.setDescription(team.getDescription());
+      groupHandler.saveGroup(group,true);
+      endRequest();
+    } catch (Exception e) {
+      //todo
+    } finally {
+      endRequest();
     }
 
-    teamEntity = toEntity(team);
-    teamEntity = teamDAO.update(teamEntity);
-
-    return toDTO(teamEntity);
+    return toDTO(group);
   }
 
-  public void deleteTeam(long teamId) throws EntityNotFoundException {
-    if (teamId <= 0) {
-      throw new IllegalArgumentException("TeamId must be a positive integer");
+  public void deleteTeam(String teamId) throws Exception {
+    try {
+      startRequest();
+
+    Group group = groupHandler.findGroupById(teamId);
+    if (group == null) {
+      throw new EntityNotFoundException("froup with id " + teamId + " not found");
     }
-    TeamEntity teamEntity = teamDAO.find(teamId);
-    if (teamEntity == null) {
-      throw new EntityNotFoundException("Team with id " + teamId + " not found");
-    }
-    teamDAO.delete(teamEntity);
+
+    groupHandler.removeGroup(group,true);
+      endRequest();
+  } catch (Exception e) {
+    //todo
+  } finally {
+    endRequest();
+  }
   }
 
-  public Team getTeamById(long TeamId) {
-    if (TeamId <= 0) {
-      throw new IllegalArgumentException("TeamId must be a positive integer");
-    }
-    TeamEntity TeamEntity = teamDAO.find(TeamId);
-    return toDTO(TeamEntity);
+  public Team getTeamById(String teamId)  throws Exception {
+    Group group = groupHandler.findGroupById(teamId);
+    return toDTO(group);
   }
 
-  public List<Team> getTeams() {
-    List<TeamEntity> teams = teamDAO.findAll();
+  public List<Team> getTeams()  throws Exception {
+    Group parentGroup = groupHandler.findGroupById(PARENT_GROUP);
+    return groupHandler.findGroups(parentGroup).stream().map(this::toDTO).collect(Collectors.toList());
+  }
+
+  public List<Team> getTeamsByUser(String userName) throws Exception {
+
+    return groupHandler.findGroupsOfUser(userName).stream().map(this::toDTO).collect(Collectors.toList());
+  }
+
+
+  public List<TeamMember> getMembersByTeam(String teamId)  throws Exception {
+    try {
+      Group group = groupHandler.findGroupById(teamId);
+      List<Membership> memberships = Arrays.asList(membershipHandler.findAllMembershipsByGroup(group).load(0, -1));
+      return memberships.stream().map(teamMemberEntity -> {
+        try {
+          return toDTO(teamMemberEntity);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return null;
+      }).collect(Collectors.toList());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+  public Team toDTO(Group group) {
+    try {
+      if (group == null) {
+        return null;
+      }
+      return new Team(group.getId(),
+              group.getLabel(),
+              group.getDescription());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+
+  public List<Team> toDtos(List<Group> teams){
     return teams.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
-  public List<TeamMember> getTeamsByUser(String userName) {
-    List<TeamMemberEntity> applicatiions = teamMemberDAO.getTeamsByUser(userName);
-    return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
+  public List<Team> toDtos_(List<String> teams){
+    return teams.stream().map(this::getDtoByGroupId).collect(Collectors.toList());
   }
 
-
-  public List<TeamMember> getMembersByTeam(long teamId) {
-    List<TeamMemberEntity> applicatiions = teamMemberDAO.getMembersByTeam(teamId);
-    return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
-  }
-
-
-  public Team toDTO(TeamEntity teamEntity) {
-    if (teamEntity == null) {
-      return null;
+  public Team getDtoByGroupId(String groupId){
+    try {
+      Group group = groupHandler.findGroupById(groupId);
+      return toDTO(group);
+    } catch (Exception e) {
+      //Todo
     }
-    return new Team(teamEntity.getId(),
-            teamEntity.getName(),
-            teamEntity.getDescription());
-  }
-
-  public TeamEntity toEntity(Team team) {
-    if (team == null) {
-      return null;
-    }
-    return new TeamEntity(team.getId(),
-            team.getName(),
-            team.getDescription());
-  }
-
-  public List<Team> toDtos(List<TeamEntity> teams){
-    return teams.stream().map(this::toDTO).collect(Collectors.toList());
+    return null;
   }
 
 /////////////////////////Team Fields storage /////////////////////////////////////////
 
-  public TeamMember createTeamMember(TeamMember feamMember) throws Exception {
-    if (feamMember == null) {
+  public void createTeamMember(TeamMember teamMember) throws Exception {
+    if (teamMember == null) {
       throw new IllegalArgumentException("TeamMember is mandatory");
     }
-    TeamMemberEntity feamMemberEntity = toEntity(feamMember);
-    feamMember.setId(null);
-    feamMemberEntity = teamMemberDAO.create(feamMemberEntity);
-    return toDTO(feamMemberEntity);
-  }
-
-  public TeamMember updateTeamMember(TeamMember feamMember) throws Exception {
-    if (feamMember == null) {
-      throw new IllegalArgumentException("TeamMember is mandatory");
-    }
-    Long feamMemberId = feamMember.getId();
-    TeamMemberEntity feamMemberEntity = teamMemberDAO.find(feamMember.getId());
-    if (feamMemberEntity == null) {
-      throw new EntityNotFoundException("TeamMember with id " + feamMemberId + " wasn't found");
-    }
-
-    feamMemberEntity = toEntity(feamMember);
-    feamMemberEntity = teamMemberDAO.update(feamMemberEntity);
-
-    return toDTO(feamMemberEntity);
-  }
-
-  public void deleteTeamMember(long feamMemberId) throws EntityNotFoundException {
-    if (feamMemberId <= 0) {
-      throw new IllegalArgumentException("TeamMemberId must be a positive integer");
-    }
-    TeamMemberEntity feamMemberEntity = teamMemberDAO.find(feamMemberId);
-    if (feamMemberEntity == null) {
-      throw new EntityNotFoundException("TeamMember with id " + feamMemberId + " not found");
-    }
-    teamMemberDAO.delete(feamMemberEntity);
-  }
-
-  public void deleteAllTeamMembersByTeam(long teamId) throws EntityNotFoundException {
-    if (teamId <= 0) {
-      throw new IllegalArgumentException("TeamMemberId must be a positive integer");
-    }
-    List<TeamMemberEntity> teamMemberEntities = teamMemberDAO.getMembersByTeam(teamId);
-    teamMemberDAO.deleteAll(teamMemberEntities);
+    try {
+      startRequest();
+    Group group = groupHandler.findGroupById(teamMember.getTeam().getId());
+    User user = organizationService.getUserHandler().findUserByName(teamMember.getUserName());
+    MembershipType membershipType = organizationService.getMembershipTypeHandler().findMembershipType("member");
+    membershipHandler.linkMembership(user,group,membershipType,true);
+      endRequest();
+  } catch (Exception e) {
+        //todo
+        } finally {
+        endRequest();
+        }
   }
 
 
-  public TeamMember getTeamMemberById(long teamMemberId) {
-    if (teamMemberId <= 0) {
-      throw new IllegalArgumentException("TeamMemberId must be a positive integer");
+  public void deleteTeamMember(String teamMemberId) throws Exception {
+    try {
+      startRequest();
+    membershipHandler.removeMembership(teamMemberId,true);
+      endRequest();
+        } catch (Exception e) {
+        //todo
+        } finally {
+        endRequest();
+        }
+  }
+
+  public void deleteAllTeamMembersByTeam(String teamId) throws Exception {
+    try {
+      startRequest();
+    Group group = groupHandler.findGroupById(teamId);
+    for(Membership membership : membershipHandler.findAllMembershipsByGroup(group).load(0,-1)){
+      membershipHandler.removeMembership(membership.getId(),true);
     }
-    TeamMemberEntity TeamMemberEntity = teamMemberDAO.find(teamMemberId);
-    return toDTO(TeamMemberEntity);
+      endRequest();
+        } catch (Exception e) {
+        //todo
+        } finally {
+        endRequest();
+        }
   }
 
 
-  public TeamMember  getMemberByTeamUserAndRole(long teamId, String userName, String role) {
-    TeamMemberEntity TeamMemberEntity = teamMemberDAO.getMemberByTeamUserAndRole(teamId, userName, role);
-    return toDTO(TeamMemberEntity);
+  public TeamMember getTeamMemberById(String teamMemberId) throws Exception {
+    return toDTO(membershipHandler.findMembership(teamMemberId));
+
   }
 
 
-  public TeamMember toDTO(TeamMemberEntity teamMemberEntity) {
+  public TeamMember  getMemberByTeamUserAndRole(String teamId, String userName, String role) throws Exception {
+    return toDTO(membershipHandler.findMembershipByUserGroupAndType(userName,teamId,role));
+  }
+
+
+  public TeamMember toDTO(Membership teamMemberEntity) throws Exception {
     if (teamMemberEntity == null) {
       return null;
     }
     TeamMember teamMember = new TeamMember(teamMemberEntity.getId(),
             teamMemberEntity.getUserName(),
-            teamMemberEntity.getRole(),
-            toDTO(teamMemberEntity.getTeamEntity()));
+            teamMemberEntity.getMembershipType(),
+            toDTO(groupHandler.findGroupById(teamMemberEntity.getGroupId())));
     Identity identity =identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,teamMember.getUserName());
     if(identity != null) {
       teamMember.setFullName(identity.getProfile().getFullName());
@@ -211,15 +270,23 @@ public class TeamStorage {
     return teamMember;
   }
 
-  public TeamMemberEntity toEntity(TeamMember teamMember) {
-    if (teamMember == null) {
-      return null;
+
+  private void endRequest() {
+    if (requestStarted && organizationService instanceof ComponentRequestLifecycle) {
+      try {
+        ((ComponentRequestLifecycle) organizationService).endRequest(PortalContainer.getInstance());
+      } catch (Exception e) {
+        log.warn(e.getMessage(), e);
+      }
+      requestStarted = false;
     }
-    return new TeamMemberEntity(teamMember.getId(),
-            teamMember.getUserName(),
-            teamMember.getRole(),
-            toEntity(teamMember.getTeam()));
   }
 
+  private void startRequest() {
+    if (organizationService instanceof ComponentRequestLifecycle) {
+      ((ComponentRequestLifecycle) organizationService).startRequest(PortalContainer.getInstance());
+      requestStarted = true;
+    }
+  }
 
 }

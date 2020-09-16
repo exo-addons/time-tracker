@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class Team implements Serializable {
 
 
-  private Long              id;
+  private String              id;
 
   private String            Name;
 
@@ -38,7 +38,7 @@ public class Team implements Serializable {
   public Team() {
   }
 
-  public Team(Long id, String Name, String description) {
+  public Team(String id, String Name, String description) {
     this.id = id;
     this.Name = Name;
     this.description = description;

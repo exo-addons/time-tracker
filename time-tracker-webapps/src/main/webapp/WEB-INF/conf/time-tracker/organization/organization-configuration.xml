@@ -42,17 +42,33 @@
                                         </field>
                                     </object>
                                 </value>
+                                <value>
+                                    <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                                        <field name="name">
+                                            <string>teams</string>
+                                        </field>
+                                        <field name="label">
+                                            <string>Teams</string>
+                                        </field>
+                                        <field name="description">
+                                            <string>teams of the organization</string>
+                                        </field>
+                                        <field name="parentId">
+                                            <string>/organization</string>
+                                        </field>
+                                    </object>
+                                </value>
                             </collection>
                         </field>
-                        <field name="user">
+                        <field name="membershipType">
                             <collection type="java.util.ArrayList">
                                 <value>
-                                    <object type="org.exoplatform.services.organization.OrganizationConfig$User">
-                                        <field name="userName">
-                                            <string>${exo.super.user}</string>
+                                    <object type="org.exoplatform.services.organization.OrganizationConfig$MembershipType">
+                                        <field name="type">
+                                            <string>reviewer</string>
                                         </field>
-                                        <field name="groups">
-                                            <string>*:/platform/ux-team</string>
+                                        <field name="description">
+                                            <string>reviewer membership type</string>
                                         </field>
                                     </object>
                                 </value>
@@ -63,5 +79,6 @@
             </init-params>
         </component-plugin>
     </external-component-plugins>
+
 
 </configuration>

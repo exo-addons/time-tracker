@@ -744,7 +744,7 @@ export default {
         },
 
         deleteTeam(item) {
-            fetch(`/portal/rest/timetracker/teamsmgn/team/` + item.id, {
+            fetch(`/portal/rest/timetracker/teamsmgn/team?teamId=` + item.id, {
                     method: 'delete',
                     credentials: 'include',
                     headers: {

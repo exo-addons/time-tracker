@@ -90,8 +90,8 @@ public class ActivitiesManagementREST implements ResourceContainer {
             if (sourceIdentity == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
-            List<TeamMember> teamsMmebers = teamService.getTeamsList(getCurrentUserName());
-            List<Team> teams = teamsMmebers.stream().map(TeamMember::getTeam).collect(Collectors.toList());
+            List<Team> teams = teamService.getTeamsList(getCurrentUserName());
+            //List<Team> teams = teamsMmebers.stream().map(TeamMember::getTeam).collect(Collectors.toList());
             List<Activity> activities = activityService.getActivitiesforUser(teams.stream().map(Team::getId).collect(Collectors.toList()));
             return Response.ok(activities).build();
         } catch (Exception e) {

@@ -1,4 +1,3 @@
-
 <template>
 <exo-drawer ref="addTTEntryDrawer" right class="">
     <template slot="title">
@@ -13,18 +12,16 @@
                     <v-label for="activity">
                         Activity
                     </v-label>
-                    <select v-model="activityRecord.activity" name="activity" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activities" :key="item.id" :value="item">
-                            {{ item.label}}
-                        </option>
-                    </select>
+
+                    <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
+
                 </v-row>
 
                 <v-row>
                     <v-label for="description">
                         Description
                     </v-label>
-                    <input ref="description" v-model="activityRecord.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
+                    <input ref="description_" v-model="activityRecord.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
                 <v-row>
                     <v-label for="time">
@@ -54,7 +51,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="projectVersion"> Project Version </v-label>
-                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
+                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
                 <v-row>
                     <v-label for="salesOrder">
@@ -99,9 +96,14 @@ export default {
         offices: ["FR", "TN", "LX", "VN", "UA"]
     }),
     created() {
+
         //  this.initialize()
     },
+
     methods: {
+        focusInput() {
+            this.$refs.description_.focus();
+        },
 
         save() {
             this.$emit('save', this.activityRecord)
@@ -113,6 +115,7 @@ export default {
         },
         open() {
             this.$refs.addTTEntryDrawer.open()
+              this.focusInput();
         },
 
     }

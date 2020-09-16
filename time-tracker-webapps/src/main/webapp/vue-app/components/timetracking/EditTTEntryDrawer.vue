@@ -1,25 +1,23 @@
 <template>
 <exo-drawer ref="editDrawer" right class="">
     <template slot="title">
-       Edit Entry
+        Edit Entry
     </template>
     <template slot="content">
         <div>
 
-  <v-form ref="form">
+            <v-form ref="form">
 
-      <v-row>
+                <v-row>
                     <v-label for="activity">
                         Activity
                     </v-label>
-                    <select v-model="activityRecord.activity" name="activity" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activities" :key="item.id" :value="item">
-                            {{ item.label}}
-                        </option>
-                    </select>
+
+                    <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
+
                 </v-row>
 
-                   <v-row>
+                <v-row>
                     <v-label for="description">
                         description
                     </v-label>
@@ -33,7 +31,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="location">
-                       Location
+                        Location
                     </v-label>
                     <select v-model="activityRecord.location" name="location" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in locations" :key="item" :value="item">
@@ -53,7 +51,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="projectVersion">
-                       Project Version
+                        Project Version
                     </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
@@ -67,14 +65,12 @@
                         </option>
                     </select>
                 </v-row>
-                
 
             </v-form>
 
-
         </div>
     </template>
-        <template slot="footer">
+    <template slot="footer">
         <div class="d-flex">
             <v-spacer />
             <v-btn class="btn mr-2" @click="cancel()">
@@ -94,14 +90,14 @@
 
 <script>
 export default {
-     props: ['activityRecord','activities'],
+    props: ['activityRecord', 'activities'],
     data: () => ({
-     salesOrders:[],
-     locations:["Home","eXo TN","eXo FR","eXo","Ext"],
-     offices:["FR","TN","LX","VN","UA"]
+        salesOrders: [],
+        locations: ["Home", "eXo TN", "eXo FR", "eXo", "Ext"],
+        offices: ["FR", "TN", "LX", "VN", "UA"]
     }),
     created() {
-      //  this.initialize()
+        //  this.initialize()
     },
 
     methods: {

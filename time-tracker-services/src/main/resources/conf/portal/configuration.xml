@@ -54,12 +54,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <type>org.exoplatform.timetracker.dao.FilterDAO</type>
   </component>
   <component>
-    <type>org.exoplatform.timetracker.dao.TeamMemberDAO</type>
-  </component>
-  <component>
-    <type>org.exoplatform.timetracker.dao.TeamDAO</type>
-  </component>
-  <component>
     <type>org.exoplatform.timetracker.dao.ActivityTeamDAO</type>
   </component>
   <component>

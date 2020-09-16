@@ -16,13 +16,13 @@
  */
 package org.exoplatform.timetracker.storage;
 
+import org.exoplatform.services.organization.Group;
 import org.exoplatform.timetracker.dao.ActivityDAO;
 import org.exoplatform.timetracker.dao.ActivityTeamDAO;
 import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.entity.ActivityEntity;
 import org.exoplatform.timetracker.entity.ActivityTeamEntity;
-import org.exoplatform.timetracker.entity.TeamEntity;
 import org.gatein.api.EntityNotFoundException;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class ActivityStorage {
         for(Team team : activity.getTeams()){
             Team team_=teamStorage.getTeamById(team.getId());
             if(team_!=null){
-                activityTeamEntities.add(new ActivityTeamEntity(activityEntity,teamStorage.toEntity(team_))) ;
+                activityTeamEntities.add(new ActivityTeamEntity(activityEntity,team_.getId())) ;
             }
         }
         activityTeamDAO.createAll(activityTeamEntities);
@@ -97,7 +97,7 @@ public class ActivityStorage {
         for(Team team : activity.getTeams()){
             Team team_=teamStorage.getTeamById(team.getId());
             if(team_!=null){
-                activityTeamEntities.add(new ActivityTeamEntity(activityEntity,teamStorage.toEntity(team_))) ;
+                activityTeamEntities.add(new ActivityTeamEntity(activityEntity,team_.getId())) ;
             }
         }
         activityTeamDAO.createAll(activityTeamEntities);
@@ -129,7 +129,7 @@ public class ActivityStorage {
         return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Activity> getActivitiesByTeams(List<Long> teams) {
+    public List<Activity> getActivitiesByTeams(List<String> teams) {
         List<ActivityTeamEntity> applicatiions = activityTeamDAO.getActivitiesByTeams(teams);
         List<ActivityEntity> activities = applicatiions.stream().map(ActivityTeamEntity::getActivityEntity).collect(Collectors.toList());
         return activities.stream().map(this::toDTO).collect(Collectors.toList());
@@ -144,7 +144,7 @@ public class ActivityStorage {
             return null;
         }
         List<ActivityTeamEntity> teamEntities = activityTeamDAO.getTeamsByActivity(activityEntity.getId());
-        List<TeamEntity> teams = teamEntities.stream().map(ActivityTeamEntity::getTeamEntity).collect(Collectors.toList());
+        List<String> teams = teamEntities.stream().map(ActivityTeamEntity::getTeamId).collect(Collectors.toList());
         return new Activity(activityEntity.getId(),
                 codesStorage.toTypeDTO(activityEntity.getTypeEntity()),
                 codesStorage.toSubTypeDTO(activityEntity.getSubTypeEntity()),
@@ -153,7 +153,7 @@ public class ActivityStorage {
                 activityEntity.getLabel(),
                 projectStorage.toDTO(activityEntity.getProjectEntity()),
                 featureStorage.toDTO(activityEntity.getFeatureEntity()),
-                teamStorage.toDtos(teams)
+                teamStorage.toDtos_(teams)
         );
     }
 

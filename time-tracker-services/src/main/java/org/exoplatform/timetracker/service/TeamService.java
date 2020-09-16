@@ -17,6 +17,7 @@
 package org.exoplatform.timetracker.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ecs.html.S;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.Project;
@@ -73,7 +74,7 @@ public class TeamService {
         if (team == null) {
             throw new IllegalArgumentException("Team is mandatory");
         }
-        Long teamId = team.getId();
+        String teamId = team.getId();
         if (teamId == null) {
             throw new EntityNotFoundException("Team with null id wasn't found");
         }
@@ -94,10 +95,7 @@ public class TeamService {
      * @throws EntityNotFoundException if Team wasn't found
      * @throws IllegalAccessException  if user is not allowed to delete Team
      */
-    public void deleteTeam(Long teamId) throws EntityNotFoundException, IllegalAccessException {
-        if (teamId == null || teamId <= 0) {
-            throw new IllegalArgumentException("TeamId must be a positive integer");
-        }
+    public void deleteTeam(String teamId) throws Exception {
 
         Team storedTeam = teamStorage.getTeamById(teamId);
         if (storedTeam == null) {
@@ -113,7 +111,7 @@ public class TeamService {
      *
      * @return List of {@link Team} that contains the list of Teams
      */
-    public List<TeamMember> getTeamsList(String userName) {
+    public List<Team> getTeamsList(String userName)  throws Exception {
         return teamStorage.getTeamsByUser(userName);
     }
 
@@ -124,7 +122,7 @@ public class TeamService {
      *
      * @return List of {@link Team} that contains the list of Teams
      */
-    public List<TeamMember> getMembersList(long teamID) {
+    public List<TeamMember> getMembersList(String teamID) throws Exception {
         return teamStorage.getMembersByTeam(teamID);
     }
 
@@ -135,7 +133,7 @@ public class TeamService {
      *
      * @return List of {@link Team} that contains the list of Teams
      */
-    public List<Team> getTeams() {
+    public List<Team> getTeams()  throws Exception {
         return teamStorage.getTeams();
     }
 
@@ -149,42 +147,16 @@ public class TeamService {
      * @throws Exception when TeamMember already exists or an error occurs while
      *                   creating TeamMember or its attached image
      */
-    public TeamMember createTeamMember(TeamMember teamMember) throws Exception {
+    public void createTeamMember(TeamMember teamMember) throws Exception {
         if (teamMember == null) {
             throw new IllegalArgumentException("TeamMember is mandatory");
         }
         if (teamStorage.getMemberByTeamUserAndRole(teamMember.getTeam().getId(),teamMember.getUserName(),teamMember.getRole()) != null) {
             throw new EntityExistsException("TeamMember Already exist");
         }
-        return teamStorage.createTeamMember(teamMember);
+        teamStorage.createTeamMember(teamMember);
 
     }
-
-
-    /**
-     * Update an existing Project on datasource. If the Project doesn't exit an
-     * {@link EntityNotFoundException} will be thrown.
-     *
-     * @param teamMember dto to update on store
-     * @return stored {@link TeamMember} in datasource
-     * @throws Exception when {@link EntityNotFoundException} is thrown or an error
-     *           occurs while saving Project
-     */
-    public TeamMember updateTeamMember(TeamMember teamMember) throws Exception {
-        if (teamMember == null) {
-            throw new IllegalArgumentException("TeamMember is mandatory");
-        }
-        Long teamMemberId = teamMember.getId();
-        if (teamMemberId == null) {
-            throw new EntityNotFoundException("TeamMember with null id wasn't found");
-        }
-        TeamMember storedProject = teamStorage.getTeamMemberById(teamMemberId);
-        if (storedProject == null) {
-            throw new EntityNotFoundException("TeamMember with id " + teamMemberId + " wasn't found");
-        }
-        return teamStorage.updateTeamMember(teamMember);
-    }
-
 
 
     /**
@@ -195,11 +167,7 @@ public class TeamService {
      * @throws EntityNotFoundException if TeamMember wasn't found
      * @throws IllegalAccessException  if user is not allowed to delete TeamMember
      */
-    public void deleteTeamMember(Long teamMemberId) throws EntityNotFoundException, IllegalAccessException {
-        if (teamMemberId == null || teamMemberId <= 0) {
-            throw new IllegalArgumentException("TeamMemberId must be a positive integer");
-        }
-
+    public void deleteTeamMember(String teamMemberId)  throws Exception {
         TeamMember storedTeamMember = teamStorage.getTeamMemberById(teamMemberId);
         if (storedTeamMember == null) {
             throw new EntityNotFoundException("TeamMember with id " + teamMemberId + " not found");
