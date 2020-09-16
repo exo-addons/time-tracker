@@ -1,4 +1,3 @@
-
 <template>
 <exo-drawer ref="addTTEntryDrawer" right class="">
     <template slot="title">
@@ -11,23 +10,21 @@
 
                 <v-row align="center" justify="center">
 
-            <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="date" centered prepend-icon="event" readonly v-bind="attrs" v-on="on"></v-text-field>
-                </template>
-                <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
-            </v-menu>
-        </v-row>
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-text-field v-model="date" centered prepend-icon="event" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+                    </v-menu>
+                </v-row>
 
                 <v-row>
                     <v-label for="activity">
                         Activity
                     </v-label>
-                    <select v-model="activityRecord.activity" name="activity" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activities" :key="item.id" :value="item">
-                            {{ item.label}}
-                        </option>
-                    </select>
+
+                    <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
+
                 </v-row>
 
                 <v-row>
@@ -64,7 +61,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="projectVersion"> Project Version </v-label>
-                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
+                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
                 <v-row>
                     <v-label for="salesOrder">
