@@ -115,7 +115,7 @@ export default {
         },
         open() {
             this.$refs.addTTEntryDrawer.open()
-              this.focusInput();
+          //    this.focusInput();
         },
 
     }
