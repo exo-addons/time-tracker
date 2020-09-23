@@ -31,6 +31,9 @@ import java.util.List;
 
 /**
  * A Service to access and store Teams
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class TeamService {
 
@@ -38,6 +41,11 @@ public class TeamService {
 
     private final TeamStorage teamStorage;
 
+    /**
+     * <p>Constructor for TeamService.</p>
+     *
+     * @param teamStorage a {@link org.exoplatform.timetracker.storage.TeamStorage} object.
+     */
     public TeamService(TeamStorage teamStorage) {
         this.teamStorage = teamStorage;
 
@@ -45,11 +53,11 @@ public class TeamService {
 
     /**
      * Create new Team that will be available for all users. If the Team
-     * already exits an {@link EntityExistsException} will be thrown.
+     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
      *
      * @param team Team to create
-     * @return stored {@link Team} in datasource
-     * @throws Exception when Team already exists or an error occurs while
+     * @return stored {@link org.exoplatform.timetracker.dto.Team} in datasource
+     * @throws java.lang.Exception when Team already exists or an error occurs while
      *                   creating Team or its attached image
      */
     public Team createTeam(Team team) throws Exception {
@@ -63,11 +71,11 @@ public class TeamService {
 
     /**
      * Update an existing Project on datasource. If the Project doesn't exit an
-     * {@link EntityNotFoundException} will be thrown.
+     * {@link javax.persistence.EntityNotFoundException} will be thrown.
      *
      * @param team dto to update on store
-     * @return stored {@link Team} in datasource
-     * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+     * @return stored {@link org.exoplatform.timetracker.dto.Team} in datasource
+     * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
      *           occurs while saving Project
      */
     public Team updateTeam(Team team) throws Exception {
@@ -94,6 +102,7 @@ public class TeamService {
      * @param teamId technical identifier of Team
      * @throws EntityNotFoundException if Team wasn't found
      * @throws IllegalAccessException  if user is not allowed to delete Team
+     * @throws java.lang.Exception if any.
      */
     public void deleteTeam(String teamId) throws Exception {
 
@@ -109,7 +118,9 @@ public class TeamService {
      * Retrieves the list of Teams with offset, limit and a keyword that can be
      * empty
      *
-     * @return List of {@link Team} that contains the list of Teams
+     * @return List of {@link org.exoplatform.timetracker.dto.Team} that contains the list of Teams
+     * @param userName a {@link java.lang.String} object.
+     * @throws java.lang.Exception if any.
      */
     public List<Team> getTeamsList(String userName)  throws Exception {
         return teamStorage.getTeamsByUser(userName);
@@ -120,7 +131,9 @@ public class TeamService {
      * Retrieves the list of Teams with offset, limit and a keyword that can be
      * empty
      *
-     * @return List of {@link Team} that contains the list of Teams
+     * @return List of {@link org.exoplatform.timetracker.dto.Team} that contains the list of Teams
+     * @param teamID a {@link java.lang.String} object.
+     * @throws java.lang.Exception if any.
      */
     public List<TeamMember> getMembersList(String teamID) throws Exception {
         return teamStorage.getMembersByTeam(teamID);
@@ -131,7 +144,8 @@ public class TeamService {
      * Retrieves the list of Teams with offset, limit and a keyword that can be
      * empty
      *
-     * @return List of {@link Team} that contains the list of Teams
+     * @return List of {@link org.exoplatform.timetracker.dto.Team} that contains the list of Teams
+     * @throws java.lang.Exception if any.
      */
     public List<Team> getTeams()  throws Exception {
         return teamStorage.getTeams();
@@ -140,11 +154,10 @@ public class TeamService {
 
     /**
      * Create new TeamMember that will be available for all users. If the TeamMember
-     * already exits an {@link EntityExistsException} will be thrown.
+     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
      *
      * @param teamMember TeamMember to create
-     * @return stored {@link TeamMember} in datasource
-     * @throws Exception when TeamMember already exists or an error occurs while
+     * @throws java.lang.Exception when TeamMember already exists or an error occurs while
      *                   creating TeamMember or its attached image
      */
     public void createTeamMember(TeamMember teamMember) throws Exception {
@@ -166,6 +179,7 @@ public class TeamService {
      * @param teamMemberId technical identifier of TeamMember
      * @throws EntityNotFoundException if TeamMember wasn't found
      * @throws IllegalAccessException  if user is not allowed to delete TeamMember
+     * @throws java.lang.Exception if any.
      */
     public void deleteTeamMember(String teamMemberId)  throws Exception {
         TeamMember storedTeamMember = teamStorage.getTeamMemberById(teamMemberId);
