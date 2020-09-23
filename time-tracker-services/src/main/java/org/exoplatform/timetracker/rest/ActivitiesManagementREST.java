@@ -40,6 +40,12 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>ActivitiesManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/activitymgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Activity center Activitys") // NOSONAR
@@ -52,11 +58,23 @@ public class ActivitiesManagementREST implements ResourceContainer {
     private final ActivityService activityService;
     private final TeamService teamService;
 
+    /**
+     * <p>Constructor for ActivitiesManagementREST.</p>
+     *
+     * @param activityService a {@link org.exoplatform.timetracker.service.ActivityService} object.
+     * @param teamService a {@link org.exoplatform.timetracker.service.TeamService} object.
+     * @param container a {@link org.exoplatform.container.PortalContainer} object.
+     */
     public ActivitiesManagementREST(ActivityService activityService, TeamService teamService, PortalContainer container) {
         this.activityService = activityService;
         this.teamService = teamService;
     }
 
+    /**
+     * <p>getAllActivities.</p>
+     *
+     * @return a {@link javax.ws.rs.core.Response} object.
+     */
     @GET
     @Path("activity/all")
     @RolesAllowed("users")
@@ -77,6 +95,11 @@ public class ActivitiesManagementREST implements ResourceContainer {
         }
     }
 
+    /**
+     * <p>getActivities.</p>
+     *
+     * @return a {@link javax.ws.rs.core.Response} object.
+     */
     @GET
     @Path("activity")
     @RolesAllowed("users")
@@ -100,6 +123,12 @@ public class ActivitiesManagementREST implements ResourceContainer {
         }
     }
 
+    /**
+     * <p>createActivity.</p>
+     *
+     * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @return a {@link javax.ws.rs.core.Response} object.
+     */
     @POST
     @Path("activity")
     @RolesAllowed("administrators")
@@ -125,6 +154,12 @@ public class ActivitiesManagementREST implements ResourceContainer {
         return Response.noContent().build();
     }
 
+    /**
+     * <p>updateActivity.</p>
+     *
+     * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @return a {@link javax.ws.rs.core.Response} object.
+     */
     @PUT
     @Path("activity")
     @RolesAllowed("administrators")
@@ -152,6 +187,12 @@ public class ActivitiesManagementREST implements ResourceContainer {
         return Response.noContent().build();
     }
 
+    /**
+     * <p>deleteActivity.</p>
+     *
+     * @param activityId a {@link java.lang.Long} object.
+     * @return a {@link javax.ws.rs.core.Response} object.
+     */
     @DELETE
     @Path("activity/{activityId}")
     @RolesAllowed("administrators")

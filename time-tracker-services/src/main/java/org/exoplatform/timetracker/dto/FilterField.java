@@ -21,7 +21,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * <p>FilterField class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -37,9 +40,20 @@ public class FilterField implements Serializable {
     private Filter filter;
 
 
+    /**
+     * <p>Constructor for FilterField.</p>
+     */
     public FilterField() {
     }
 
+    /**
+     * <p>Constructor for FilterField.</p>
+     *
+     * @param id a {@link java.lang.Long} object.
+     * @param name a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+     */
     public FilterField(Long id, String name, String value, Filter filter) {
         this.id = id;
         this.name = name;

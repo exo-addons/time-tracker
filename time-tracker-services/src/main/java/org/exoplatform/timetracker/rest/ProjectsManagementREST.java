@@ -36,6 +36,12 @@ import org.exoplatform.timetracker.service.ProjectService;
 
 import io.swagger.annotations.*;
 
+/**
+ * <p>ProjectsManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/projectsmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Projects") // NOSONAR
@@ -47,10 +53,21 @@ public class ProjectsManagementREST implements ResourceContainer {
 
   private final ProjectService projectService;
 
+  /**
+   * <p>Constructor for ProjectsManagementREST.</p>
+   *
+   * @param projectService a {@link org.exoplatform.timetracker.service.ProjectService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public ProjectsManagementREST(ProjectService projectService, PortalContainer container) {
     this.projectService = projectService;
   }
 
+  /**
+   * <p>getProjects.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("project")
   @RolesAllowed("users")
@@ -71,6 +88,12 @@ public class ProjectsManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createProject.</p>
+   *
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("project")
   @RolesAllowed("administrators")
@@ -96,6 +119,12 @@ public class ProjectsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateProject.</p>
+   *
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("project")
   @RolesAllowed("administrators")
@@ -123,6 +152,12 @@ public class ProjectsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteProject.</p>
+   *
+   * @param projectId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("project/{projectId}")
   @RolesAllowed("administrators")

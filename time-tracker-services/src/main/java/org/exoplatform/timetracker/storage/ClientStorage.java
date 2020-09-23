@@ -28,15 +28,30 @@ import org.exoplatform.timetracker.entity.ClientEntity;
 /**
  * Storage service to access / load and save Clients. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ClientStorage {
 
   private final ClientDAO clientDAO;
 
+  /**
+   * <p>Constructor for ClientStorage.</p>
+   *
+   * @param clientDAO a {@link org.exoplatform.timetracker.dao.ClientDAO} object.
+   */
   public ClientStorage(ClientDAO clientDAO) {
     this.clientDAO = clientDAO;
   }
 
+  /**
+   * <p>createClient.</p>
+   *
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @throws java.lang.Exception if any.
+   */
   public Client createClient(Client client) throws Exception {
     if (client == null) {
       throw new IllegalArgumentException("Client is mandatory");
@@ -47,6 +62,13 @@ public class ClientStorage {
     return toDTO(clientEntity);
   }
 
+  /**
+   * <p>updateClient.</p>
+   *
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @throws java.lang.Exception if any.
+   */
   public Client updateClient(Client client) throws Exception {
     if (client == null) {
       throw new IllegalArgumentException("Client is mandatory");
@@ -63,6 +85,12 @@ public class ClientStorage {
     return toDTO(clientEntity);
   }
 
+  /**
+   * <p>deleteClient.</p>
+   *
+   * @param clientId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteClient(long clientId) throws EntityNotFoundException {
     if (clientId <= 0) {
       throw new IllegalArgumentException("ClientId must be a positive integer");
@@ -74,6 +102,12 @@ public class ClientStorage {
     clientDAO.delete(clientEntity);
   }
 
+  /**
+   * <p>getClientById.</p>
+   *
+   * @param ClientId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.Client} object.
+   */
   public Client getClientById(long ClientId) {
     if (ClientId <= 0) {
       throw new IllegalArgumentException("ClientId must be a positive integer");
@@ -82,15 +116,31 @@ public class ClientStorage {
     return toDTO(ClientEntity);
   }
 
+  /**
+   * <p>getClients.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Client> getClients() {
     List<ClientEntity> applicatiions = clientDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countClients.</p>
+   *
+   * @return a long.
+   */
   public long countClients() {
     return clientDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param clientEntity a {@link org.exoplatform.timetracker.entity.ClientEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Client} object.
+   */
   public Client toDTO(ClientEntity clientEntity) {
     if (clientEntity == null) {
       return null;
@@ -100,6 +150,12 @@ public class ClientStorage {
                         clientEntity.getLabel());
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @return a {@link org.exoplatform.timetracker.entity.ClientEntity} object.
+   */
   public ClientEntity toEntity(Client client) {
     if (client == null) {
       return null;

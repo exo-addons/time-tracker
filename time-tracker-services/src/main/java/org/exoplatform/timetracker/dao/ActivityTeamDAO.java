@@ -29,11 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>ActivityTeamDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class ActivityTeamDAO extends GenericDAOJPAImpl<ActivityTeamEntity, Serializable> {
   private static final Log LOG = ExoLogger.getLogger(ActivityTeamDAO.class);
 
+  /**
+   * <p>getActivitiesByTeams.</p>
+   *
+   * @param teams a {@link java.util.List} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<ActivityTeamEntity> getActivitiesByTeams(List<String> teams) {
 
     TypedQuery<ActivityTeamEntity> query = getEntityManager().createNamedQuery("ActivityTeamEntity.getActivitiesByTeams", ActivityTeamEntity.class)
@@ -47,6 +56,12 @@ public class ActivityTeamDAO extends GenericDAOJPAImpl<ActivityTeamEntity, Seria
       return new ArrayList<ActivityTeamEntity>();
     }
   }
+  /**
+   * <p>getTeamsByActivity.</p>
+   *
+   * @param activityId a long.
+   * @return a {@link java.util.List} object.
+   */
   public List<ActivityTeamEntity> getTeamsByActivity(long activityId) {
 
     TypedQuery<ActivityTeamEntity> query = getEntityManager().createNamedQuery("ActivityTeamEntity.getTeamsByActivity", ActivityTeamEntity.class)

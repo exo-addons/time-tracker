@@ -21,7 +21,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
+ * <p>SubActivityCode class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -35,9 +38,20 @@ public class SubActivityCode implements Serializable {
 
   private ActivityCode activityCode;
 
+  /**
+   * <p>Constructor for SubActivityCode.</p>
+   */
   public SubActivityCode() {
   }
 
+  /**
+   * <p>Constructor for SubActivityCode.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param activityCode a {@link org.exoplatform.timetracker.dto.ActivityCode} object.
+   */
   public SubActivityCode(Long id, String code, String label, ActivityCode activityCode) {
     this.id = id;
     this.code = code;

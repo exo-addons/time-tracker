@@ -38,6 +38,12 @@ import org.exoplatform.timetracker.service.ActivityRecordService;
 
 import io.swagger.annotations.*;
 
+/**
+ * <p>ActivityRecordsManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/activityRecordrecordsmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access ActivityRecord center ActivityRecords") // NOSONAR
@@ -49,10 +55,21 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
 
   private final ActivityRecordService activityRecordService;
 
+  /**
+   * <p>Constructor for ActivityRecordsManagementREST.</p>
+   *
+   * @param activityRecordService a {@link org.exoplatform.timetracker.service.ActivityRecordService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public ActivityRecordsManagementREST(ActivityRecordService activityRecordService, PortalContainer container) {
     this.activityRecordService = activityRecordService;
   }
 
+  /**
+   * <p>getActivityRecords.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("activityrecord")
   @RolesAllowed("users")
@@ -72,6 +89,31 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+  /**
+   * <p>getActivityRecordsList.</p>
+   *
+   * @param uriInfo a {@link javax.ws.rs.core.UriInfo} object.
+   * @param search a {@link java.lang.String} object.
+   * @param activity a long.
+   * @param type a long.
+   * @param subType a long.
+   * @param activityCode a long.
+   * @param subActivityCode a long.
+   * @param client a long.
+   * @param project a long.
+   * @param feature a long.
+   * @param fromDate a {@link java.lang.String} object.
+   * @param toDate a {@link java.lang.String} object.
+   * @param userName a {@link java.lang.String} object.
+   * @param location a {@link java.lang.String} object.
+   * @param office a {@link java.lang.String} object.
+   * @param sortBy a {@link java.lang.String} object.
+   * @param sortDesc a {@link java.lang.Boolean} object.
+   * @param page a int.
+   * @param limit a int.
+   * @param export a {@link java.lang.Boolean} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("activityrecord/list")
   @RolesAllowed("users")
@@ -111,6 +153,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>getActivityRecords.</p>
+   *
+   * @param day a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("activityrecord/{day}")
   @RolesAllowed("users")
@@ -131,6 +179,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createActivityRecord.</p>
+   *
+   * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("activityrecord")
   @RolesAllowed("administrators")
@@ -157,6 +211,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateActivityRecord.</p>
+   *
+   * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("activityrecord")
   @RolesAllowed("administrators")
@@ -184,6 +244,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteActivityRecord.</p>
+   *
+   * @param activityRecordId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("activityrecord/{activityrecordId}")
   @RolesAllowed("administrators")

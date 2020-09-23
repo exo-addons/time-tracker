@@ -33,12 +33,21 @@ import java.util.stream.Collectors;
 /**
  * Storage service to access / load and save Filters. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class FilterStorage {
 
   private final FilterDAO filterDAO;
   private final FilterFieldDAO filterFieldDAO;
 
+  /**
+   * <p>Constructor for FilterStorage.</p>
+   *
+   * @param filterDAO a {@link org.exoplatform.timetracker.dao.FilterDAO} object.
+   * @param filterFieldDAO a {@link org.exoplatform.timetracker.dao.FilterFieldDAO} object.
+   */
   public FilterStorage(FilterDAO filterDAO, FilterFieldDAO filterFieldDAO) {
     this.filterDAO = filterDAO;
     this.filterFieldDAO = filterFieldDAO;
@@ -47,6 +56,13 @@ public class FilterStorage {
 
   /////////////////////////Filter storage /////////////////////////////////////////
 
+  /**
+   * <p>createFilter.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @throws java.lang.Exception if any.
+   */
   public Filter createFilter(Filter filter) throws Exception {
     if (filter == null) {
       throw new IllegalArgumentException("Filter is mandatory");
@@ -57,6 +73,13 @@ public class FilterStorage {
     return toDTO(filterEntity);
   }
 
+  /**
+   * <p>updateFilter.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @throws java.lang.Exception if any.
+   */
   public Filter updateFilter(Filter filter) throws Exception {
     if (filter == null) {
       throw new IllegalArgumentException("Filter is mandatory");
@@ -73,6 +96,12 @@ public class FilterStorage {
     return toDTO(filterEntity);
   }
 
+  /**
+   * <p>deleteFilter.</p>
+   *
+   * @param filterId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteFilter(long filterId) throws EntityNotFoundException {
     if (filterId <= 0) {
       throw new IllegalArgumentException("FilterId must be a positive integer");
@@ -84,6 +113,12 @@ public class FilterStorage {
     filterDAO.delete(filterEntity);
   }
 
+  /**
+   * <p>getFilterById.</p>
+   *
+   * @param FilterId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.Filter} object.
+   */
   public Filter getFilterById(long FilterId) {
     if (FilterId <= 0) {
       throw new IllegalArgumentException("FilterId must be a positive integer");
@@ -92,20 +127,42 @@ public class FilterStorage {
     return toDTO(FilterEntity);
   }
 
+  /**
+   * <p>getFilters.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Filter> getFilters() {
     List<FilterEntity> applicatiions = filterDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>getFiltersByUserName.</p>
+   *
+   * @param userName a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<Filter> getFiltersByUserName(String userName) {
     List<FilterEntity> applicatiions = filterDAO.getFiltersByUserName(userName);
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countFilters.</p>
+   *
+   * @return a long.
+   */
   public long countFilters() {
     return filterDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param filterEntity a {@link org.exoplatform.timetracker.entity.FilterEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Filter} object.
+   */
   public Filter toDTO(FilterEntity filterEntity) {
     if (filterEntity == null) {
       return null;
@@ -115,6 +172,12 @@ public class FilterStorage {
             filterEntity.getUserName());
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @return a {@link org.exoplatform.timetracker.entity.FilterEntity} object.
+   */
   public FilterEntity toEntity(Filter filter) {
     if (filter == null) {
       return null;
@@ -127,6 +190,13 @@ public class FilterStorage {
 
 /////////////////////////Filter Fields storage /////////////////////////////////////////
 
+  /**
+   * <p>createFilterField.</p>
+   *
+   * @param filterField a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   * @return a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   * @throws java.lang.Exception if any.
+   */
   public FilterField createFilterField(FilterField filterField) throws Exception {
     if (filterField == null) {
       throw new IllegalArgumentException("FilterField is mandatory");
@@ -137,6 +207,13 @@ public class FilterStorage {
     return toDTO(filterFieldEntity);
   }
 
+  /**
+   * <p>updateFilterField.</p>
+   *
+   * @param filterField a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   * @return a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   * @throws java.lang.Exception if any.
+   */
   public FilterField updateFilterField(FilterField filterField) throws Exception {
     if (filterField == null) {
       throw new IllegalArgumentException("FilterField is mandatory");
@@ -153,6 +230,12 @@ public class FilterStorage {
     return toDTO(filterFieldEntity);
   }
 
+  /**
+   * <p>deleteFilterField.</p>
+   *
+   * @param filterFieldId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteFilterField(long filterFieldId) throws EntityNotFoundException {
     if (filterFieldId <= 0) {
       throw new IllegalArgumentException("FilterFieldId must be a positive integer");
@@ -164,6 +247,12 @@ public class FilterStorage {
     filterFieldDAO.delete(filterFieldEntity);
   }
 
+  /**
+   * <p>deleteAllFilterFieldsByFilter.</p>
+   *
+   * @param filterFieldId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteAllFilterFieldsByFilter(long filterFieldId) throws EntityNotFoundException {
     if (filterFieldId <= 0) {
       throw new IllegalArgumentException("FilterFieldId must be a positive integer");
@@ -173,6 +262,12 @@ public class FilterStorage {
   }
 
 
+  /**
+   * <p>getFilterFieldById.</p>
+   *
+   * @param FilterFieldId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   */
   public FilterField getFilterFieldById(long FilterFieldId) {
     if (FilterFieldId <= 0) {
       throw new IllegalArgumentException("FilterFieldId must be a positive integer");
@@ -181,20 +276,42 @@ public class FilterStorage {
     return toDTO(FilterFieldEntity);
   }
 
+  /**
+   * <p>getFilterFields.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<FilterField> getFilterFields() {
     List<FilterFieldEntity> applicatiions = filterFieldDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>getFilterFieldsByFilter.</p>
+   *
+   * @param filterId a long.
+   * @return a {@link java.util.List} object.
+   */
   public List<FilterField> getFilterFieldsByFilter(long filterId) {
     List<FilterFieldEntity> applicatiions = filterFieldDAO.getFieldsByFilter(filterId);
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countFilterFields.</p>
+   *
+   * @return a long.
+   */
   public long countFilterFields() {
     return filterFieldDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param filterFieldEntity a {@link org.exoplatform.timetracker.entity.FilterFieldEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   */
   public FilterField toDTO(FilterFieldEntity filterFieldEntity) {
     if (filterFieldEntity == null) {
       return null;
@@ -205,6 +322,12 @@ public class FilterStorage {
             toDTO(filterFieldEntity.getFilterEntity()));
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param filterField a {@link org.exoplatform.timetracker.dto.FilterField} object.
+   * @return a {@link org.exoplatform.timetracker.entity.FilterFieldEntity} object.
+   */
   public FilterFieldEntity toEntity(FilterField filterField) {
     if (filterField == null) {
       return null;

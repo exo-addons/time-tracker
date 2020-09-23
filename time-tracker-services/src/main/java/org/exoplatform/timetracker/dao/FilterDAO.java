@@ -29,11 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>FilterDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class FilterDAO extends GenericDAOJPAImpl<FilterEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(FilterDAO.class);
 
+  /**
+   * <p>getFiltersByUserName.</p>
+   *
+   * @param userName a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<FilterEntity> getFiltersByUserName(String userName) {
 
     TypedQuery<FilterEntity> query = getEntityManager().createNamedQuery("FilterEntity.getFiltersByUserName", FilterEntity.class)

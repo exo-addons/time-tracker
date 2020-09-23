@@ -23,7 +23,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * <p>FilterModel class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -36,14 +39,29 @@ public class FilterModel implements Serializable {
   private List<FilterField> filterFields;
   private JSONObject fields;
 
+  /**
+   * <p>Constructor for FilterModel.</p>
+   */
   public FilterModel() {
   }
 
+  /**
+   * <p>Constructor for FilterModel.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @param filterFields a {@link java.util.List} object.
+   */
   public FilterModel(Filter filter, List<FilterField> filterFields) {
     this.filter = filter;
     this.fields = fields;
 
   }
+  /**
+   * <p>Constructor for FilterModel.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
+   * @param fields a {@link org.json.JSONObject} object.
+   */
   public FilterModel(Filter filter, JSONObject fields) {
     this.filter = filter;
     this.fields = fields;

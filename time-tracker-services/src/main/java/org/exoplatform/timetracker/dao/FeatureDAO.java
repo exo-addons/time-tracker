@@ -22,7 +22,10 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.FeatureEntity;
 
 /**
+ * <p>FeatureDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class FeatureDAO extends GenericDAOJPAImpl<FeatureEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(FeatureDAO.class);

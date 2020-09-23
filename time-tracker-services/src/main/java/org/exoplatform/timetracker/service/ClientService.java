@@ -30,6 +30,9 @@ import org.exoplatform.timetracker.storage.ClientStorage;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ClientService {
 
@@ -37,6 +40,11 @@ public class ClientService {
 
   private final ClientStorage clientStorage;
 
+  /**
+   * <p>Constructor for ClientService.</p>
+   *
+   * @param clientStorage a {@link org.exoplatform.timetracker.storage.ClientStorage} object.
+   */
   public ClientService(ClientStorage clientStorage) {
     this.clientStorage = clientStorage;
 
@@ -44,11 +52,11 @@ public class ClientService {
 
   /**
    * Create new Client that will be available for all users. If the Client
-   * already exits an {@link EntityExistsException} will be thrown.
-   * 
+   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   *
    * @param client Client to create
-   * @return stored {@link Client} in datasource
-   * @throws Exception when Client already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.Client} in datasource
+   * @throws java.lang.Exception when Client already exists or an error occurs while
    *           creating Client or its attached image
    */
   public Client createClient(Client client) throws Exception {
@@ -65,12 +73,12 @@ public class ClientService {
 
   /**
    * Update an existing Client on datasource. If the Client doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param Client dto to update on store
    * @param username username storing Client
-   * @return stored {@link Client} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.Client} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving Client
    */
   public Client updateClient(Client Client, String username) throws Exception {
@@ -94,11 +102,11 @@ public class ClientService {
   /**
    * Delete Client identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param clientId technical identifier of Client
    * @param username user currently deleting Client
-   * @throws EntityNotFoundException if Client wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete Client
+   * @throws javax.persistence.EntityNotFoundException if Client wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete Client
    */
   public void deleteClient(Long clientId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (clientId == null || clientId <= 0) {
@@ -119,7 +127,7 @@ public class ClientService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link Client} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.Client} that contains the list of Activities
    */
   public List<Client> getClientsList() {
     return clientStorage.getClients();

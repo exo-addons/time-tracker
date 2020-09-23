@@ -22,7 +22,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import javax.persistence.*;
 
 /**
+ * <p>FilterFieldEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "FilterFieldEntity")
 @ExoEntity
@@ -30,7 +33,6 @@ import javax.persistence.*;
 @Data
 @NamedQueries({
         @NamedQuery(name = "FilterFieldEntity.getFieldsByFilter", query = "SELECT field FROM FilterFieldEntity field where field.filterEntity.id = :filerId ") })
-
 public class FilterFieldEntity {
 
   @Id
@@ -51,9 +53,20 @@ public class FilterFieldEntity {
   private FilterEntity   filterEntity;
 
 
+  /**
+   * <p>Constructor for FilterFieldEntity.</p>
+   */
   public FilterFieldEntity() {
   }
 
+  /**
+   * <p>Constructor for FilterFieldEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param name a {@link java.lang.String} object.
+   * @param value a {@link java.lang.String} object.
+   * @param filterEntity a {@link org.exoplatform.timetracker.entity.FilterEntity} object.
+   */
   public FilterFieldEntity(Long id, String name, String value,FilterEntity filterEntity) {
     this.id = id;
     this.name = name;

@@ -30,6 +30,9 @@ import org.exoplatform.timetracker.storage.ActivityStorage;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ActivityService {
 
@@ -37,6 +40,11 @@ public class ActivityService {
 
   private final ActivityStorage activitiestorage;
 
+  /**
+   * <p>Constructor for ActivityService.</p>
+   *
+   * @param activitiestorage a {@link org.exoplatform.timetracker.storage.ActivityStorage} object.
+   */
   public ActivityService(ActivityStorage activitiestorage) {
     this.activitiestorage = activitiestorage;
 
@@ -44,11 +52,11 @@ public class ActivityService {
 
   /**
    * Create new Activity that will be available for all users. If the Activity
-   * already exits an {@link EntityExistsException} will be thrown.
-   * 
+   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   *
    * @param activity Activity to create
-   * @return stored {@link Activity} in datasource
-   * @throws Exception when Activity already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.Activity} in datasource
+   * @throws java.lang.Exception when Activity already exists or an error occurs while
    *           creating Activity or its attached image
    */
   public Activity createActivity(Activity activity) throws Exception {
@@ -65,12 +73,12 @@ public class ActivityService {
 
   /**
    * Update an existing Activity on datasource. If the Activity doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param Activity dto to update on store
    * @param username username storing Activity
-   * @return stored {@link Activity} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.Activity} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving Activity
    */
   public Activity updateActivity(Activity Activity, String username) throws Exception {
@@ -94,11 +102,11 @@ public class ActivityService {
   /**
    * Delete Activity identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param activityId technical identifier of Activity
    * @param username user currently deleting Activity
-   * @throws EntityNotFoundException if Activity wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete Activity
+   * @throws javax.persistence.EntityNotFoundException if Activity wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete Activity
    */
   public void deleteActivity(Long activityId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (activityId == null || activityId <= 0) {
@@ -119,7 +127,7 @@ public class ActivityService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link Activity} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.Activity} that contains the list of Activities
    */
   public List<Activity> getActivitiesList() {
     return activitiestorage.getActivities();
@@ -129,7 +137,8 @@ public class ActivityService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link Activity} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.Activity} that contains the list of Activities
+   * @param teams a {@link java.util.List} object.
    */
   public List<Activity> getActivitiesforUser(List<String> teams) {
 

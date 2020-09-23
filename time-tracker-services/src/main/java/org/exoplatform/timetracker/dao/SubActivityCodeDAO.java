@@ -23,7 +23,10 @@ import org.exoplatform.timetracker.entity.FeatureEntity;
 import org.exoplatform.timetracker.entity.SubActivityCodeEntity;
 
 /**
+ * <p>SubActivityCodeDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class SubActivityCodeDAO extends GenericDAOJPAImpl<SubActivityCodeEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(SubActivityCodeDAO.class);

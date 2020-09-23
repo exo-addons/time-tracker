@@ -30,6 +30,9 @@ import org.exoplatform.timetracker.storage.SalesOrderStorage;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class SalesOrderService {
 
@@ -37,6 +40,11 @@ public class SalesOrderService {
 
   private final SalesOrderStorage salesOrderStorage;
 
+  /**
+   * <p>Constructor for SalesOrderService.</p>
+   *
+   * @param salesOrderStorage a {@link org.exoplatform.timetracker.storage.SalesOrderStorage} object.
+   */
   public SalesOrderService(SalesOrderStorage salesOrderStorage) {
     this.salesOrderStorage = salesOrderStorage;
 
@@ -44,11 +52,11 @@ public class SalesOrderService {
 
   /**
    * Create new SalesOrder that will be available for all users. If the SalesOrder
-   * already exits an {@link EntityExistsException} will be thrown.
-   * 
+   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   *
    * @param salesOrder SalesOrder to create
-   * @return stored {@link SalesOrder} in datasource
-   * @throws Exception when SalesOrder already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.SalesOrder} in datasource
+   * @throws java.lang.Exception when SalesOrder already exists or an error occurs while
    *           creating SalesOrder or its attached image
    */
   public SalesOrder createSalesOrder(SalesOrder salesOrder) throws Exception {
@@ -65,12 +73,12 @@ public class SalesOrderService {
 
   /**
    * Update an existing SalesOrder on datasource. If the SalesOrder doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param SalesOrder dto to update on store
    * @param username username storing SalesOrder
-   * @return stored {@link SalesOrder} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.SalesOrder} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving SalesOrder
    */
   public SalesOrder updateSalesOrder(SalesOrder SalesOrder, String username) throws Exception {
@@ -94,11 +102,11 @@ public class SalesOrderService {
   /**
    * Delete SalesOrder identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param salesOrderId technical identifier of SalesOrder
    * @param username user currently deleting SalesOrder
-   * @throws EntityNotFoundException if SalesOrder wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete SalesOrder
+   * @throws javax.persistence.EntityNotFoundException if SalesOrder wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete SalesOrder
    */
   public void deleteSalesOrder(Long salesOrderId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (salesOrderId == null || salesOrderId <= 0) {
@@ -119,7 +127,7 @@ public class SalesOrderService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link SalesOrder} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.SalesOrder} that contains the list of Activities
    */
   public List<SalesOrder> getSalesOrdersList() {
     return salesOrderStorage.getSalesOrders();

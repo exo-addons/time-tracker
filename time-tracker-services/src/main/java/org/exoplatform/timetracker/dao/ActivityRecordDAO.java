@@ -32,7 +32,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * <p>ActivityRecordDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, Long> {
     private static final Log LOG = ExoLogger.getLogger(ActivityRecordDAO.class);
@@ -40,9 +43,18 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
     private final String DATE_FORMAT = "yyyy-MM-dd";
 
     private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+    /** Constant <code>QUERY_DATE_FORMAT="yyyy-MM-dd HH:mm:ss"</code> */
     public static final String QUERY_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    /** Constant <code>quryDateFormatter</code> */
     public static final SimpleDateFormat quryDateFormatter = new SimpleDateFormat(QUERY_DATE_FORMAT);
 
+    /**
+     * <p>getUserActivityRecordsList.</p>
+     *
+     * @param day a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<ActivityRecordEntity> getUserActivityRecordsList(String day, String userName) {
 
         TypedQuery<ActivityRecordEntity> query = getEntityManager().createNamedQuery("ActivityRecordEntity.getActivityRecordsByDay", ActivityRecordEntity.class)
@@ -58,6 +70,29 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
         }
     }
 
+    /**
+     * <p>getActivityRecords.</p>
+     *
+     * @param search a {@link java.lang.String} object.
+     * @param activity a {@link java.lang.Long} object.
+     * @param type a {@link java.lang.Long} object.
+     * @param subType a {@link java.lang.Long} object.
+     * @param activityCode a {@link java.lang.Long} object.
+     * @param subActivityCode a {@link java.lang.Long} object.
+     * @param client a {@link java.lang.Long} object.
+     * @param project a {@link java.lang.Long} object.
+     * @param feature a {@link java.lang.Long} object.
+     * @param fromDate a {@link java.lang.String} object.
+     * @param toDate a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @param location a {@link java.lang.String} object.
+     * @param office a {@link java.lang.String} object.
+     * @param offset a int.
+     * @param limit a int.
+     * @param sortBy a {@link java.lang.String} object.
+     * @param sortDesc a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<ActivityRecordEntity> getActivityRecords(String search,
                                                          Long activity,
                                                          Long type,
@@ -198,6 +233,25 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
         }
     }
 
+    /**
+     * <p>countActivityRecords.</p>
+     *
+     * @param search a {@link java.lang.String} object.
+     * @param activity a {@link java.lang.Long} object.
+     * @param type a {@link java.lang.Long} object.
+     * @param subType a {@link java.lang.Long} object.
+     * @param activityCode a {@link java.lang.Long} object.
+     * @param subActivityCode a {@link java.lang.Long} object.
+     * @param client a {@link java.lang.Long} object.
+     * @param project a {@link java.lang.Long} object.
+     * @param feature a {@link java.lang.Long} object.
+     * @param fromDate a {@link java.lang.String} object.
+     * @param toDate a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @param location a {@link java.lang.String} object.
+     * @param office a {@link java.lang.String} object.
+     * @return a long.
+     */
     public long countActivityRecords(String search,
                                      Long activity,
                                      Long type,

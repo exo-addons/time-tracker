@@ -23,7 +23,10 @@ import org.exoplatform.timetracker.entity.ProjectEntity;
 import org.exoplatform.timetracker.entity.SalesOrderEntity;
 
 /**
+ * <p>SalesOrderDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class SalesOrderDAO extends GenericDAOJPAImpl<SalesOrderEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(SalesOrderDAO.class);

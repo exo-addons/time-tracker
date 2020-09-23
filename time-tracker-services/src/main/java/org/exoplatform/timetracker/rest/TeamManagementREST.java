@@ -37,6 +37,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+/**
+ * <p>TeamManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/teamsmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Teams") // NOSONAR
@@ -48,10 +54,21 @@ public class TeamManagementREST implements ResourceContainer {
 
   private final TeamService teamService;
 
+  /**
+   * <p>Constructor for TeamManagementREST.</p>
+   *
+   * @param teamService a {@link org.exoplatform.timetracker.service.TeamService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public TeamManagementREST(TeamService teamService, PortalContainer container) {
     this.teamService = teamService;
   }
 
+  /**
+   * <p>getTeams.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("team")
   @RolesAllowed("users")
@@ -72,6 +89,11 @@ public class TeamManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>getAll.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("team/all")
   @RolesAllowed("users")
@@ -92,6 +114,12 @@ public class TeamManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createTeam.</p>
+   *
+   * @param team a {@link org.exoplatform.timetracker.dto.Team} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("team")
   @RolesAllowed("administrators")
@@ -117,6 +145,12 @@ public class TeamManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateTeam.</p>
+   *
+   * @param team a {@link org.exoplatform.timetracker.dto.Team} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("team")
   @RolesAllowed("administrators")
@@ -144,6 +178,12 @@ public class TeamManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteTeam.</p>
+   *
+   * @param teamId a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("team")
   @RolesAllowed("administrators")
@@ -172,6 +212,12 @@ public class TeamManagementREST implements ResourceContainer {
   }
 
 
+  /**
+   * <p>getTeamMembers.</p>
+   *
+   * @param teamId a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("teamMember")
   @RolesAllowed("users")
@@ -192,6 +238,12 @@ public class TeamManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createTeamMember.</p>
+   *
+   * @param teamMember a {@link org.exoplatform.timetracker.dto.TeamMember} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("teamMember")
   @RolesAllowed("administrators")
@@ -217,6 +269,12 @@ public class TeamManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>createAllTeamMember.</p>
+   *
+   * @param teamMembers a {@link java.util.List} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("teamMember/all")
   @RolesAllowed("administrators")
@@ -243,6 +301,12 @@ public class TeamManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteTeamMember.</p>
+   *
+   * @param teamMemberId a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("teamMember")
   @RolesAllowed("administrators")

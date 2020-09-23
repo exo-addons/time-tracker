@@ -32,6 +32,9 @@ import java.util.stream.Collectors;
 /**
  * Storage service to access / load and save Activitys. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ActivityStorage {
 
@@ -47,6 +50,16 @@ public class ActivityStorage {
 
     private final TeamStorage teamStorage;
 
+    /**
+     * <p>Constructor for ActivityStorage.</p>
+     *
+     * @param activityDAO a {@link org.exoplatform.timetracker.dao.ActivityDAO} object.
+     * @param projectStorage a {@link org.exoplatform.timetracker.storage.ProjectStorage} object.
+     * @param featureStorage a {@link org.exoplatform.timetracker.storage.FeatureStorage} object.
+     * @param codesStorage a {@link org.exoplatform.timetracker.storage.CodesStorage} object.
+     * @param teamStorage a {@link org.exoplatform.timetracker.storage.TeamStorage} object.
+     * @param activityTeamDAO a {@link org.exoplatform.timetracker.dao.ActivityTeamDAO} object.
+     */
     public ActivityStorage(ActivityDAO activityDAO,
                            ProjectStorage projectStorage,
                            FeatureStorage featureStorage,
@@ -61,6 +74,13 @@ public class ActivityStorage {
         this.activityTeamDAO = activityTeamDAO;
     }
 
+    /**
+     * <p>createActivity.</p>
+     *
+     * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @throws java.lang.Exception if any.
+     */
     public Activity createActivity(Activity activity) throws Exception {
         if (activity == null) {
             throw new IllegalArgumentException("Activity is mandatory");
@@ -79,6 +99,13 @@ public class ActivityStorage {
         return toDTO(activityEntity);
     }
 
+    /**
+     * <p>updateActivity.</p>
+     *
+     * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @throws java.lang.Exception if any.
+     */
     public Activity updateActivity(Activity activity) throws Exception {
         if (activity == null) {
             throw new IllegalArgumentException("Activity is mandatory");
@@ -105,6 +132,12 @@ public class ActivityStorage {
         return toDTO(activityEntity);
     }
 
+    /**
+     * <p>deleteActivity.</p>
+     *
+     * @param activityId a long.
+     * @throws org.gatein.api.EntityNotFoundException if any.
+     */
     public void deleteActivity(long activityId) throws EntityNotFoundException {
         if (activityId <= 0) {
             throw new IllegalArgumentException("ActivityId must be a positive integer");
@@ -116,6 +149,12 @@ public class ActivityStorage {
         activityDAO.delete(activityEntity);
     }
 
+    /**
+     * <p>getActivityById.</p>
+     *
+     * @param ActivityId a long.
+     * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
+     */
     public Activity getActivityById(long ActivityId) {
         if (ActivityId <= 0) {
             throw new IllegalArgumentException("ActivityId must be a positive integer");
@@ -124,21 +163,43 @@ public class ActivityStorage {
         return toDTO(ActivityEntity);
     }
 
+    /**
+     * <p>getActivities.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Activity> getActivities() {
         List<ActivityEntity> applicatiions = activityDAO.findAll();
         return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    /**
+     * <p>getActivitiesByTeams.</p>
+     *
+     * @param teams a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Activity> getActivitiesByTeams(List<String> teams) {
         List<ActivityTeamEntity> applicatiions = activityTeamDAO.getActivitiesByTeams(teams);
         List<ActivityEntity> activities = applicatiions.stream().map(ActivityTeamEntity::getActivityEntity).collect(Collectors.toList());
         return activities.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    /**
+     * <p>countActivities.</p>
+     *
+     * @return a long.
+     */
     public long countActivities() {
         return activityDAO.count();
     }
 
+    /**
+     * <p>toDTO.</p>
+     *
+     * @param activityEntity a {@link org.exoplatform.timetracker.entity.ActivityEntity} object.
+     * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
+     */
     public Activity toDTO(ActivityEntity activityEntity) {
         if (activityEntity == null) {
             return null;
@@ -157,6 +218,12 @@ public class ActivityStorage {
         );
     }
 
+    /**
+     * <p>toEntity.</p>
+     *
+     * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+     * @return a {@link org.exoplatform.timetracker.entity.ActivityEntity} object.
+     */
     public ActivityEntity toEntity(Activity activity) {
         if (activity == null) {
             return null;

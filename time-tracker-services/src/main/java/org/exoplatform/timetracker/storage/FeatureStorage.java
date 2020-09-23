@@ -28,15 +28,30 @@ import org.exoplatform.timetracker.entity.FeatureEntity;
 /**
  * Storage service to access / load and save Features. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class FeatureStorage {
 
   private final FeatureDAO featureDAO;
 
+  /**
+   * <p>Constructor for FeatureStorage.</p>
+   *
+   * @param featureDAO a {@link org.exoplatform.timetracker.dao.FeatureDAO} object.
+   */
   public FeatureStorage(FeatureDAO featureDAO) {
     this.featureDAO = featureDAO;
   }
 
+  /**
+   * <p>createFeature.</p>
+   *
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @throws java.lang.Exception if any.
+   */
   public Feature createFeature(Feature feature) throws Exception {
     if (feature == null) {
       throw new IllegalArgumentException("Feature is mandatory");
@@ -47,6 +62,13 @@ public class FeatureStorage {
     return toDTO(featureEntity);
   }
 
+  /**
+   * <p>updateFeature.</p>
+   *
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @throws java.lang.Exception if any.
+   */
   public Feature updateFeature(Feature feature) throws Exception {
     if (feature == null) {
       throw new IllegalArgumentException("Feature is mandatory");
@@ -63,6 +85,12 @@ public class FeatureStorage {
     return toDTO(featureEntity);
   }
 
+  /**
+   * <p>deleteFeature.</p>
+   *
+   * @param featureId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteFeature(long featureId) throws EntityNotFoundException {
     if (featureId <= 0) {
       throw new IllegalArgumentException("FeatureId must be a positive integer");
@@ -74,6 +102,12 @@ public class FeatureStorage {
     featureDAO.delete(featureEntity);
   }
 
+  /**
+   * <p>getFeatureById.</p>
+   *
+   * @param FeatureId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.Feature} object.
+   */
   public Feature getFeatureById(long FeatureId) {
     if (FeatureId <= 0) {
       throw new IllegalArgumentException("FeatureId must be a positive integer");
@@ -82,15 +116,31 @@ public class FeatureStorage {
     return toDTO(FeatureEntity);
   }
 
+  /**
+   * <p>getFeatures.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Feature> getFeatures() {
     List<FeatureEntity> applicatiions = featureDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countFeatures.</p>
+   *
+   * @return a long.
+   */
   public long countFeatures() {
     return featureDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param featureEntity a {@link org.exoplatform.timetracker.entity.FeatureEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Feature} object.
+   */
   public Feature toDTO(FeatureEntity featureEntity) {
     if (featureEntity == null) {
       return null;
@@ -102,6 +152,12 @@ public class FeatureStorage {
                         featureEntity.getExo());
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @return a {@link org.exoplatform.timetracker.entity.FeatureEntity} object.
+   */
   public FeatureEntity toEntity(Feature feature) {
     if (feature == null) {
       return null;

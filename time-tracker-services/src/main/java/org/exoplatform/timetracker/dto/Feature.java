@@ -21,7 +21,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
+ * <p>Feature class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -39,9 +42,21 @@ public class Feature implements Serializable {
 
   private String            exo;
 
+  /**
+   * <p>Constructor for Feature.</p>
+   */
   public Feature() {
   }
 
+  /**
+   * <p>Constructor for Feature.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param spec a {@link java.lang.String} object.
+   * @param exo a {@link java.lang.String} object.
+   */
   public Feature(Long id, String code, String label, String spec, String exo) {
     this.id = id;
     this.code = code;

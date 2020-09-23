@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>ActivityEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "ActivityEntity")
 @ExoEntity
@@ -65,9 +68,24 @@ public class ActivityEntity {
   @JoinColumn(name = "SUB_TYPE_ID")
   private SubTypeEntity subTypeEntity;
 
+  /**
+   * <p>Constructor for ActivityEntity.</p>
+   */
   public ActivityEntity() {
   }
 
+  /**
+   * <p>Constructor for ActivityEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param label a {@link java.lang.String} object.
+   * @param projectEntity a {@link org.exoplatform.timetracker.entity.ProjectEntity} object.
+   * @param activityCodeEntity a {@link org.exoplatform.timetracker.entity.ActivityCodeEntity} object.
+   * @param subActivityCodeEntity a {@link org.exoplatform.timetracker.entity.SubActivityCodeEntity} object.
+   * @param typeEntity a {@link org.exoplatform.timetracker.entity.TypeEntity} object.
+   * @param subTypeEntity a {@link org.exoplatform.timetracker.entity.SubTypeEntity} object.
+   * @param featureEntity a {@link org.exoplatform.timetracker.entity.FeatureEntity} object.
+   */
   public ActivityEntity(Long id,
                         String label,
                         ProjectEntity projectEntity,

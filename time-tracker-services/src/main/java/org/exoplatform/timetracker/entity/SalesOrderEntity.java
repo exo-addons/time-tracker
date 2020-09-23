@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>SalesOrderEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "SalesOrderEntity")
 @ExoEntity
@@ -48,9 +51,20 @@ public class SalesOrderEntity {
   @JoinColumn(name = "CLIENT_ID")
   private ClientEntity clientEntity;
 
+  /**
+   * <p>Constructor for SalesOrderEntity.</p>
+   */
   public SalesOrderEntity() {
   }
 
+  /**
+   * <p>Constructor for SalesOrderEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param name a {@link java.lang.String} object.
+   * @param description a {@link java.lang.String} object.
+   * @param clientEntity a {@link org.exoplatform.timetracker.entity.ClientEntity} object.
+   */
   public SalesOrderEntity(Long id, String name, String description, ClientEntity clientEntity) {
     this.id = id;
     this.name = name;

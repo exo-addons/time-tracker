@@ -31,6 +31,9 @@ import org.exoplatform.timetracker.entity.ActivityRecordEntity;
 /**
  * Storage service to access / load and save ActivityRecords. This service will
  * be used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ActivityRecordStorage {
 
@@ -47,6 +50,14 @@ public class ActivityRecordStorage {
     private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 
 
+    /**
+     * <p>Constructor for ActivityRecordStorage.</p>
+     *
+     * @param activityRecordDAO a {@link org.exoplatform.timetracker.dao.ActivityRecordDAO} object.
+     * @param clientStorage a {@link org.exoplatform.timetracker.storage.ClientStorage} object.
+     * @param activityStorage a {@link org.exoplatform.timetracker.storage.ActivityStorage} object.
+     * @param salesOrderStorage a {@link org.exoplatform.timetracker.storage.SalesOrderStorage} object.
+     */
     public ActivityRecordStorage(ActivityRecordDAO activityRecordDAO,
                                  ClientStorage clientStorage,
                                  ActivityStorage activityStorage,
@@ -57,6 +68,13 @@ public class ActivityRecordStorage {
         this.salesOrderStorage = salesOrderStorage;
     }
 
+    /**
+     * <p>createActivityRecord.</p>
+     *
+     * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     * @return a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     * @throws java.lang.Exception if any.
+     */
     public ActivityRecord createActivityRecord(ActivityRecord activityRecord) throws Exception {
         if (activityRecord == null) {
             throw new IllegalArgumentException("ActivityRecord is mandatory");
@@ -69,6 +87,13 @@ public class ActivityRecordStorage {
         return toDTO(activityRecordEntity);
     }
 
+    /**
+     * <p>updateActivityRecord.</p>
+     *
+     * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     * @return a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     * @throws java.lang.Exception if any.
+     */
     public ActivityRecord updateActivityRecord(ActivityRecord activityRecord) throws Exception {
         if (activityRecord == null) {
             throw new IllegalArgumentException("ActivityRecord is mandatory");
@@ -85,6 +110,12 @@ public class ActivityRecordStorage {
         return toDTO(activityRecordEntity);
     }
 
+    /**
+     * <p>deleteActivityRecord.</p>
+     *
+     * @param activityRecordId a long.
+     * @throws org.gatein.api.EntityNotFoundException if any.
+     */
     public void deleteActivityRecord(long activityRecordId) throws EntityNotFoundException {
         if (activityRecordId <= 0) {
             throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
@@ -96,6 +127,12 @@ public class ActivityRecordStorage {
         activityRecordDAO.delete(activityRecordEntity);
     }
 
+    /**
+     * <p>getActivityRecordById.</p>
+     *
+     * @param ActivityRecordId a long.
+     * @return a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     */
     public ActivityRecord getActivityRecordById(long ActivityRecordId) {
         if (ActivityRecordId <= 0) {
             throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
@@ -104,17 +141,52 @@ public class ActivityRecordStorage {
         return toDTO(ActivityRecordEntity);
     }
 
+    /**
+     * <p>getActivityRecords.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<ActivityRecord> getActivityRecords() {
         List<ActivityRecordEntity> applicatiions = activityRecordDAO.findAll();
         return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    /**
+     * <p>getUserActivityRecords.</p>
+     *
+     * @param day a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<ActivityRecord> getUserActivityRecords(String day, String userName) {
         List<ActivityRecordEntity> applicatiions = activityRecordDAO.getUserActivityRecordsList(day, userName);
         return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
 
+    /**
+     * <p>getActivityRecordsList.</p>
+     *
+     * @param search a {@link java.lang.String} object.
+     * @param activity a {@link java.lang.Long} object.
+     * @param type a {@link java.lang.Long} object.
+     * @param subType a {@link java.lang.Long} object.
+     * @param activityCode a {@link java.lang.Long} object.
+     * @param subActivityCode a {@link java.lang.Long} object.
+     * @param client a {@link java.lang.Long} object.
+     * @param project a {@link java.lang.Long} object.
+     * @param feature a {@link java.lang.Long} object.
+     * @param fromDate a {@link java.lang.String} object.
+     * @param toDate a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @param location a {@link java.lang.String} object.
+     * @param office a {@link java.lang.String} object.
+     * @param offset a int.
+     * @param limit a int.
+     * @param sortBy a {@link java.lang.String} object.
+     * @param sortDesc a boolean.
+     * @return a {@link org.exoplatform.timetracker.dto.RecordsAccessList} object.
+     */
     public RecordsAccessList getActivityRecordsList(String search,
                                                     Long activity,
                                                     Long type,
@@ -141,6 +213,25 @@ public class ActivityRecordStorage {
     }
 
 
+    /**
+     * <p>countActivityRecords.</p>
+     *
+     * @param search a {@link java.lang.String} object.
+     * @param activity a {@link java.lang.Long} object.
+     * @param type a {@link java.lang.Long} object.
+     * @param subType a {@link java.lang.Long} object.
+     * @param activityCode a {@link java.lang.Long} object.
+     * @param subActivityCode a {@link java.lang.Long} object.
+     * @param client a {@link java.lang.Long} object.
+     * @param project a {@link java.lang.Long} object.
+     * @param feature a {@link java.lang.Long} object.
+     * @param fromDate a {@link java.lang.String} object.
+     * @param toDate a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @param location a {@link java.lang.String} object.
+     * @param office a {@link java.lang.String} object.
+     * @return a long.
+     */
     public long countActivityRecords(String search,
                                      Long activity,
                                      Long type,
@@ -158,6 +249,12 @@ public class ActivityRecordStorage {
         return activityRecordDAO.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location,office);
     }
 
+    /**
+     * <p>toDTO.</p>
+     *
+     * @param activityRecordEntity a {@link org.exoplatform.timetracker.entity.ActivityRecordEntity} object.
+     * @return a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     */
     public ActivityRecord toDTO(ActivityRecordEntity activityRecordEntity) {
         if (activityRecordEntity == null) {
             return null;
@@ -178,6 +275,12 @@ public class ActivityRecordStorage {
                 activityRecordEntity.getCreatedDate());
     }
 
+    /**
+     * <p>toEntity.</p>
+     *
+     * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+     * @return a {@link org.exoplatform.timetracker.entity.ActivityRecordEntity} object.
+     */
     public ActivityRecordEntity toEntity(ActivityRecord activityRecord) {
         if (activityRecord == null) {
             return null;

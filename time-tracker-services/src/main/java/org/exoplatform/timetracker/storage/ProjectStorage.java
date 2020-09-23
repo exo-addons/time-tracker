@@ -28,17 +28,33 @@ import org.exoplatform.timetracker.entity.ProjectEntity;
 /**
  * Storage service to access / load and save Projects. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ProjectStorage {
 
   private final ProjectDAO projectDAO;
   private final ClientStorage clientStorage;
 
+  /**
+   * <p>Constructor for ProjectStorage.</p>
+   *
+   * @param projectDAO a {@link org.exoplatform.timetracker.dao.ProjectDAO} object.
+   * @param clientStorage a {@link org.exoplatform.timetracker.storage.ClientStorage} object.
+   */
   public ProjectStorage(ProjectDAO projectDAO, ClientStorage clientStorage) {
     this.projectDAO = projectDAO;
     this.clientStorage = clientStorage;
   }
 
+  /**
+   * <p>createProject.</p>
+   *
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @throws java.lang.Exception if any.
+   */
   public Project createProject(Project project) throws Exception {
     if (project == null) {
       throw new IllegalArgumentException("Project is mandatory");
@@ -49,6 +65,13 @@ public class ProjectStorage {
     return toDTO(projectEntity);
   }
 
+  /**
+   * <p>updateProject.</p>
+   *
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @throws java.lang.Exception if any.
+   */
   public Project updateProject(Project project) throws Exception {
     if (project == null) {
       throw new IllegalArgumentException("Project is mandatory");
@@ -65,6 +88,12 @@ public class ProjectStorage {
     return toDTO(projectEntity);
   }
 
+  /**
+   * <p>deleteProject.</p>
+   *
+   * @param projectId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteProject(long projectId) throws EntityNotFoundException {
     if (projectId <= 0) {
       throw new IllegalArgumentException("ProjectId must be a positive integer");
@@ -76,6 +105,12 @@ public class ProjectStorage {
     projectDAO.delete(projectEntity);
   }
 
+  /**
+   * <p>getProjectById.</p>
+   *
+   * @param ProjectId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.Project} object.
+   */
   public Project getProjectById(long ProjectId) {
     if (ProjectId <= 0) {
       throw new IllegalArgumentException("ProjectId must be a positive integer");
@@ -84,15 +119,31 @@ public class ProjectStorage {
     return toDTO(ProjectEntity);
   }
 
+  /**
+   * <p>getProjects.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<Project> getProjects() {
     List<ProjectEntity> applicatiions = projectDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countProjects.</p>
+   *
+   * @return a long.
+   */
   public long countProjects() {
     return projectDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param projectEntity a {@link org.exoplatform.timetracker.entity.ProjectEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.Project} object.
+   */
   public Project toDTO(ProjectEntity projectEntity) {
     if (projectEntity == null) {
       return null;
@@ -103,6 +154,12 @@ public class ProjectStorage {
                         clientStorage.toDTO(projectEntity.getClientEntity()));
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @return a {@link org.exoplatform.timetracker.entity.ProjectEntity} object.
+   */
   public ProjectEntity toEntity(Project project) {
     if (project == null) {
       return null;

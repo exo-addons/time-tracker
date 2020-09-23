@@ -22,7 +22,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import javax.persistence.*;
 
 /**
+ * <p>FilterEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "FilterEntity")
 @ExoEntity
@@ -30,7 +33,6 @@ import javax.persistence.*;
 @Data
 @NamedQueries({
         @NamedQuery(name = "FilterEntity.getFiltersByUserName", query = "SELECT filter FROM FilterEntity filter where filter.userName = :userName ") })
-
 public class FilterEntity {
 
   @Id
@@ -46,9 +48,19 @@ public class FilterEntity {
   private String userName;
 
 
+  /**
+   * <p>Constructor for FilterEntity.</p>
+   */
   public FilterEntity() {
   }
 
+  /**
+   * <p>Constructor for FilterEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param name a {@link java.lang.String} object.
+   * @param userName a {@link java.lang.String} object.
+   */
   public FilterEntity(Long id, String name, String userName) {
     this.id = id;
     this.name = name;

@@ -36,6 +36,12 @@ import org.exoplatform.timetracker.service.SalesOrderService;
 
 import io.swagger.annotations.*;
 
+/**
+ * <p>SalesOrdersManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/salesOrdersmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access SalesOrders") // NOSONAR
@@ -47,10 +53,21 @@ public class SalesOrdersManagementREST implements ResourceContainer {
 
   private final SalesOrderService salesOrderService;
 
+  /**
+   * <p>Constructor for SalesOrdersManagementREST.</p>
+   *
+   * @param salesOrderService a {@link org.exoplatform.timetracker.service.SalesOrderService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public SalesOrdersManagementREST(SalesOrderService salesOrderService, PortalContainer container) {
     this.salesOrderService = salesOrderService;
   }
 
+  /**
+   * <p>getSalesOrders.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("salesOrder")
   @RolesAllowed("users")
@@ -71,6 +88,12 @@ public class SalesOrdersManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createSalesOrder.</p>
+   *
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("salesOrder")
   @RolesAllowed("administrators")
@@ -96,6 +119,12 @@ public class SalesOrdersManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateSalesOrder.</p>
+   *
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("salesOrder")
   @RolesAllowed("administrators")
@@ -123,6 +152,12 @@ public class SalesOrdersManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteSalesOrder.</p>
+   *
+   * @param salesOrderId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("salesOrder/{salesOrderId}")
   @RolesAllowed("administrators")

@@ -36,6 +36,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * <p>FiltersManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/filtersmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Filters") // NOSONAR
@@ -47,10 +53,21 @@ public class FiltersManagementREST implements ResourceContainer {
 
   private final FilterService filterService;
 
+  /**
+   * <p>Constructor for FiltersManagementREST.</p>
+   *
+   * @param filterService a {@link org.exoplatform.timetracker.service.FilterService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public FiltersManagementREST(FilterService filterService, PortalContainer container) {
     this.filterService = filterService;
   }
 
+  /**
+   * <p>getFilters.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("filter")
   @RolesAllowed("users")
@@ -71,6 +88,12 @@ public class FiltersManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createFilter.</p>
+   *
+   * @param filter a {@link org.exoplatform.timetracker.dto.FilterModel} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("filter")
   @RolesAllowed("administrators")
@@ -98,6 +121,12 @@ public class FiltersManagementREST implements ResourceContainer {
 
 
 
+  /**
+   * <p>deleteFilter.</p>
+   *
+   * @param filterId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("filter/{filterId}")
   @RolesAllowed("administrators")

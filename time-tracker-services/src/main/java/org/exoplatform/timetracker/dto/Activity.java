@@ -25,7 +25,10 @@ import org.exoplatform.timetracker.entity.ProjectEntity;
 import lombok.Data;
 
 /**
+ * <p>Activity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -53,9 +56,25 @@ public class Activity implements Serializable {
 
   private List<Team> teams;
 
+  /**
+   * <p>Constructor for Activity.</p>
+   */
   public Activity() {
   }
 
+  /**
+   * <p>Constructor for Activity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param type a {@link org.exoplatform.timetracker.dto.Type} object.
+   * @param subType a {@link org.exoplatform.timetracker.dto.SubType} object.
+   * @param activityCode a {@link org.exoplatform.timetracker.dto.ActivityCode} object.
+   * @param subActivityCode a {@link org.exoplatform.timetracker.dto.SubActivityCode} object.
+   * @param label a {@link java.lang.String} object.
+   * @param project a {@link org.exoplatform.timetracker.dto.Project} object.
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @param teams a {@link java.util.List} object.
+   */
   public Activity(Long id,
                   Type type,
                   SubType subType,

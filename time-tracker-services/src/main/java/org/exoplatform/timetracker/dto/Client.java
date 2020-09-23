@@ -21,7 +21,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
+ * <p>Client class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -35,9 +38,19 @@ public class Client implements Serializable {
 
   private String            label;
 
+  /**
+   * <p>Constructor for Client.</p>
+   */
   public Client() {
   }
 
+  /**
+   * <p>Constructor for Client.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   */
   public Client(Long id, String code, String label) {
     this.id = id;
     this.code = code;

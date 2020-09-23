@@ -21,7 +21,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * <p>Filter class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -35,9 +38,19 @@ public class Filter implements Serializable {
   private String            userName;
 
 
+  /**
+   * <p>Constructor for Filter.</p>
+   */
   public Filter() {
   }
 
+  /**
+   * <p>Constructor for Filter.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param name a {@link java.lang.String} object.
+   * @param userName a {@link java.lang.String} object.
+   */
   public Filter(Long id, String name, String userName) {
     this.id = id;
     this.name = name;

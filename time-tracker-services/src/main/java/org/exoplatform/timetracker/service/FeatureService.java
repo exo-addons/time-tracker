@@ -30,6 +30,9 @@ import org.exoplatform.timetracker.storage.FeatureStorage;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class FeatureService {
 
@@ -37,6 +40,11 @@ public class FeatureService {
 
   private final FeatureStorage featureStorage;
 
+  /**
+   * <p>Constructor for FeatureService.</p>
+   *
+   * @param featureStorage a {@link org.exoplatform.timetracker.storage.FeatureStorage} object.
+   */
   public FeatureService(FeatureStorage featureStorage) {
     this.featureStorage = featureStorage;
 
@@ -44,11 +52,11 @@ public class FeatureService {
 
   /**
    * Create new Feature that will be available for all users. If the Feature
-   * already exits an {@link EntityExistsException} will be thrown.
-   * 
+   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   *
    * @param feature Feature to create
-   * @return stored {@link Feature} in datasource
-   * @throws Exception when Feature already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.Feature} in datasource
+   * @throws java.lang.Exception when Feature already exists or an error occurs while
    *           creating Feature or its attached image
    */
   public Feature createFeature(Feature feature) throws Exception {
@@ -65,12 +73,12 @@ public class FeatureService {
 
   /**
    * Update an existing Feature on datasource. If the Feature doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param Feature dto to update on store
    * @param username username storing Feature
-   * @return stored {@link Feature} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.Feature} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving Feature
    */
   public Feature updateFeature(Feature Feature, String username) throws Exception {
@@ -94,11 +102,11 @@ public class FeatureService {
   /**
    * Delete Feature identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param featureId technical identifier of Feature
    * @param username user currently deleting Feature
-   * @throws EntityNotFoundException if Feature wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete Feature
+   * @throws javax.persistence.EntityNotFoundException if Feature wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete Feature
    */
   public void deleteFeature(Long featureId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (featureId == null || featureId <= 0) {
@@ -119,7 +127,7 @@ public class FeatureService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link Feature} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.Feature} that contains the list of Activities
    */
   public List<Feature> getFeaturesList() {
     return featureStorage.getFeatures();

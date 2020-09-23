@@ -28,17 +28,33 @@ import org.exoplatform.timetracker.entity.SalesOrderEntity;
 /**
  * Storage service to access / load and save SalesOrders. This service will be
  * used , as well, to convert from JPA entity to DTO.
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class SalesOrderStorage {
 
   private final SalesOrderDAO salesOrderDAO;
   private final ClientStorage clientStorage;
 
+  /**
+   * <p>Constructor for SalesOrderStorage.</p>
+   *
+   * @param salesOrderDAO a {@link org.exoplatform.timetracker.dao.SalesOrderDAO} object.
+   * @param clientStorage a {@link org.exoplatform.timetracker.storage.ClientStorage} object.
+   */
   public SalesOrderStorage(SalesOrderDAO salesOrderDAO, ClientStorage clientStorage) {
     this.salesOrderDAO = salesOrderDAO;
     this.clientStorage = clientStorage;
   }
 
+  /**
+   * <p>createSalesOrder.</p>
+   *
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @throws java.lang.Exception if any.
+   */
   public SalesOrder createSalesOrder(SalesOrder salesOrder) throws Exception {
     if (salesOrder == null) {
       throw new IllegalArgumentException("SalesOrder is mandatory");
@@ -49,6 +65,13 @@ public class SalesOrderStorage {
     return toDTO(salesOrderEntity);
   }
 
+  /**
+   * <p>updateSalesOrder.</p>
+   *
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @throws java.lang.Exception if any.
+   */
   public SalesOrder updateSalesOrder(SalesOrder salesOrder) throws Exception {
     if (salesOrder == null) {
       throw new IllegalArgumentException("SalesOrder is mandatory");
@@ -65,6 +88,12 @@ public class SalesOrderStorage {
     return toDTO(salesOrderEntity);
   }
 
+  /**
+   * <p>deleteSalesOrder.</p>
+   *
+   * @param salesOrderId a long.
+   * @throws org.gatein.api.EntityNotFoundException if any.
+   */
   public void deleteSalesOrder(long salesOrderId) throws EntityNotFoundException {
     if (salesOrderId <= 0) {
       throw new IllegalArgumentException("SalesOrderId must be a positive integer");
@@ -76,6 +105,12 @@ public class SalesOrderStorage {
     salesOrderDAO.delete(salesOrderEntity);
   }
 
+  /**
+   * <p>getSalesOrderById.</p>
+   *
+   * @param SalesOrderId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   */
   public SalesOrder getSalesOrderById(long SalesOrderId) {
     if (SalesOrderId <= 0) {
       throw new IllegalArgumentException("SalesOrderId must be a positive integer");
@@ -84,15 +119,31 @@ public class SalesOrderStorage {
     return toDTO(SalesOrderEntity);
   }
 
+  /**
+   * <p>getSalesOrders.</p>
+   *
+   * @return a {@link java.util.List} object.
+   */
   public List<SalesOrder> getSalesOrders() {
     List<SalesOrderEntity> applicatiions = salesOrderDAO.findAll();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
+  /**
+   * <p>countSalesOrders.</p>
+   *
+   * @return a long.
+   */
   public long countSalesOrders() {
     return salesOrderDAO.count();
   }
 
+  /**
+   * <p>toDTO.</p>
+   *
+   * @param salesOrderEntity a {@link org.exoplatform.timetracker.entity.SalesOrderEntity} object.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   */
   public SalesOrder toDTO(SalesOrderEntity salesOrderEntity) {
     if (salesOrderEntity == null) {
       return null;
@@ -103,6 +154,12 @@ public class SalesOrderStorage {
                         clientStorage.toDTO(salesOrderEntity.getClientEntity()));
   }
 
+  /**
+   * <p>toEntity.</p>
+   *
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @return a {@link org.exoplatform.timetracker.entity.SalesOrderEntity} object.
+   */
   public SalesOrderEntity toEntity(SalesOrder salesOrder) {
     if (salesOrder == null) {
       return null;

@@ -25,7 +25,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>ActivityRecordEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "ActivityRecordEntity")
 @ExoEntity
@@ -33,7 +36,6 @@ import lombok.Data;
 @Data
 @NamedQueries({
         @NamedQuery(name = "ActivityRecordEntity.getActivityRecordsByDay", query = "SELECT activity FROM ActivityRecordEntity activity where activity.activityDate = :day and activity.userName = :userName ") })
-
 public class ActivityRecordEntity {
 
 
@@ -82,9 +84,30 @@ public class ActivityRecordEntity {
   @Column(name = "CREATED_DATE")
   protected Date         createdDate;
 
+  /**
+   * <p>Constructor for ActivityRecordEntity.</p>
+   */
   public ActivityRecordEntity() {
   }
 
+  /**
+   * <p>Constructor for ActivityRecordEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param userName a {@link java.lang.String} object.
+   * @param activityDate a {@link java.lang.String} object.
+   * @param from a {@link java.util.Date} object.
+   * @param to a {@link java.util.Date} object.
+   * @param description a {@link java.lang.String} object.
+   * @param location a {@link java.lang.String} object.
+   * @param office a {@link java.lang.String} object.
+   * @param time a int.
+   * @param projectVersion a {@link java.lang.String} object.
+   * @param clientEntity a {@link org.exoplatform.timetracker.entity.ClientEntity} object.
+   * @param activityEntity a {@link org.exoplatform.timetracker.entity.ActivityEntity} object.
+   * @param salesOrderEntity a {@link org.exoplatform.timetracker.entity.SalesOrderEntity} object.
+   * @param createdDate a {@link java.util.Date} object.
+   */
   public ActivityRecordEntity(Long id,
                               String userName,
                               String activityDate,

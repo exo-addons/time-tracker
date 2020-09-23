@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>TypeEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "TypeEntity")
 @ExoEntity
@@ -45,9 +48,19 @@ public class TypeEntity {
   private String label;
 
 
+  /**
+   * <p>Constructor for TypeEntity.</p>
+   */
   public TypeEntity() {
   }
 
+  /**
+   * <p>Constructor for TypeEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   */
   public TypeEntity(Long id, String code, String label) {
     this.id = id;
     this.code = code;

@@ -31,6 +31,9 @@ import org.exoplatform.timetracker.storage.ActivityRecordStorage;
 
 /**
  * A Service to access and store ActivityRecords
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ActivityRecordService {
 
@@ -38,17 +41,22 @@ public class ActivityRecordService {
 
   private final ActivityRecordStorage activityRecordstorage;
 
+  /**
+   * <p>Constructor for ActivityRecordService.</p>
+   *
+   * @param activityRecordstorage a {@link org.exoplatform.timetracker.storage.ActivityRecordStorage} object.
+   */
   public ActivityRecordService(ActivityRecordStorage activityRecordstorage) {
     this.activityRecordstorage = activityRecordstorage;
 
   }
 
   /**
-   * Create new ActivityRecord 
-   * 
+   * Create new ActivityRecord
+   *
    * @param activityRecord ActivityRecord to create
-   * @return stored {@link ActivityRecord} in datasource
-   * @throws Exception when ActivityRecord already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in datasource
+   * @throws java.lang.Exception when ActivityRecord already exists or an error occurs while
    *           creating ActivityRecord or its attached image
    */
   public ActivityRecord createActivityRecord(ActivityRecord activityRecord) throws Exception {
@@ -60,12 +68,12 @@ public class ActivityRecordService {
 
   /**
    * Update an existing ActivityRecord on datasource. If the ActivityRecord doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param ActivityRecord dto to update on store
    * @param username username storing ActivityRecord
-   * @return stored {@link ActivityRecord} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving ActivityRecord
    */
   public ActivityRecord updateActivityRecord(ActivityRecord ActivityRecord, String username) throws Exception {
@@ -89,11 +97,11 @@ public class ActivityRecordService {
   /**
    * Delete ActivityRecord identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param activityRecordId technical identifier of ActivityRecord
    * @param username user currently deleting ActivityRecord
-   * @throws EntityNotFoundException if ActivityRecord wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete ActivityRecord
+   * @throws javax.persistence.EntityNotFoundException if ActivityRecord wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete ActivityRecord
    */
   public void deleteActivityRecord(Long activityRecordId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (activityRecordId == null || activityRecordId <= 0) {
@@ -114,7 +122,7 @@ public class ActivityRecordService {
    * Retrieves the list of ActivityRecords with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
    */
   public List<ActivityRecord> getActivityRecords() {
     return activityRecordstorage.getActivityRecords();
@@ -124,7 +132,25 @@ public class ActivityRecordService {
    * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @param search a {@link java.lang.String} object.
+   * @param activity a {@link java.lang.Long} object.
+   * @param type a {@link java.lang.Long} object.
+   * @param subType a {@link java.lang.Long} object.
+   * @param activityCode a {@link java.lang.Long} object.
+   * @param subActivityCode a {@link java.lang.Long} object.
+   * @param client a {@link java.lang.Long} object.
+   * @param project a {@link java.lang.Long} object.
+   * @param feature a {@link java.lang.Long} object.
+   * @param fromDate a {@link java.lang.String} object.
+   * @param toDate a {@link java.lang.String} object.
+   * @param userName a {@link java.lang.String} object.
+   * @param location a {@link java.lang.String} object.
+   * @param office a {@link java.lang.String} object.
+   * @param offset a int.
+   * @param limit a int.
+   * @param sortBy a {@link java.lang.String} object.
+   * @param sortDesc a boolean.
    */
   public RecordsAccessList getActivityRecordsList(String search,
                                                   Long activity,
@@ -151,7 +177,21 @@ public class ActivityRecordService {
    * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @param search a {@link java.lang.String} object.
+   * @param activity a {@link java.lang.Long} object.
+   * @param type a {@link java.lang.Long} object.
+   * @param subType a {@link java.lang.Long} object.
+   * @param activityCode a {@link java.lang.Long} object.
+   * @param subActivityCode a {@link java.lang.Long} object.
+   * @param client a {@link java.lang.Long} object.
+   * @param project a {@link java.lang.Long} object.
+   * @param feature a {@link java.lang.Long} object.
+   * @param fromDate a {@link java.lang.String} object.
+   * @param toDate a {@link java.lang.String} object.
+   * @param userName a {@link java.lang.String} object.
+   * @param location a {@link java.lang.String} object.
+   * @param office a {@link java.lang.String} object.
    */
   public long countActivityRecords(String search,
                                    Long activity,
@@ -172,9 +212,10 @@ public class ActivityRecordService {
 
   /**
    * Retrieves the list of ActivityRecords wby day
-   * @param day day of activity
    *
-   * @return List of {@link ActivityRecord} that contains the list of ActivityRecords
+   * @param day day of activity
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @param userName a {@link java.lang.String} object.
    */
   public List<ActivityRecord> getUserActivityRecordsList(String day,String userName) {
     return activityRecordstorage.getUserActivityRecords(day,userName);

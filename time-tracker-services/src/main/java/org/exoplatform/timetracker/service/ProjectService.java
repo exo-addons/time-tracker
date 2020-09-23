@@ -30,6 +30,9 @@ import org.exoplatform.timetracker.storage.ProjectStorage;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class ProjectService {
 
@@ -37,6 +40,11 @@ public class ProjectService {
 
   private final ProjectStorage projectStorage;
 
+  /**
+   * <p>Constructor for ProjectService.</p>
+   *
+   * @param projectStorage a {@link org.exoplatform.timetracker.storage.ProjectStorage} object.
+   */
   public ProjectService(ProjectStorage projectStorage) {
     this.projectStorage = projectStorage;
 
@@ -44,11 +52,11 @@ public class ProjectService {
 
   /**
    * Create new Project that will be available for all users. If the Project
-   * already exits an {@link EntityExistsException} will be thrown.
-   * 
+   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   *
    * @param project Project to create
-   * @return stored {@link Project} in datasource
-   * @throws Exception when Project already exists or an error occurs while
+   * @return stored {@link org.exoplatform.timetracker.dto.Project} in datasource
+   * @throws java.lang.Exception when Project already exists or an error occurs while
    *           creating Project or its attached image
    */
   public Project createProject(Project project) throws Exception {
@@ -65,12 +73,12 @@ public class ProjectService {
 
   /**
    * Update an existing Project on datasource. If the Project doesn't exit an
-   * {@link EntityNotFoundException} will be thrown.
-   * 
+   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   *
    * @param Project dto to update on store
    * @param username username storing Project
-   * @return stored {@link Project} in datasource
-   * @throws Exception when {@link EntityNotFoundException} is thrown or an error
+   * @return stored {@link org.exoplatform.timetracker.dto.Project} in datasource
+   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
    *           occurs while saving Project
    */
   public Project updateProject(Project Project, String username) throws Exception {
@@ -94,11 +102,11 @@ public class ProjectService {
   /**
    * Delete Project identified by its id and check if username has permission to
    * delete it.
-   * 
+   *
    * @param projectId technical identifier of Project
    * @param username user currently deleting Project
-   * @throws EntityNotFoundException if Project wasn't found
-   * @throws IllegalAccessException if user is not allowed to delete Project
+   * @throws javax.persistence.EntityNotFoundException if Project wasn't found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete Project
    */
   public void deleteProject(Long projectId, String username) throws EntityNotFoundException, IllegalAccessException {
     if (projectId == null || projectId <= 0) {
@@ -119,7 +127,7 @@ public class ProjectService {
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
    *
-   * @return List of {@link Project} that contains the list of Activities
+   * @return List of {@link org.exoplatform.timetracker.dto.Project} that contains the list of Activities
    */
   public List<Project> getProjectsList() {
     return projectStorage.getProjects();

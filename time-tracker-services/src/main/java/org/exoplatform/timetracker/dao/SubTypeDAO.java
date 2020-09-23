@@ -23,7 +23,10 @@ import org.exoplatform.timetracker.entity.FeatureEntity;
 import org.exoplatform.timetracker.entity.SubTypeEntity;
 
 /**
+ * <p>SubTypeDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class SubTypeDAO extends GenericDAOJPAImpl<SubTypeEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(SubTypeDAO.class);

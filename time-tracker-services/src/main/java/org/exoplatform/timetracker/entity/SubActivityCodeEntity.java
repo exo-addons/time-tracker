@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>SubActivityCodeEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "SubActivityCodeEntity")
 @ExoEntity
@@ -49,9 +52,20 @@ public class SubActivityCodeEntity {
   private ActivityCodeEntity         activityCodeEntity;
 
 
+  /**
+   * <p>Constructor for SubActivityCodeEntity.</p>
+   */
   public SubActivityCodeEntity() {
   }
 
+  /**
+   * <p>Constructor for SubActivityCodeEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param activityCodeEntity a {@link org.exoplatform.timetracker.entity.ActivityCodeEntity} object.
+   */
   public SubActivityCodeEntity(Long id, String code, String label, ActivityCodeEntity activityCodeEntity) {
     this.id = id;
     this.code = code;

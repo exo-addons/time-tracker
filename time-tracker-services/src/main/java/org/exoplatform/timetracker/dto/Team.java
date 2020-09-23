@@ -21,7 +21,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * <p>Team class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -35,9 +38,19 @@ public class Team implements Serializable {
   private String            description;
 
 
+  /**
+   * <p>Constructor for Team.</p>
+   */
   public Team() {
   }
 
+  /**
+   * <p>Constructor for Team.</p>
+   *
+   * @param id a {@link java.lang.String} object.
+   * @param Name a {@link java.lang.String} object.
+   * @param description a {@link java.lang.String} object.
+   */
   public Team(String id, String Name, String description) {
     this.id = id;
     this.Name = Name;

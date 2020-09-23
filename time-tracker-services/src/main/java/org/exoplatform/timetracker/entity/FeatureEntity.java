@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>FeatureEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "FeatureEntity")
 @ExoEntity
@@ -50,9 +53,21 @@ public class FeatureEntity {
   @Column(name = "EXO")
   private String exo;
 
+  /**
+   * <p>Constructor for FeatureEntity.</p>
+   */
   public FeatureEntity() {
   }
 
+  /**
+   * <p>Constructor for FeatureEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param spec a {@link java.lang.String} object.
+   * @param exo a {@link java.lang.String} object.
+   */
   public FeatureEntity(Long id, String code, String label, String spec, String exo) {
     this.id = id;
     this.code = code;

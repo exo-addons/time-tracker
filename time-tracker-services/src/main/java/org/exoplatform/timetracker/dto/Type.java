@@ -21,7 +21,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
+ * <p>Type class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -35,9 +38,19 @@ public class Type implements Serializable {
   private String            label;
 
 
+  /**
+   * <p>Constructor for Type.</p>
+   */
   public Type() {
   }
 
+  /**
+   * <p>Constructor for Type.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   */
   public Type(Long id, String code, String label) {
     this.id = id;
     this.code = code;

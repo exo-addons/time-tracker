@@ -35,6 +35,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * <p>CodesManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/codesmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Codes") // NOSONAR
@@ -46,10 +52,21 @@ public class CodesManagementREST implements ResourceContainer {
 
   private final CodesService codesService;
 
+  /**
+   * <p>Constructor for CodesManagementREST.</p>
+   *
+   * @param codesService a {@link org.exoplatform.timetracker.service.CodesService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public CodesManagementREST(CodesService codesService, PortalContainer container) {
     this.codesService = codesService;
   }
 
+  /**
+   * <p>getActivityCodes.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("activityCode")
   @RolesAllowed("users")
@@ -70,6 +87,12 @@ public class CodesManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createActivityCode.</p>
+   *
+   * @param activityCode a {@link org.exoplatform.timetracker.dto.ActivityCode} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("activityCode")
   @RolesAllowed("administrators")
@@ -95,6 +118,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateActivityCode.</p>
+   *
+   * @param activityCode a {@link org.exoplatform.timetracker.dto.ActivityCode} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("activityCode")
   @RolesAllowed("administrators")
@@ -122,6 +151,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteActivityCode.</p>
+   *
+   * @param activityCodeId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("activityCode/{activityCodeId}")
   @RolesAllowed("administrators")
@@ -151,6 +186,11 @@ public class CodesManagementREST implements ResourceContainer {
 
 
 
+  /**
+   * <p>getSubActivityCodes.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("subActivityCode")
   @RolesAllowed("users")
@@ -171,6 +211,12 @@ public class CodesManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createSubActivityCode.</p>
+   *
+   * @param subActivityCode a {@link org.exoplatform.timetracker.dto.SubActivityCode} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("subActivityCode")
   @RolesAllowed("administrators")
@@ -196,6 +242,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateSubActivityCode.</p>
+   *
+   * @param subActivityCode a {@link org.exoplatform.timetracker.dto.SubActivityCode} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("subActivityCode")
   @RolesAllowed("administrators")
@@ -223,6 +275,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteSubActivityCode.</p>
+   *
+   * @param subActivityCodeId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("subActivityCode/{subActivityCodeId}")
   @RolesAllowed("administrators")
@@ -253,6 +311,11 @@ public class CodesManagementREST implements ResourceContainer {
 
 
 
+  /**
+   * <p>getTypes.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("type")
   @RolesAllowed("users")
@@ -273,6 +336,12 @@ public class CodesManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createType.</p>
+   *
+   * @param type a {@link org.exoplatform.timetracker.dto.Type} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("type")
   @RolesAllowed("administrators")
@@ -298,6 +367,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateType.</p>
+   *
+   * @param type a {@link org.exoplatform.timetracker.dto.Type} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("type")
   @RolesAllowed("administrators")
@@ -325,6 +400,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteType.</p>
+   *
+   * @param typeId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("type/{typeId}")
   @RolesAllowed("administrators")
@@ -354,6 +435,11 @@ public class CodesManagementREST implements ResourceContainer {
 
 
 
+  /**
+   * <p>getSubTypes.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("subType")
   @RolesAllowed("users")
@@ -374,6 +460,12 @@ public class CodesManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createSubType.</p>
+   *
+   * @param subType a {@link org.exoplatform.timetracker.dto.SubType} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("subType")
   @RolesAllowed("administrators")
@@ -399,6 +491,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateSubType.</p>
+   *
+   * @param subType a {@link org.exoplatform.timetracker.dto.SubType} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("subType")
   @RolesAllowed("administrators")
@@ -426,6 +524,12 @@ public class CodesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteSubType.</p>
+   *
+   * @param subTypeId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("subType/{subTypeId}")
   @RolesAllowed("administrators")

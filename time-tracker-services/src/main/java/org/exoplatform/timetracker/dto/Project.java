@@ -23,7 +23,10 @@ import org.exoplatform.timetracker.entity.ClientEntity;
 import lombok.Data;
 
 /**
+ * <p>Project class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -39,9 +42,20 @@ public class Project implements Serializable {
 
   private Client            client;
 
+  /**
+   * <p>Constructor for Project.</p>
+   */
   public Project() {
   }
 
+  /**
+   * <p>Constructor for Project.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   */
   public Project(Long id, String code, String label, Client client) {
     this.id = id;
     this.code = code;

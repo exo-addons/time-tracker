@@ -23,7 +23,10 @@ import org.exoplatform.timetracker.entity.ClientEntity;
 import lombok.Data;
 
 /**
+ * <p>SalesOrder class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -38,9 +41,20 @@ public class SalesOrder implements Serializable {
 
   private Client            client;
 
+  /**
+   * <p>Constructor for SalesOrder.</p>
+   */
   public SalesOrder() {
   }
 
+  /**
+   * <p>Constructor for SalesOrder.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param name a {@link java.lang.String} object.
+   * @param description a {@link java.lang.String} object.
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   */
   public SalesOrder(Long id, String name, String description, Client client) {
     this.id = id;
     this.name = name;

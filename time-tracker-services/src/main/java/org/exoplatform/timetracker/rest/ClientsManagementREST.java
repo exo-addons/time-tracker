@@ -36,6 +36,12 @@ import org.exoplatform.timetracker.service.ClientService;
 
 import io.swagger.annotations.*;
 
+/**
+ * <p>ClientsManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/clientsmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Clients") // NOSONAR
@@ -47,10 +53,21 @@ public class ClientsManagementREST implements ResourceContainer {
 
   private final ClientService clientService;
 
+  /**
+   * <p>Constructor for ClientsManagementREST.</p>
+   *
+   * @param clientService a {@link org.exoplatform.timetracker.service.ClientService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public ClientsManagementREST(ClientService clientService, PortalContainer container) {
     this.clientService = clientService;
   }
 
+  /**
+   * <p>getClients.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("client")
   @RolesAllowed("users")
@@ -71,6 +88,12 @@ public class ClientsManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createClient.</p>
+   *
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("client")
   @RolesAllowed("administrators")
@@ -96,6 +119,12 @@ public class ClientsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateClient.</p>
+   *
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("client")
   @RolesAllowed("administrators")
@@ -123,6 +152,12 @@ public class ClientsManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteClient.</p>
+   *
+   * @param clientId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("client/{clientId}")
   @RolesAllowed("administrators")

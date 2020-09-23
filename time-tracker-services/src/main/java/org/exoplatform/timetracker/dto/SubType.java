@@ -21,7 +21,10 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
+ * <p>SubType class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -37,9 +40,20 @@ public class SubType implements Serializable {
   private Type            type;
 
 
+  /**
+   * <p>Constructor for SubType.</p>
+   */
   public SubType() {
   }
 
+  /**
+   * <p>Constructor for SubType.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param type a {@link org.exoplatform.timetracker.dto.Type} object.
+   */
   public SubType(Long id, String code, String label, Type type) {
     this.id = id;
     this.code = code;

@@ -23,7 +23,10 @@ import org.exoplatform.commons.api.persistence.ExoEntity;
 import lombok.Data;
 
 /**
+ * <p>SubTypeEntity class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 @Entity(name = "SubTypeEntity")
 @ExoEntity
@@ -48,9 +51,20 @@ public class SubTypeEntity {
   @JoinColumn(name = "TYPE_ID")
   private TypeEntity         typeEntity;
 
+  /**
+   * <p>Constructor for SubTypeEntity.</p>
+   */
   public SubTypeEntity() {
   }
 
+  /**
+   * <p>Constructor for SubTypeEntity.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param code a {@link java.lang.String} object.
+   * @param label a {@link java.lang.String} object.
+   * @param typeEntity a {@link org.exoplatform.timetracker.entity.TypeEntity} object.
+   */
   public SubTypeEntity(Long id, String code, String label, TypeEntity typeEntity) {
     this.id = id;
     this.code = code;

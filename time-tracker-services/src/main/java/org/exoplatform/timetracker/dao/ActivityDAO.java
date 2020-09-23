@@ -23,7 +23,10 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.ActivityEntity;
 
 /**
+ * <p>ActivityDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class ActivityDAO extends GenericDAOJPAImpl<ActivityEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(ActivityDAO.class);

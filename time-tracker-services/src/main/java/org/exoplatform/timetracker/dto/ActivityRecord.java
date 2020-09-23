@@ -22,7 +22,10 @@ import java.util.Date;
 import lombok.Data;
 
 /**
+ * <p>ActivityRecord class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -58,9 +61,30 @@ public class ActivityRecord implements Serializable {
 
   private Date         createdDate;
 
+  /**
+   * <p>Constructor for ActivityRecord.</p>
+   */
   public ActivityRecord() {
   }
 
+  /**
+   * <p>Constructor for ActivityRecord.</p>
+   *
+   * @param id a {@link java.lang.Long} object.
+   * @param userName a {@link java.lang.String} object.
+   * @param activityDate a {@link java.lang.String} object.
+   * @param from a {@link java.util.Date} object.
+   * @param to a {@link java.util.Date} object.
+   * @param description a {@link java.lang.String} object.
+   * @param location a {@link java.lang.String} object.
+   * @param office a {@link java.lang.String} object.
+   * @param time a int.
+   * @param projectVersion a {@link java.lang.String} object.
+   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @param activity a {@link org.exoplatform.timetracker.dto.Activity} object.
+   * @param salesOrder a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   * @param createdDate a {@link java.util.Date} object.
+   */
   public ActivityRecord(Long id,
                         String userName,
                         String activityDate,

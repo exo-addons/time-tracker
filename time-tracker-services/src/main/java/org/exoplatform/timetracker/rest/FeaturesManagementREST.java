@@ -36,6 +36,12 @@ import org.exoplatform.timetracker.service.FeatureService;
 
 import io.swagger.annotations.*;
 
+/**
+ * <p>FeaturesManagementREST class.</p>
+ *
+ * @author medamine
+ * @version $Id: $Id
+ */
 @Path("timetracker/featuresmgn")
 @RolesAllowed("users")
 @Api(value = "/timetracker", description = "Manage and access Features") // NOSONAR
@@ -47,10 +53,21 @@ public class FeaturesManagementREST implements ResourceContainer {
 
   private final FeatureService featureService;
 
+  /**
+   * <p>Constructor for FeaturesManagementREST.</p>
+   *
+   * @param featureService a {@link org.exoplatform.timetracker.service.FeatureService} object.
+   * @param container a {@link org.exoplatform.container.PortalContainer} object.
+   */
   public FeaturesManagementREST(FeatureService featureService, PortalContainer container) {
     this.featureService = featureService;
   }
 
+  /**
+   * <p>getFeatures.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @GET
   @Path("feature")
   @RolesAllowed("users")
@@ -71,6 +88,12 @@ public class FeaturesManagementREST implements ResourceContainer {
     }
   }
 
+  /**
+   * <p>createFeature.</p>
+   *
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @POST
   @Path("feature")
   @RolesAllowed("administrators")
@@ -96,6 +119,12 @@ public class FeaturesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>updateFeature.</p>
+   *
+   * @param feature a {@link org.exoplatform.timetracker.dto.Feature} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @PUT
   @Path("feature")
   @RolesAllowed("administrators")
@@ -123,6 +152,12 @@ public class FeaturesManagementREST implements ResourceContainer {
     return Response.noContent().build();
   }
 
+  /**
+   * <p>deleteFeature.</p>
+   *
+   * @param featureId a {@link java.lang.Long} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
   @DELETE
   @Path("feature/{featureId}")
   @RolesAllowed("administrators")

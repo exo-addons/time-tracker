@@ -33,6 +33,9 @@ import java.util.List;
 
 /**
  * A Service to access and store Activities
+ *
+ * @author medamine
+ * @version $Id: $Id
  */
 public class FilterService {
 
@@ -40,6 +43,11 @@ public class FilterService {
 
     private final FilterStorage filterStorage;
 
+    /**
+     * <p>Constructor for FilterService.</p>
+     *
+     * @param filterStorage a {@link org.exoplatform.timetracker.storage.FilterStorage} object.
+     */
     public FilterService(FilterStorage filterStorage) {
         this.filterStorage = filterStorage;
 
@@ -47,12 +55,13 @@ public class FilterService {
 
     /**
      * Create new Filter that will be available for all users. If the Filter
-     * already exits an {@link EntityExistsException} will be thrown.
+     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
      *
      * @param filter Filter to create
-     * @return stored {@link Filter} in datasource
-     * @throws Exception when Filter already exists or an error occurs while
+     * @return stored {@link org.exoplatform.timetracker.dto.Filter} in datasource
+     * @throws java.lang.Exception when Filter already exists or an error occurs while
      *                   creating Filter or its attached image
+     * @param userName a {@link java.lang.String} object.
      */
     public FilterModel createFilter(FilterModel filter, String userName) throws Exception {
         if (filter == null) {
@@ -74,8 +83,8 @@ public class FilterService {
      * delete it.
      *
      * @param filterId technical identifier of Filter
-     * @throws EntityNotFoundException if Filter wasn't found
-     * @throws IllegalAccessException  if user is not allowed to delete Filter
+     * @throws javax.persistence.EntityNotFoundException if Filter wasn't found
+     * @throws java.lang.IllegalAccessException  if user is not allowed to delete Filter
      */
     public void deleteFilter(Long filterId) throws EntityNotFoundException, IllegalAccessException {
         if (filterId == null || filterId <= 0) {
@@ -94,7 +103,8 @@ public class FilterService {
      * Retrieves the list of Activities with offset, limit and a keyword that can be
      * empty
      *
-     * @return List of {@link FilterModel} that contains the list of Activities
+     * @return List of {@link org.exoplatform.timetracker.dto.FilterModel} that contains the list of Activities
+     * @param userName a {@link java.lang.String} object.
      */
     public JSONArray getFiltersList(String userName) {
         JSONArray filterModels = new JSONArray();
@@ -117,6 +127,12 @@ public class FilterService {
     }
 
 
+    /**
+     * <p>getFields.</p>
+     *
+     * @param filterId a long.
+     * @return a {@link org.json.JSONObject} object.
+     */
     public JSONObject getFields(long filterId) {
         List<FilterField> fieldsList = filterStorage.getFilterFieldsByFilter(filterId);
         JSONObject fieldsJson = new JSONObject();

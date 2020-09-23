@@ -30,7 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>FilterFieldDAO class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 public class FilterFieldDAO extends GenericDAOJPAImpl<FilterFieldEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(FilterFieldDAO.class);
@@ -38,6 +41,12 @@ public class FilterFieldDAO extends GenericDAOJPAImpl<FilterFieldEntity, Long> {
 
 
 
+  /**
+   * <p>getFieldsByFilter.</p>
+   *
+   * @param filerId a {@link java.lang.Long} object.
+   * @return a {@link java.util.List} object.
+   */
   public List<FilterFieldEntity> getFieldsByFilter(Long filerId) {
 
     TypedQuery<FilterFieldEntity> query = getEntityManager().createNamedQuery("FilterFieldEntity.getFieldsByFilter", FilterFieldEntity.class)

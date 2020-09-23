@@ -21,7 +21,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * <p>TeamMember class.</p>
+ *
  * @author Krout MedAmine
+ * @version $Id: $Id
  */
 
 @Data
@@ -39,9 +42,20 @@ public class TeamMember implements Serializable {
     private Team team;
 
 
+    /**
+     * <p>Constructor for TeamMember.</p>
+     */
     public TeamMember() {
     }
 
+    /**
+     * <p>Constructor for TeamMember.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param userName a {@link java.lang.String} object.
+     * @param role a {@link java.lang.String} object.
+     * @param team a {@link org.exoplatform.timetracker.dto.Team} object.
+     */
     public TeamMember(String id, String userName, String role, Team team) {
         this.id = id;
         this.userName = userName;
