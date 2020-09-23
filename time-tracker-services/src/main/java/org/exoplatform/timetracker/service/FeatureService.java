@@ -78,7 +78,7 @@ public class FeatureService {
    * @param Feature dto to update on store
    * @param username username storing Feature
    * @return stored {@link org.exoplatform.timetracker.dto.Feature} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving Feature
    */
   public Feature updateFeature(Feature Feature, String username) throws Exception {

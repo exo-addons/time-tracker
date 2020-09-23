@@ -78,7 +78,7 @@ public class SalesOrderService {
    * @param SalesOrder dto to update on store
    * @param username username storing SalesOrder
    * @return stored {@link org.exoplatform.timetracker.dto.SalesOrder} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving SalesOrder
    */
   public SalesOrder updateSalesOrder(SalesOrder SalesOrder, String username) throws Exception {

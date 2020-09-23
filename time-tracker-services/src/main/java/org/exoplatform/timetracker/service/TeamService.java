@@ -75,7 +75,7 @@ public class TeamService {
      *
      * @param team dto to update on store
      * @return stored {@link org.exoplatform.timetracker.dto.Team} in datasource
-     * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+     * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
      *           occurs while saving Project
      */
     public Team updateTeam(Team team) throws Exception {

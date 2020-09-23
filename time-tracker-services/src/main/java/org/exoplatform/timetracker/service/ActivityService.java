@@ -78,7 +78,7 @@ public class ActivityService {
    * @param Activity dto to update on store
    * @param username username storing Activity
    * @return stored {@link org.exoplatform.timetracker.dto.Activity} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving Activity
    */
   public Activity updateActivity(Activity Activity, String username) throws Exception {

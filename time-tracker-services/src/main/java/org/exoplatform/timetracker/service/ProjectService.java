@@ -78,7 +78,7 @@ public class ProjectService {
    * @param Project dto to update on store
    * @param username username storing Project
    * @return stored {@link org.exoplatform.timetracker.dto.Project} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving Project
    */
   public Project updateProject(Project Project, String username) throws Exception {

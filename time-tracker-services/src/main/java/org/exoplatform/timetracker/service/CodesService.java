@@ -70,7 +70,7 @@ public class CodesService {
    * @param activityCode to update on store
    * @param username username storing ActivityCode
    * @return stored {@link org.exoplatform.timetracker.dto.ActivityCode} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving ActivityCode
    */
   public ActivityCode updateActivityCode(ActivityCode activityCode, String username) throws Exception {
@@ -125,7 +125,7 @@ public class CodesService {
    * @param SubActivityCode dto to update on store
    * @param username username storing SubActivityCode
    * @return stored {@link org.exoplatform.timetracker.dto.SubActivityCode} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving SubActivityCode
    */
   public SubActivityCode updateSubActivityCode(SubActivityCode SubActivityCode, String username) throws Exception {
@@ -179,7 +179,7 @@ public class CodesService {
    * @param type dto to update on store
    * @param username username storing Type
    * @return stored {@link org.exoplatform.timetracker.dto.Type} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving Type
    */
   public Type updateType(Type type, String username) throws Exception {
@@ -232,7 +232,7 @@ public class CodesService {
    * @param SubType dto to update on store
    * @param username username storing SubType
    * @return stored {@link org.exoplatform.timetracker.dto.SubType} in datasource
-   * @throws java.lang.Exception when {@link javax.persistence.EntityNotFoundjava.lang.Exception} is thrown or an error
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving SubType
    */
   public SubType updateSubType(SubType SubType, String username) throws Exception {
