@@ -203,6 +203,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
+      if(activityRecord.getActivity().getId()==null){
+        activityRecord.setActivity(null);
+      }
       activityRecord.setUserName(sourceIdentity.getRemoteId());
       activityRecordService.createActivityRecord(activityRecord);
     } catch (EntityExistsException e) {

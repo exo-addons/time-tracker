@@ -114,6 +114,7 @@ export default {
 
         save() {
             this.activityRecord.activityDate = this.date
+            this.activityRecord.activity = {id:this.activityRecord.activity}
             this.$emit('save', this.activityRecord)
             this.activityRecord = {}
             this.$refs.addTTEntryDrawer.close()

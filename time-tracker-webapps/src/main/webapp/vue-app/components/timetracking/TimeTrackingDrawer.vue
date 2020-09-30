@@ -29,7 +29,7 @@
             <h4>Total number of hours: {{total}}</h4>
         </v-row>
         <v-row>
-            <v-list class="actList">
+            <v-list class="actList" v-if="activityRecords.length>0">
                 <v-list-item :key="item.id" v-for="item in activityRecords" @click="editActivityRecord(item)" class="actItem">
                     <v-list-item-action>
                         <v-list-item-action-text v-text="item.time" class="numberHr"></v-list-item-action-text>
