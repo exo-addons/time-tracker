@@ -344,7 +344,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     try {
                         long from = formatter.parse(fromDate).getTime();
                         String date = quryDateFormatter.format(from);
-                        queryString = queryString + " TIMESTAMP(activityRecord.from) >= '" + date + "'";
+                        queryString = queryString + " TIMESTAMP(activityRecord.activityTime) >= '" + date + "'";
                         queryString = queryString + " and ";
                     } catch (Exception e) {
                         LOG.error("Cannot parse from date, the from date filer will not applied to get th list of activityRecords");

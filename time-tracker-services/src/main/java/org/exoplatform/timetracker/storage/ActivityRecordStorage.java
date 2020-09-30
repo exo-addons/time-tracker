@@ -82,7 +82,7 @@ public class ActivityRecordStorage {
         ActivityRecordEntity activityRecordEntity = toEntity(activityRecord);
         activityRecordEntity.setId(null);
         activityRecordEntity.setCreatedDate(new Date());
-        activityRecordEntity.setFrom(formatter.parse(activityRecordEntity.getActivityDate()));
+        activityRecordEntity.setActivityTime(formatter.parse(activityRecordEntity.getActivityDate()));
         activityRecordEntity = activityRecordDAO.create(activityRecordEntity);
         return toDTO(activityRecordEntity);
     }
@@ -262,8 +262,7 @@ public class ActivityRecordStorage {
         return new ActivityRecord(activityRecordEntity.getId(),
                 activityRecordEntity.getUserName(),
                 activityRecordEntity.getActivityDate(),
-                activityRecordEntity.getFrom(),
-                activityRecordEntity.getTo(),
+                activityRecordEntity.getActivityTime(),
                 activityRecordEntity.getDescription(),
                 activityRecordEntity.getLocation(),
                 activityRecordEntity.getOffice(),
@@ -288,8 +287,7 @@ public class ActivityRecordStorage {
         return new ActivityRecordEntity(activityRecord.getId(),
                 activityRecord.getUserName(),
                 activityRecord.getActivityDate(),
-                activityRecord.getFrom(),
-                activityRecord.getTo(),
+                activityRecord.getActivityTime(),
                 activityRecord.getDescription(),
                 activityRecord.getLocation(),
                 activityRecord.getOffice(),

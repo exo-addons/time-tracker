@@ -178,9 +178,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 	  <column name="CREATED_DATE" type="TIMESTAMP">
 	  <constraints nullable="false" />
             </column>
-      <column name="FROM" type="TIMESTAMP">
-      </column>
-      <column name="TO" type="TIMESTAMP">
+      <column name="ACTIVITY_TIME" type="TIMESTAMP">
       </column>
       <column name="DESCRIPTION" type="VARCHAR(250)">
       </column>

@@ -39,9 +39,7 @@ public class ActivityRecord implements Serializable {
 
   private String            activityDate;
 
-  private Date              from;
-
-  private Date              to;
+  private Date              activityTime;
 
   private String            description;
 
@@ -73,8 +71,7 @@ public class ActivityRecord implements Serializable {
    * @param id a {@link java.lang.Long} object.
    * @param userName a {@link java.lang.String} object.
    * @param activityDate a {@link java.lang.String} object.
-   * @param from a {@link java.util.Date} object.
-   * @param to a {@link java.util.Date} object.
+   * @param activityTime a {@link java.util.Date} object.
    * @param description a {@link java.lang.String} object.
    * @param location a {@link java.lang.String} object.
    * @param office a {@link java.lang.String} object.
@@ -88,8 +85,7 @@ public class ActivityRecord implements Serializable {
   public ActivityRecord(Long id,
                         String userName,
                         String activityDate,
-                        Date from,
-                        Date to,
+                        Date activityTime,
                         String description,
                         String location,
                         String office,
@@ -102,8 +98,7 @@ public class ActivityRecord implements Serializable {
     this.id = id;
     this.userName = userName;
     this.activityDate = activityDate;
-    this.from = from;
-    this.to = to;
+    this.activityTime = activityTime;
     this.description = description;
     this.location = location;
     this.office = office;

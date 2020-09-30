@@ -48,11 +48,8 @@ public class ActivityRecordEntity {
   private String         userName;
   @Column(name = "ACTIVITY_DATE")
   private String         activityDate;
-  @Column(name = "FROM")
-  private Date           from;
-
-  @Column(name = "TO")
-  private Date           to;
+  @Column(name = "ACTIVITY_TIME")
+  private Date           activityTime;
 
   @Column(name = "DESCRIPTION")
   private String         description;
@@ -84,6 +81,9 @@ public class ActivityRecordEntity {
   @Column(name = "CREATED_DATE")
   protected Date         createdDate;
 
+
+
+
   /**
    * <p>Constructor for ActivityRecordEntity.</p>
    */
@@ -96,8 +96,7 @@ public class ActivityRecordEntity {
    * @param id a {@link java.lang.Long} object.
    * @param userName a {@link java.lang.String} object.
    * @param activityDate a {@link java.lang.String} object.
-   * @param from a {@link java.util.Date} object.
-   * @param to a {@link java.util.Date} object.
+   * @param activityTime a {@link java.util.Date} object.
    * @param description a {@link java.lang.String} object.
    * @param location a {@link java.lang.String} object.
    * @param office a {@link java.lang.String} object.
@@ -111,8 +110,7 @@ public class ActivityRecordEntity {
   public ActivityRecordEntity(Long id,
                               String userName,
                               String activityDate,
-                              Date from,
-                              Date to,
+                              Date activityTime,
                               String description,
                               String location,
                               String office,
@@ -125,8 +123,7 @@ public class ActivityRecordEntity {
     this.id = id;
     this.userName = userName;
     this.activityDate = activityDate;
-    this.from = from;
-    this.to = to;
+    this.activityTime = activityTime;
     this.description = description;
     this.location = location;
     this.office = office;
