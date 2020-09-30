@@ -292,8 +292,7 @@ public class CodesStorage {
     }
     return new SubActivityCode(subActivityCodeEntity.getId(),
                                subActivityCodeEntity.getCode(),
-                               subActivityCodeEntity.getLabel(),
-                               toActivityCodeDTO(subActivityCodeEntity.getActivityCodeEntity()));
+                               subActivityCodeEntity.getLabel());
   }
 
   /**
@@ -308,8 +307,7 @@ public class CodesStorage {
     }
     return new SubActivityCodeEntity(subActivityCode.getId(),
                                      subActivityCode.getCode(),
-                                     subActivityCode.getLabel(),
-                                     toActivityCodeEntity(subActivityCode.getActivityCode()));
+                                     subActivityCode.getLabel());
   }
 
   ///////////////////////////// Type Storage //////////////////////////
