@@ -25,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -145,6 +146,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      if (StringUtils.isNotEmpty(userName)){
+        userName=sourceIdentity.getRemoteId();
       }
       return Response.ok(activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, page, limit, sortBy, sortDesc)).build();
     } catch (Exception e) {
