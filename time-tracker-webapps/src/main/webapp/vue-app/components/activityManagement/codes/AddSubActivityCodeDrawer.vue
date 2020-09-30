@@ -19,16 +19,6 @@
                     </v-label>
                     <input ref="label" v-model="subActivityCode.label" type="text" name="label" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
-                 <v-row>
-                    <v-label for="activityCode">
-                        Activity
-                    </v-label>
-                    <select v-model="subActivityCode.activityCode" name="activityCode" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activityCodes" :key="item.id" :value="item">
-                            {{ item.label}}
-                        </option>
-                    </select>
-                </v-row>
             </v-form>
         </div>
     </template>
@@ -52,18 +42,14 @@
 
 <script>
 export default {
-    props:['activityCodes'],
-
     data: () => ({
         defaultItem: {
             code: '',
             label: '',
-            activityCode: ''
         },
         subActivityCode: {
             code: '',
             label: '',
-            activityCode: ''
         },
     }),
 

@@ -36,8 +36,6 @@ public class SubActivityCode implements Serializable {
 
   private String       label;
 
-  private ActivityCode activityCode;
-
   /**
    * <p>Constructor for SubActivityCode.</p>
    */
@@ -50,13 +48,11 @@ public class SubActivityCode implements Serializable {
    * @param id a {@link java.lang.Long} object.
    * @param code a {@link java.lang.String} object.
    * @param label a {@link java.lang.String} object.
-   * @param activityCode a {@link org.exoplatform.timetracker.dto.ActivityCode} object.
    */
-  public SubActivityCode(Long id, String code, String label, ActivityCode activityCode) {
+  public SubActivityCode(Long id, String code, String label) {
     this.id = id;
     this.code = code;
     this.label = label;
-    this.activityCode = activityCode;
   }
 
 }

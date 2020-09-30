@@ -109,7 +109,7 @@
 
         <add-activity-code-drawer ref="addActivityCodeDrawer" v-on:save="addActivityCode" />
 
-        <add-sub-activity-code-drawer ref="addSubActivityCodeDrawer" :activityCodes="activityCodes" v-on:save="addSubActivityCode" />
+        <add-sub-activity-code-drawer ref="addSubActivityCodeDrawer"  v-on:save="addSubActivityCode" />
 
         <add-type-drawer ref="addTypeDrawer"  :activityCodes="activityCodes" v-on:save="addType" />
        

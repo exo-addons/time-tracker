@@ -47,11 +47,6 @@ public class SubActivityCodeEntity {
   @Column(name = "LABEL")
   private String label;
 
-  @ManyToOne
-  @JoinColumn(name = "ACTIVITY_CODE_ID")
-  private ActivityCodeEntity         activityCodeEntity;
-
-
   /**
    * <p>Constructor for SubActivityCodeEntity.</p>
    */
@@ -64,13 +59,11 @@ public class SubActivityCodeEntity {
    * @param id a {@link java.lang.Long} object.
    * @param code a {@link java.lang.String} object.
    * @param label a {@link java.lang.String} object.
-   * @param activityCodeEntity a {@link org.exoplatform.timetracker.entity.ActivityCodeEntity} object.
    */
-  public SubActivityCodeEntity(Long id, String code, String label, ActivityCodeEntity activityCodeEntity) {
+  public SubActivityCodeEntity(Long id, String code, String label) {
     this.id = id;
     this.code = code;
     this.label = label;
-    this.activityCodeEntity = activityCodeEntity;
   }
 
 }

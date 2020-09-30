@@ -74,10 +74,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       </column>
       <column name="LABEL" type="VARCHAR(200)">
       </column>
-      <column name="ACTIVITY_CODE_ID" type="BIGINT">
-        <constraints nullable="false" foreignKeyName="FK_TT_SUB_ACTIVITY_CODE"
-                     references="ADDONS_TT_ACTIVITY_CODE(ID)"/>
-      </column>
     </createTable>
 
     <createTable tableName="ADDONS_TT_CLIENT">
@@ -198,7 +194,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <constraints nullable="false" />
       </column>
       <column name="ACTIVITY_ID" type="BIGINT">
-        <constraints nullable="false" foreignKeyName="FK_TT_ACTIVITY_RECORD"
+        <constraints foreignKeyName="FK_TT_ACTIVITY_RECORD"
                              references="ADDONS_TT_ACTIVITY(ID)"/>
       </column>
       <column name="CLIENT_ID" type="BIGINT">
