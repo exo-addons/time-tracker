@@ -35,7 +35,7 @@
                         <v-list-item-action-text v-text="item.time" class="numberHr"></v-list-item-action-text>
                     </v-list-item-action>
                     <v-list-item-content>
-                        <v-list-item-title v-text="item.activity.label"></v-list-item-title>
+                        <v-list-item-title v-if="item.activity" v-text="item.activity.label"></v-list-item-title>
                         <v-list-item-subtitle v-text="item.description"></v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
