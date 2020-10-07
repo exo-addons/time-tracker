@@ -1,22 +1,38 @@
 <template>
-<v-app class="VuetifyApp" color="transaprent" id="timeTrackingApp">
+  <v-app
+    id="timeTrackingApp"
+    class="VuetifyApp"
+    color="transaprent">
     <main>
-            <v-container px-0 py-0>
-      <v-layout class="transparent">
-        <v-btn icon small color="transparent" class="uiApplicationIconButton" @click="openTimeTrackingDrawer()">
-          <v-icon left>mdi-apps</v-icon>
-        </v-btn>
-      </v-layout>
-    </v-container>
-        <div :class="alert_type" class="alert" id v-if="alert">
-            <i :class="alertIcon"></i>
-            {{message}}
-        </div>
+      <v-container px-0 py-0>
+        <v-layout class="transparent">
+          <v-btn
+            icon
+            small
+            color="transparent"
+            class="uiApplicationIconButton"
+            @click="openTimeTrackingDrawer()">
+            <v-icon
+              class="timeTrackingIcon"
+              style="color: #a8b3c5 !important"
+              left>
+              mdi-clock
+            </v-icon>
+          </v-btn>
+        </v-layout>
+      </v-container>
+      <div
+        v-if="alert"
+        id
+        :class="alert_type"
+        class="alert">
+        <i :class="alertIcon"></i>
+        {{ message }}
+      </div>
 
-        <time-tracking-drawer  ref="timeTrackingDrawer" />
-
+      <time-tracking-drawer ref="timeTrackingDrawer" />
     </main>
-</v-app>
+  </v-app>
 </template>
 
 <script>
