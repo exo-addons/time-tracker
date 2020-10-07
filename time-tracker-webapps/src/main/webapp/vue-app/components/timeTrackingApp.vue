@@ -14,7 +14,6 @@
             @click="openTimeTrackingDrawer()">
             <v-icon
               class="timeTrackingIcon"
-              style="color: #a8b3c5 !important"
               left>
               mdi-clock
             </v-icon>
@@ -83,5 +82,7 @@ openTimeTrackingDrawer() {
 </script>
 
 <style>
-
+  .timeTrackingIcon {
+    color: #a8b3c5 !important;
+  }
 </style>
