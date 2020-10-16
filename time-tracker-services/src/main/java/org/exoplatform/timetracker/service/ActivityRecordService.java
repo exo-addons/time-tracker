@@ -70,20 +70,20 @@ public class ActivityRecordService {
    * Update an existing ActivityRecord on datasource. If the ActivityRecord doesn't exit an
    * {@link javax.persistence.EntityNotFoundException} will be thrown.
    *
-   * @param ActivityRecord dto to update on store
+   * @param activityRecord dto to update on store
    * @param username username storing ActivityRecord
    * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in datasource
    * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
    *           occurs while saving ActivityRecord
    */
-  public ActivityRecord updateActivityRecord(ActivityRecord ActivityRecord, String username) throws Exception {
-    if (ActivityRecord == null) {
+  public ActivityRecord updateActivityRecord(ActivityRecord activityRecord, String username) throws Exception {
+    if (activityRecord == null) {
       throw new IllegalArgumentException("ActivityRecord is mandatory");
     }
     if (StringUtils.isBlank(username)) {
       throw new IllegalArgumentException("username is mandatory");
     }
-    Long ActivityRecordId = ActivityRecord.getId();
+    Long ActivityRecordId = activityRecord.getId();
     if (ActivityRecordId == null) {
       throw new EntityNotFoundException("ActivityRecord with null id wasn't found");
     }
@@ -91,7 +91,7 @@ public class ActivityRecordService {
     if (storedActivityRecord == null) {
       throw new EntityNotFoundException("ActivityRecord with id " + ActivityRecordId + " wasn't found");
     }
-    return activityRecordstorage.updateActivityRecord(ActivityRecord);
+    return activityRecordstorage.updateActivityRecord(activityRecord);
   }
 
   /**
