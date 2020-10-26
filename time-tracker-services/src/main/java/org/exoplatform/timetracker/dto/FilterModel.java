@@ -53,7 +53,7 @@ public class FilterModel implements Serializable {
    */
   public FilterModel(Filter filter, List<FilterField> filterFields) {
     this.filter = filter;
-    this.fields = fields;
+    this.filterFields = filterFields;
 
   }
   /**
