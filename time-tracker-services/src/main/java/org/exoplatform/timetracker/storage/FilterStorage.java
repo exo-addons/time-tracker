@@ -18,13 +18,10 @@ package org.exoplatform.timetracker.storage;
 
 import org.exoplatform.timetracker.dao.FilterDAO;
 import org.exoplatform.timetracker.dao.FilterFieldDAO;
-import org.exoplatform.timetracker.dao.ProjectDAO;
 import org.exoplatform.timetracker.dto.Filter;
 import org.exoplatform.timetracker.dto.FilterField;
-import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.entity.FilterEntity;
 import org.exoplatform.timetracker.entity.FilterFieldEntity;
-import org.exoplatform.timetracker.entity.ProjectEntity;
 import org.gatein.api.EntityNotFoundException;
 
 import java.util.List;
