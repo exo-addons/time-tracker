@@ -28,6 +28,7 @@ public class FilterServiceTest extends TestCase {
   }
 
   public void testCreateFilter() throws Exception {
+    // Given
     Filter filter =new Filter(1l,"testName","root");
     FilterField filterField = new FilterField(1l,"test","test",filter);
     List<FilterField> filterFields = new ArrayList<FilterField>();
@@ -36,24 +37,34 @@ public class FilterServiceTest extends TestCase {
     when(filterStorage.createFilter(filter)).thenReturn(filter);
     when(filterStorage.createFilterField(filterField)).thenReturn(filterField);
     FilterModel newFilterModel = null;
+
+    // When
     newFilterModel = filterService.createFilter(filterModel,"root");
+
+    // Then
     assertNotNull(newFilterModel);
     verify(filterStorage, times(1)).createFilter(any());
     verify(filterStorage, times(1)).createFilterField(any());
   }
 
   public void testDeleteFilter() throws IllegalAccessException {
+    // Given
     Filter storedFilter =new Filter(1l,"testName","root");
     when(filterStorage.getFilterById(1l)).thenReturn(storedFilter);
     doNothing().when(filterStorage).deleteAllFilterFieldsByFilter(anyLong());
     doNothing().when(filterStorage).deleteFilter(anyLong());
+
+    // When
     filterService.deleteFilter(1l);
+
+    // Then
     verify(filterStorage, times(1)).getFilterById(anyLong());
     verify(filterStorage, times(1)).deleteFilter(anyLong());
     verify(filterStorage, times(1)).deleteAllFilterFieldsByFilter(anyLong());
   }
 
   public void testGetFiltersList() {
+    // Given
     JSONArray filterModels = new JSONArray();
     Filter filter =new Filter(1l,"testName","root");
     Filter filter1 =new Filter(2l,"testName1","root");
@@ -65,12 +76,17 @@ public class FilterServiceTest extends TestCase {
     filters.add(filter2);
     filters.add(filter3);
     when(filterStorage.getFiltersByUserName("root")).thenReturn(filters);
+
+    // When
     filterModels = filterService.getFiltersList("root");
+
+    // Then
     assertEquals(filterModels.length(), 4);
     verify(filterStorage, times(1)).getFiltersByUserName(any());
   }
 
   public void testGetFields() {
+    // Given
     JSONObject fieldsJson = new JSONObject();
     Filter filter =new Filter(1l,"testName","root");
     Filter filter1 =new Filter(2l,"testName1","root");
@@ -83,7 +99,11 @@ public class FilterServiceTest extends TestCase {
     fieldsList.add(filterField1);
     fieldsList.add(filterField2);
     when(filterStorage.getFilterFieldsByFilter(1l)).thenReturn(fieldsList);
+
+    // When
     fieldsJson = filterService.getFields(1l);
+
+    // Then
     assertNotNull(fieldsJson);
     verify(filterStorage, times(1)).getFilterFieldsByFilter(anyLong());
   }
