@@ -3,6 +3,9 @@ const merge = require('webpack-merge');
 
 const webpackCommonConfig = require('./webpack.common.js');
 
+// add the server path to your server location path
+const exoServerPath = "/home/exo/Downloads/plfent-6.1.0-M04/platform-6.1.0-M04";
+
 module.exports = merge(webpackCommonConfig, {
     module: {
         rules: [{
@@ -22,11 +25,11 @@ module.exports = merge(webpackCommonConfig, {
         timeTracking: './src/main/webapp/vue-app/timeTracking-dev.js'
     },
     output: {
-        path: path.join(__dirname, 'target/time-tracker/'),
+        path: path.join(exoServerPath, 'target/time-tracker/'),
         filename: 'js/[name].bundle.js'
     },
     devServer: {
-        contentBase: path.join(__dirname, 'src/main/webapp'),
+        contentBase: path.join(exoServerPath, 'src/main/webapp'),
         port: 3000
     },
     devtool: 'inline-source-map'
