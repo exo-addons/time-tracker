@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.js --mode development --hot",
-    "watch": "webpack --config webpack.watch.js --progress --colors --watch -d",
+    "watch": "webpack --config webpack.dev.js --progress --colors --watch -d",
     "build": "webpack --config webpack.prod.js --mode production",
     "format": "prettier --config ./.prettierrc --write ./src/main/webapp/vue-app/*.js ./src/main/webapp/vue-app/js/*.js",
-    "lint": "eslint --fix ./src/main/webapp/vue-app/components/*.vue",
+    "lint": "eslint --fix ./src/main/webapp/vue-apps/**/*.js ./src/main/webapp/vue-apps/**/*.vue ./src/main/webapp/vue-apps/**/**/*.js  ./src/main/webapp/vue-apps/**/**/*.vue ./src/main/webapp/vue-apps/**/**/**/*.js ./src/main/webapp/vue-apps/**/**/**/*.vue",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "author": "eXo",
