@@ -4,7 +4,7 @@ const merge = require('webpack-merge');
 const webpackCommonConfig = require('./webpack.common.js');
 
 // add the server path to your server location path
-const exoServerPath = "/home/exo/Downloads/plfent-6.1.0-M04/platform-6.1.0-M04";
+const exoServerPath = "/exo-server";
 
 module.exports = merge(webpackCommonConfig, {
     module: {
