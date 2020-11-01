@@ -7,6 +7,15 @@
         <div>
 
             <v-form ref="form">
+                <v-row align="center" justify="center">
+
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-text-field v-model="date" centered prepend-icon="event" readonly v-bind="attrs" v-on="on"></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+                    </v-menu>
+                </v-row>
 
                 <v-row>
                     <v-label for="activity">
@@ -90,6 +99,8 @@
 export default {
     props: ['activities'],
     data: () => ({
+        date: new Date().toISOString().substr(0, 10),
+        menu2: false,
         activityRecord: {},
         salesOrders: [],
         locations: ["Home", "eXo TN", "eXo FR", "eXo", "Ext"],
@@ -132,6 +143,7 @@ export default {
             },
 
         save() {
+            this.activityRecord.activityDate = this.date
             this.activityRecord.activity = {id:this.activityRecord.activity}
             this.$emit('save', this.activityRecord)
             this.activityRecord = {}
