@@ -115,6 +115,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating ActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -148,6 +149,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating ActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -181,6 +183,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting ActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -239,6 +242,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating SubActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-sub-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -272,6 +276,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating SubActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=edit-sub-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -305,6 +310,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting SubActivityCode", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-sub-activity-code parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -364,6 +370,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Type", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -397,6 +404,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating Type", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=edit-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -430,6 +438,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Type", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -488,6 +497,8 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating SubType", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-sub-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
+
     return Response.noContent().build();
   }
 
@@ -521,6 +532,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating SubType", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-sub-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -554,6 +566,7 @@ public class CodesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting SubType", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-sub-type parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

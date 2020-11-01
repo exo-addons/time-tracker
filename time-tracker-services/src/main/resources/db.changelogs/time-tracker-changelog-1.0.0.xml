@@ -305,4 +305,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-6">
+    <modifyDataType  columnName="TIME"
+                     newDataType="float"
+                     tableName="ADDONS_TT_ACTIVITY_RECORD"/>
+  </changeSet>
 </databaseChangeLog>

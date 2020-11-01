@@ -116,6 +116,7 @@ public class FeaturesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Feature", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-feature parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -149,6 +150,7 @@ public class FeaturesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating Feature", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-feature parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -182,6 +184,7 @@ public class FeaturesManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Feature", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-feature parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

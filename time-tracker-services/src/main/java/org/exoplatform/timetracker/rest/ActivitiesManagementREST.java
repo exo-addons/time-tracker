@@ -151,6 +151,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
             LOG.error("Unknown error occurred while creating Activity", e);
             return Response.serverError().build();
         }
+        LOG.info("service=time-tracker operation=add-activity parameters=\"user_social_id:{}\"", sourceIdentity.getId());
         return Response.noContent().build();
     }
 
@@ -184,6 +185,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
             LOG.error("Unknown error occurred while updating Activity", e);
             return Response.serverError().build();
         }
+        LOG.info("service=time-tracker operation=update-activity parameters=\"user_social_id:{}\"", sourceIdentity.getId());
         return Response.noContent().build();
     }
 
@@ -217,6 +219,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
             LOG.error("Unknown error occurred while deleting Activity", e);
             return Response.serverError().build();
         }
+        LOG.info("service=time-tracker operation=remove-activity parameters=\"user_social_id:{}\"", sourceIdentity.getId());
         return Response.noContent().build();
     }
 

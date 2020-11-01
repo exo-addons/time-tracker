@@ -116,6 +116,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating SalesOrder", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-sales-order parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -149,6 +150,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating SalesOrder", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-sales-order parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -182,6 +184,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting SalesOrder", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-sales-order parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

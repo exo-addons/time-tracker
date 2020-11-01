@@ -47,7 +47,7 @@ public class ActivityRecord implements Serializable {
 
   private String            office;
 
-  private int               time;
+  private Float               time;
 
   private SalesOrder        salesOrder;
 
@@ -89,7 +89,7 @@ public class ActivityRecord implements Serializable {
                         String description,
                         String location,
                         String office,
-                        int time,
+                        Float time,
                         String projectVersion,
                         Client client,
                         Activity activity,

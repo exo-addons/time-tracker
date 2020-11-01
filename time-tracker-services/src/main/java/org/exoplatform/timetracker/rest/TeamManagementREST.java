@@ -142,6 +142,7 @@ public class TeamManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Team", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-team parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -175,6 +176,7 @@ public class TeamManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating Team", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-team parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -208,6 +210,7 @@ public class TeamManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Team", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-team parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -266,6 +269,7 @@ public class TeamManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating TeamMember", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-team-member parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -291,6 +295,7 @@ public class TeamManagementREST implements ResourceContainer {
     try {
       for(TeamMember teamMember : teamMembers) {
         teamService.createTeamMember(teamMember);
+        LOG.info("service=time-tracker operation=add-team-member parameters=\"user_social_id:{}\"", sourceIdentity.getId());
       }
     } catch (EntityExistsException e) {
       LOG.warn(e);
@@ -331,6 +336,7 @@ public class TeamManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting TeamMember", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-team-member parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

@@ -45,6 +45,9 @@
                             </template>
                         </v-toolbar>
                     </template>
+                    <template v-slot:item.time="{ item }">
+                        {{roundVlaue(item)}}
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editActivityRecord(item)">
                             edit
@@ -62,7 +65,7 @@
     </v-card>
     <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
     <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
-    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features"  :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter"  v-on:deleteFilter="deleteFilter" />
+    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
 
@@ -429,6 +432,9 @@ export default {
                     this.activities = resp;
                 });
         },
+        roundVlaue(item) {
+            return Math.round(item.time * 10) / 10
+        },
 
         getProjects() {
             fetch(`/portal/rest/timetracker/projectsmgn/project`, {
@@ -507,7 +513,6 @@ export default {
 
         },
 
-
         getFilters() {
             fetch(`/portal/rest/timetracker/filtersmgn/filter`, {
                     credentials: 'include',
@@ -518,7 +523,6 @@ export default {
                 });
 
         },
-
 
         saveFilter(val) {
             this.activity = val.activity
@@ -533,20 +537,52 @@ export default {
             this.office = val.office
 
             const fields = [];
-            fields.push({name:"activity", value:val.activity})
-            fields.push({name:"type", value:val.type})
-            fields.push({name:"subType", value:val.subType})
-            fields.push({name:"activityCode", value:val.activityCode})
-            fields.push({name:"subActivityCode", value:val.subActivityCode})
-            fields.push({name:"client", value:val.client})
-            fields.push({name:"project", value:val.project})
-            fields.push({name:"feature", value:val.feature})
-            fields.push({name:"location", value:val.location})
-            fields.push({name:"office", value:val.office})
+            fields.push({
+                name: "activity",
+                value: val.activity
+            })
+            fields.push({
+                name: "type",
+                value: val.type
+            })
+            fields.push({
+                name: "subType",
+                value: val.subType
+            })
+            fields.push({
+                name: "activityCode",
+                value: val.activityCode
+            })
+            fields.push({
+                name: "subActivityCode",
+                value: val.subActivityCode
+            })
+            fields.push({
+                name: "client",
+                value: val.client
+            })
+            fields.push({
+                name: "project",
+                value: val.project
+            })
+            fields.push({
+                name: "feature",
+                value: val.feature
+            })
+            fields.push({
+                name: "location",
+                value: val.location
+            })
+            fields.push({
+                name: "office",
+                value: val.office
+            })
 
             const filter = {
-                filter:{name:val.name}, 
-                filterFields:fields
+                filter: {
+                    name: val.name
+                },
+                filterFields: fields
             }
 
             fetch(`/portal/rest/timetracker/filtersmgn/filter`, {
@@ -573,7 +609,6 @@ export default {
                     });
                 });
         },
-
 
         openTimeTrackingDrawer() {
             this.$refs.timeTrackingDrawer.open()
@@ -665,20 +700,19 @@ export default {
                 .then((response) => {
                     this.confirmDialog = false;
                     this.getFeatures()
-            
 
                     this.displaySusccessMessage('filter deleted');
                 })
                 .catch((result) => {
                     this.confirmDialog = false;
-                     this.getFeatures()
+                    this.getFeatures()
 
                     result.text().then((body) => {
                         this.displayErrorMessage(body);
                     });
                 });
-        }, 
-        
+        },
+
         deleteItem(item) {
             fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/` + item.id, {
                     method: 'delete',

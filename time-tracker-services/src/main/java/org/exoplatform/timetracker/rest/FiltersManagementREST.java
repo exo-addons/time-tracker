@@ -116,6 +116,7 @@ public class FiltersManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Filter", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-personal-filter parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -151,6 +152,7 @@ public class FiltersManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Filter", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-personal-filter parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

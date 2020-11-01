@@ -116,6 +116,7 @@ public class ClientsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Client", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-client parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -149,6 +150,7 @@ public class ClientsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating Client", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-client parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -182,6 +184,7 @@ public class ClientsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Client", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-client parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

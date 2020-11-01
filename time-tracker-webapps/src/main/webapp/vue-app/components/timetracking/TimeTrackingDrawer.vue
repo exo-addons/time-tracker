@@ -78,10 +78,6 @@ export default {
         }
     },
 
-    created() {
-        this.getActivityRecords()
-        this.getActivities()
-    },
 
     methods: {
 
@@ -107,7 +103,6 @@ export default {
         },
 
         save(activityRecord) {
-
             //  this.activityRecords.push(activity)
             activityRecord.activityDate = this.date
             fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`, {
@@ -125,7 +120,6 @@ export default {
                 })
                 .then((response) => {
                     this.getActivityRecords();
-                    //this.activities.push(activity)
                     this.displaySusccessMessage('activity added');
                 })
                 .catch((result) => {
@@ -166,6 +160,9 @@ export default {
             this.$refs.timeTrackerDrawer.close()
         },
         open() {
+        this.getActivityRecords()
+
+        this.getActivities()
             this.$refs.timeTrackerDrawer.open()
         },
         addActivityRecord() {

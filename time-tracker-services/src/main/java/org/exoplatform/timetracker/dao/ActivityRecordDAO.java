@@ -114,9 +114,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
         try {
             String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord";
-            if (StringUtils.isNotEmpty(search) || isEmpty(activity)  || isEmpty(type)
-                    || isEmpty(subType)  || isEmpty(activityCode)  || isEmpty(subActivityCode)
-                    || isEmpty(client)  || isEmpty(project)  || isEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
+            if (StringUtils.isNotEmpty(search) || isNotEmpty(activity)  || isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
+                    || isNotEmpty(subType)  || isNotEmpty(activityCode)  || isNotEmpty(subActivityCode)
+                    || isNotEmpty(client)  || isNotEmpty(project)  || isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
                     || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                 queryString = queryString + " where ";
                 if (StringUtils.isNotEmpty(search)) {
@@ -126,43 +126,43 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                     queryString = queryString + " and ";
                 }
-                if (isEmpty(activity )) {
+                if (isNotEmpty(activity )) {
                     queryString = queryString + " activityRecord.activityEntity.id = '" + activity + "'";
                     queryString = queryString + " and ";
                 }
-                if (isEmpty(type )) {
+                if (isNotEmpty(type )) {
                     queryString = queryString + " activityRecord.activityEntity.typeEntity.id = '" + type + "'";
                     queryString = queryString + " and ";
                 }
 
-                if (isEmpty(subType) ) {
+                if (isNotEmpty(subType) ) {
                     queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id = '" + subType + "'";
                     queryString = queryString + " and ";
                 }
 
 
-                if (isEmpty(activityCode) ) {
-                    queryString = queryString + " activityRecord.activityEntity.activityCode.id = '" + activityCode + "'";
+                if (isNotEmpty(activityCode) ) {
+                    queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id = '" + activityCode + "'";
                     queryString = queryString + " and ";
                 }
 
 
-                if (isEmpty(subActivityCode )) {
-                    queryString = queryString + " activityRecord.activityEntity.subActivityCode.id = '" + subActivityCode + "'";
+                if (isNotEmpty(subActivityCode )) {
+                    queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id = '" + subActivityCode + "'";
                     queryString = queryString + " and ";
                 }
 
-                if (isEmpty(client) ) {
+                if (isNotEmpty(client) ) {
                     queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id = '" + client + "'";
                     queryString = queryString + " and ";
                 }
 
-                if (isEmpty(project) ) {
+                if (isNotEmpty(project) ) {
                     queryString = queryString + " activityRecord.activityEntity.projectEntity.id = '" + project + "'";
                     queryString = queryString + " and ";
                 }
 
-                if (isEmpty(feature) ) {
+                if (isNotEmpty(feature) ) {
                     queryString = queryString + " activityRecord.activityEntity.featureEntity.id = '" + feature + "'";
                     queryString = queryString + " and ";
                 }
@@ -270,9 +270,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
             try {
                 String queryString = "SELECT count(activityRecord.id) FROM  ActivityRecordEntity activityRecord";
-                if (StringUtils.isNotEmpty(search) || isEmpty(activity)  || isEmpty(type)
-                        || isEmpty(subType)  || isEmpty(activityCode)  || isEmpty(subActivityCode)
-                        || isEmpty(client)  || isEmpty(project)  || isEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
+                if (StringUtils.isNotEmpty(search) || isNotEmpty(activity)  || isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
+                        || isNotEmpty(subType)  || isNotEmpty(activityCode)  || isNotEmpty(subActivityCode)
+                        || isNotEmpty(client)  || isNotEmpty(project)  || isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
                         || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                     queryString = queryString + " where ";
                     if (StringUtils.isNotEmpty(search)) {
@@ -282,43 +282,43 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                         queryString = queryString + " and ";
                     }
-                    if (isEmpty(activity )) {
+                    if (isNotEmpty(activity )) {
                         queryString = queryString + " activityRecord.activityEntity.id = '" + activity + "'";
                         queryString = queryString + " and ";
                     }
-                    if (isEmpty(type )) {
+                    if (isNotEmpty(type )) {
                         queryString = queryString + " activityRecord.activityEntity.typeEntity.id = '" + type + "'";
                         queryString = queryString + " and ";
                     }
 
-                    if (isEmpty(subType) ) {
+                    if (isNotEmpty(subType) ) {
                         queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id = '" + subType + "'";
                         queryString = queryString + " and ";
                     }
 
 
-                    if (isEmpty(activityCode) ) {
-                        queryString = queryString + " activityRecord.activityEntity.activityCode.id = '" + activityCode + "'";
+                    if (isNotEmpty(activityCode) ) {
+                        queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id = '" + activityCode + "'";
                         queryString = queryString + " and ";
                     }
 
 
-                    if (isEmpty(subActivityCode )) {
-                        queryString = queryString + " activityRecord.activityEntity.subActivityCode.id = '" + subActivityCode + "'";
+                    if (isNotEmpty(subActivityCode )) {
+                        queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id = '" + subActivityCode + "'";
                         queryString = queryString + " and ";
                     }
 
-                    if (isEmpty(client) ) {
+                    if (isNotEmpty(client) ) {
                         queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id = '" + client + "'";
                         queryString = queryString + " and ";
                     }
 
-                    if (isEmpty(project) ) {
+                    if (isNotEmpty(project) ) {
                         queryString = queryString + " activityRecord.activityEntity.projectEntity.id = '" + project + "'";
                         queryString = queryString + " and ";
                     }
 
-                    if (isEmpty(feature) ) {
+                    if (isNotEmpty(feature) ) {
                         queryString = queryString + " activityRecord.activityEntity.featureEntity.id = '" + feature + "'";
                         queryString = queryString + " and ";
                     }
@@ -376,7 +376,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
         }
     }
     
-    boolean isEmpty (Long value){
+    boolean isNotEmpty (Long value){
         if(value!=null  && value > 0) return true;
         return false;
     }

@@ -147,7 +147,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      if (StringUtils.isNotEmpty(userName)){
+      if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
       return Response.ok(activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, page, limit, sortBy, sortDesc)).build();
@@ -191,7 +191,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    */
   @POST
   @Path("activityrecord")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new ActivityRecord", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -215,6 +215,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating ActivityRecord", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-record parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -226,7 +227,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("activityrecord")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @ApiOperation(value = "Updates an existing ActivityRecord identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -248,6 +249,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating ActivityRecord", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-record parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -259,7 +261,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("activityrecord/{activityrecordId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @ApiOperation(value = "Deletes an existing ActivityRecord identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -281,6 +283,8 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting ActivityRecord", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=remove-record parameters=\"user_social_id:{}\"", sourceIdentity.getId());
+
     return Response.noContent().build();
   }
 

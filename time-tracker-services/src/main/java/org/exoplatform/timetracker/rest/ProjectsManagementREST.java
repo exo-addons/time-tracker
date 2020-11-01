@@ -116,6 +116,7 @@ public class ProjectsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while creating Project", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=add-project parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -149,6 +150,7 @@ public class ProjectsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while updating Project", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=update-project parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 
@@ -182,6 +184,7 @@ public class ProjectsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while deleting Project", e);
       return Response.serverError().build();
     }
+    LOG.info("service=time-tracker operation=delete-project parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
   }
 

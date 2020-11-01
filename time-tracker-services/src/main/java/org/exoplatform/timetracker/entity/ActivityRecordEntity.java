@@ -61,7 +61,7 @@ public class ActivityRecordEntity {
   private String         office;
 
   @Column(name = "TIME")
-  private int            time;
+  private Float            time;
 
   @Column(name = "PROJECT_VERSION")
   private String         projectVersion;
@@ -114,7 +114,7 @@ public class ActivityRecordEntity {
                               String description,
                               String location,
                               String office,
-                              int time,
+                              float time,
                               String projectVersion,
                               ClientEntity clientEntity,
                               ActivityEntity activityEntity,

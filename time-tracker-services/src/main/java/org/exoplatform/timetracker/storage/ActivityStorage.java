@@ -201,7 +201,7 @@ public class ActivityStorage {
      * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
      */
     public Activity toDTO(ActivityEntity activityEntity) {
-        if (activityEntity == null) {
+        if (activityEntity == null  || activityEntity.getId()==0) {
             return null;
         }
         List<ActivityTeamEntity> teamEntities = activityTeamDAO.getTeamsByActivity(activityEntity.getId());
@@ -225,7 +225,7 @@ public class ActivityStorage {
      * @return a {@link org.exoplatform.timetracker.entity.ActivityEntity} object.
      */
     public ActivityEntity toEntity(Activity activity) {
-        if (activity == null) {
+        if (activity == null || (activity.getId()!=null && activity.getId()==0)) {
             return null;
         }
         return new ActivityEntity(activity.getId(),
