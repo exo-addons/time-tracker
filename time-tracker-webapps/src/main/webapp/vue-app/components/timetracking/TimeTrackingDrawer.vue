@@ -198,6 +198,9 @@ export default {
 </script>
 
 <style>
+div#middle-topNavigation-container .UIIntermediateContainer >.UIRowContainer {
+    display: flex;
+}
 .actList {
     width: 100%;
 }
