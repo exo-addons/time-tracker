@@ -48,6 +48,13 @@
             <field name="description">
               <string>Time Sheet application</string>
             </field>
+            <field name="permissions">
+              <collection type="java.util.ArrayList" item-type="java.lang.String">
+                <value>
+                  <string>*:/spaces/exo_employees</string>
+                </value>
+              </collection>
+            </field>
             <field name="active">
               <boolean>true</boolean>
             </field>

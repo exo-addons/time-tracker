@@ -34,7 +34,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="time">
-                        Time spend
+                        Time spent (hours)
                     </v-label>
                     <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>

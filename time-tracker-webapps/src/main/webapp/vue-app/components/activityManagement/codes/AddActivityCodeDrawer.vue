@@ -1,7 +1,7 @@
 <template>
 <exo-drawer ref="addActivityCodeDrawer" right class="">
     <template slot="title">
-        Add ActivityCode
+        Add Activity Code
     </template>
     <template slot="content">
         <div>
@@ -44,10 +44,6 @@
 export default {
 
     data: () => ({
-        defaultItem: {
-            code: '',
-            label: '',
-        },
         activityCode: {
             code: '',
             label: ''
@@ -57,15 +53,15 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.activityCode)
-            this.activityCode = this.defaultItem
+            this.activityCode = {code: '',label: ''}
             this.$refs.addActivityCodeDrawer.close()
         },
         cancel() {
-            this.activityCode = this.defaultItem
+            this.activityCode = {code: '',label: ''}
             this.$refs.addActivityCodeDrawer.close()
         },
         open() {
-            this.activityCode = this.defaultItem
+            this.activityCode = {code: '',label: ''}
             this.$refs.addActivityCodeDrawer.open()
         },
 

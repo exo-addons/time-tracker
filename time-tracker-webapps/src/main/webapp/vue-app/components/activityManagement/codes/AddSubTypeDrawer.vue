@@ -55,31 +55,25 @@ export default {
     props:['types'],
 
     data: () => ({
-        defaultItem: {
-            code: '',
-            label: '',
-            spec: '',
-            type: '',
-        },
         subType: {
             code: '',
             label: '',
-            type: ''
-        },
+            type: '',
+        }
     }),
 
     methods: {
         save() {
             this.$emit('save', this.subType)
-            this.subType = this.defaultItem
+            this.subType = {code: '',label: ''}
             this.$refs.addSubTypeDrawer.close()
         },
         cancel() {
-            this.subType = this.defaultItem
+            this.subType = {code: '',label: ''}
             this.$refs.addSubTypeDrawer.close()
         },
         open() {
-            this.subType = this.defaultItem
+            this.subType = {code: '',label: ''}
             this.$refs.addSubTypeDrawer.open()
         },
 

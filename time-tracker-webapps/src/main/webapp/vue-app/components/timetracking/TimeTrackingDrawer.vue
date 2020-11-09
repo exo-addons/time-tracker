@@ -5,7 +5,7 @@
         {{message}}
     </div>
     <template slot="title">
-        Time Tracking
+        Log Time
     </template>
     <template slot="titleIcons">
 

@@ -43,10 +43,6 @@
 <script>
 export default {
     data: () => ({
-        defaultItem: {
-            code: '',
-            label: '',
-        },
         subActivityCode: {
             code: '',
             label: '',
@@ -56,15 +52,15 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.subActivityCode)
-            this.subActivityCode = this.defaultItem
+            this.subActivityCode = {code: '',label: ''}
             this.$refs.addSubActivityCodeDrawer.close()
         },
         cancel() {
-            this.subActivityCode = this.defaultItem
+            this.subActivityCode = {code: '',label: ''}
             this.$refs.addSubActivityCodeDrawer.close()
         },
         open() {
-            this.subActivityCode = this.defaultItem
+            this.subActivityCode = {code: '',label: ''}
             this.$refs.addSubActivityCodeDrawer.open()
         },
 

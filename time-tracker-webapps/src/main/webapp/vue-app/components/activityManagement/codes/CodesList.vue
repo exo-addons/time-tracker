@@ -84,11 +84,11 @@
             <v-data-table :headers="subTypeHeaders" :items="subTypes" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>Sub Activity Code list</v-toolbar-title>
+                        <v-toolbar-title>Sub Type list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                         <button class="btn btn-primary pull-left" type="button" @click="openAddSubTypeDrawer">
-                                    <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Activity Code
+                                    <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Type Code
                                 </button>
 
                     </v-toolbar>
@@ -114,6 +114,14 @@
         <add-type-drawer ref="addTypeDrawer"  :activityCodes="activityCodes" v-on:save="addType" />
        
         <add-sub-type-drawer ref="addSubTypeDrawer" :types="types" v-on:save="addSubType" />
+
+        <edit-activity-code-drawer ref="editActivityCodeDrawer" v-on:save="editActivityCode" />
+
+        <edit-sub-activity-code-drawer ref="editSubActivityCodeDrawer"  v-on:save="editSubActivityCode" />
+
+        <edit-type-drawer ref="editTypeDrawer" v-on:save="editType" />
+       
+        <edit-sub-type-drawer ref="editSubTypeDrawer"  :types="types" v-on:save="editSubType" />
     </div>
 </template>
 
@@ -122,12 +130,20 @@ import addActivityCodeDrawer from './AddActivityCodeDrawer.vue';
 import addSubActivityCodeDrawer from './AddSubActivityCodeDrawer.vue';
 import addTypeDrawer from './AddTypeDrawer.vue';
 import addSubTypeDrawer from './AddSubTypeDrawer.vue';
+import editActivityCodeDrawer from './EditActivityCodeDrawer.vue';
+import editSubActivityCodeDrawer from './EditSubActivityCodeDrawer.vue';
+import editTypeDrawer from './EditTypeDrawer.vue';
+import editSubTypeDrawer from './EditSubTypeDrawer.vue';
 export default {
     components: {
         addActivityCodeDrawer,
         addSubActivityCodeDrawer,
         addTypeDrawer,
         addSubTypeDrawer,
+        editActivityCodeDrawer,
+        editSubActivityCodeDrawer,
+        editTypeDrawer,
+        editSubTypeDrawer,
     },
     props:['activityCodes','subActivityCodes','types','subTypes'],
     data: () => ({
@@ -288,45 +304,76 @@ export default {
         openAddSubTypeDrawer() {
             this.$refs.addSubTypeDrawer.open()
         },
-/* 
-        openEditDrawer(item) {
-            this.editedIndex = this.features.indexOf(item)
-            this.editedItem=item
-            this.$refs.editFeatureDrawer.open()
-        },
 
- */
+
         addActivityCode(activityCode) {
-            this.activityCodes.push(activityCode)
+           // this.activityCodes.push(activityCode)
             this.$emit('addActivityCode', activityCode)
         },
 
         
 
         addSubActivityCode(subActivityCode) {
-            this.subActivityCodes.push(subActivityCode)
+           // this.subActivityCodes.push(subActivityCode)
             this.$emit('addSubActivityCode', subActivityCode)
         },
 
 
 
         addType(type) {
-            this.types.push(type)
+            //this.types.push(type)
             this.$emit('addType', type)
         },
 
 
 
         addSubType(subType) {
-            this.subTypes.push(subType)
+           // this.subTypes.push(subType)
             this.$emit('addSubType', subType)
         },
 
-/*         update(feature) {
-            Object.assign(this.features[this.editedIndex], feature)
-            this.$emit('editFeature', this.editedItem)
-        } */
+        openEditActivityCodeDrawer(item) {
+            this.$refs.editActivityCodeDrawer.open(item)
+        },
 
+        openEditSubActivityCodeDrawer(item) {
+            this.$refs.editSubActivityCodeDrawer.open(item)
+        },
+
+        openEditTypeDrawer(item) {
+            this.$refs.editTypeDrawer.open(item)
+        },
+
+        openEditSubTypeDrawer(item) {
+            this.$refs.editSubTypeDrawer.open(item)
+        }
+,
+          editActivityCode(activityCode) {
+           // this.activityCodes.push(activityCode)
+            this.$emit('editActivityCode', activityCode)
+        },
+
+        
+
+        editSubActivityCode(subActivityCode) {
+           // this.subActivityCodes.push(subActivityCode)
+            this.$emit('editSubActivityCode', subActivityCode)
+        },
+
+
+
+        editType(type) {
+            //this.types.push(type)
+            this.$emit('editType', type)
+        },
+
+
+
+        editSubType(subType) {
+           // this.subTypes.push(subType)
+            this.$emit('editSubType', subType)
+        },
+        
     }
 };
 </script>

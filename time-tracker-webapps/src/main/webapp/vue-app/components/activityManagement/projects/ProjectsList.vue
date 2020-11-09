@@ -111,7 +111,6 @@ editProjectDrawer,
 
 
         add(project) {
-            this.projects.push(project)
             this.$emit('addProject', project)
         },
 

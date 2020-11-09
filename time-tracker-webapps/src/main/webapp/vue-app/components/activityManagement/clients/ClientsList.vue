@@ -103,7 +103,6 @@ editClientDrawer,
 
 
         add(client) {
-            this.clients.push(client)
             this.$emit('addClient', client)
         },
 

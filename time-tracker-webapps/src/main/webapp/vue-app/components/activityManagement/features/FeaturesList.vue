@@ -118,7 +118,6 @@ editFeatureDrawer,
 
 
         add(feature) {
-            this.features.push(feature)
             this.$emit('addFeature', feature)
         },
 

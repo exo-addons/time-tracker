@@ -146,6 +146,7 @@ public class ActivityStorage {
         if (activityEntity == null) {
             throw new EntityNotFoundException("Activity with id " + activityId + " not found");
         }
+        activityTeamDAO.deleteAll(activityTeamDAO.getTeamsByActivity(activityEntity.getId()));
         activityDAO.delete(activityEntity);
     }
 

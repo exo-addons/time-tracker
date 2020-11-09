@@ -8,7 +8,7 @@
             <v-form ref="form" v-model="valid">
                 <v-row>
                     <v-label for="type">
-                        Type
+                        Type *
                     </v-label>
                     <select v-model="editedActivity.type" name="type" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in types" :key="item.id" :value="item">
@@ -18,7 +18,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="subType">
-                        Sub Type
+                        Sub Type *
                     </v-label>
                     <select v-model="editedActivity.subType" name="subType" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in subTypes" :key="item.id" :value="item">
@@ -28,7 +28,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="activityCode">
-                        Activity
+                        Activity *
                     </v-label>
                     <select v-model="editedActivity.activityCode" name="activityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in activityCodes" :key="item.id" :value="item">
@@ -38,7 +38,7 @@
                 </v-row>
                 <v-row>
                     <v-label for="subActivityCode">
-                        Sub Activity
+                        Sub Activity *
                     </v-label>
                     <select v-model="editedActivity.subActivityCode" name="subActivityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in subActivityCodes" :key="item.id" :value="item">
@@ -48,13 +48,13 @@
                 </v-row>
                 <v-row>
                     <v-label for="label">
-                        Label
+                        Label *
                     </v-label>
                     <input ref="label" v-model="editedActivity.label" type="text" name="label" class="input-block-level ignore-vuetify-classes my-3" />
                 </v-row>
                 <v-row>
                     <v-label for="project">
-                        Project
+                        Project *
                     </v-label>
                     <select v-model="editedActivity.project" name="project" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in projects" :key="item.id" :value="item">
@@ -74,8 +74,8 @@
                 </v-row>
 
                 <v-row>
-                    <v-label for="teals">
-                        Teams
+                    <v-label for="teams">
+                        Teams *
                     </v-label>
                     <v-autocomplete v-model="editedActivity.teams" :items="teams" menu-props="closeOnClick"  outlined dense chips small-chips multiple item-text="name" item-value="id"></v-autocomplete>
                 </v-row>
@@ -91,7 +91,7 @@
                     Cancel
                 </template>
             </v-btn>
-            <v-btn class="btn btn-primary" @click="save()">
+            <v-btn :disabled="isDisabled" class="btn btn-primary" @click="save()">
                 <template>
                     Save
                 </template>
@@ -106,38 +106,89 @@ export default {
     props: ['projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams'],
     data: () => ({
         defaultItem: {
-            type: '',
-            subType: '',
-            activity: '',
-            subActivity: '',
+              type: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            subType: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            activity: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            subActivity: {
+                id: '',
+                code: '',
+                label: ''
+            },
             label: '',
             project: {
                 id: '',
+                code: '',
                 label: ''
             },
             feature: {
                 id: '',
+                code: '',
                 label: ''
             },
         },
         editedActivity: {
-            type: '',
-            subType: '',
-            activity: '',
-            subActivity: '',
+             type: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            subType: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            activity: {
+                id: '',
+                code: '',
+                label: ''
+            },
+            subActivity: {
+                id: '',
+                code: '',
+                label: ''
+            },
             label: '',
             project: {
                 id: '',
+                code: '',
                 label: ''
             },
             feature: {
                 id: '',
+                code: '',
                 label: ''
             },
         },
     }),
 
+
+     computed: {
+         isDisabled: function(){
+                return (this.editedActivity && !(
+                this.isNotEmpty(this.editedActivity.project)
+                && this.isNotEmpty(this.editedActivity.label)
+                && this.isNotEmpty(this.editedActivity.activityCode)
+                && this.isNotEmpty(this.editedActivity.subActivityCode)
+                && this.isNotEmpty(this.editedActivity.subType
+                && this.isNotEmpty(this.editedActivity.type))))
+                }
+        },
     methods: {
+        isNotEmpty(str){
+              return(str!=null && str.id!==null && str.id!=="")
+            },
         save() {
             const teams = []
             for (const team of this.editedActivity.teams) {

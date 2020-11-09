@@ -56,15 +56,15 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.type)
-            this.type = this.defaultItem
+            this.type = {code: '',label: ''}
             this.$refs.addTypeDrawer.close()
         },
         cancel() {
-            this.type = this.defaultItem
+            this.type = {code: '',label: ''}
             this.$refs.addTypeDrawer.close()
         },
         open() {
-            this.type = this.defaultItem
+            this.type = {code: '',label: ''}
             this.$refs.addTypeDrawer.open()
         },
 

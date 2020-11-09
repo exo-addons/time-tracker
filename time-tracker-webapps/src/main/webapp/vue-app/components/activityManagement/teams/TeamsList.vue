@@ -176,7 +176,6 @@ export default {
 
 
         addTeam(team) {
-            this.teams.push(team)
             this.$emit('addTeam', team)
         },
 
