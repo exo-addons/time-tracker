@@ -13,7 +13,8 @@
                 <v-tab href="#clients" key="clients">Clients</v-tab>
                 <v-tab href="#projects" key="projects">Projects</v-tab>
                 <v-tab href="#features" key="features">Features</v-tab>
-                .<v-tab href="#codes" key="codes">Codes</v-tab>
+                .<v-tab href="#activitiesCodes" key="activitiesCodes">Activities codes</v-tab>
+                .<v-tab href="#typesCodes" key="typesCodes">Types codes</v-tab>
                 .<v-tab href="#teams" key="teams">Teams</v-tab>
             </v-tabs>
 
@@ -32,8 +33,12 @@
                     <features-list :features="features" v-on:addFeature="addFeature" v-on:editFeature="editFeature" v-on:delete="deleteFeature" />
                 </v-tab-item>
 
-                <v-tab-item class="tabContent" eager id="codes" value="codes">
-                    <codes-list :activityCodes="activityCodes" v-on:addActivityCode="addActivityCode" v-on:editActivityCode="editActivityCode" v-on:deleteActivityCode="deleteActivityCode" :subActivityCodes="subActivityCodes" v-on:addSubActivityCode="addSubActivityCode" v-on:editSubActivityCode="editSubActivityCode" v-on:deleteSubActivityCode="deleteSubActivityCode" :types="types" v-on:addType="addType" v-on:editType="editType" v-on:deleteType="deleteType" :subTypes="subTypes" v-on:addSubType="addSubType" v-on:editSubType="editSubType" v-on:deleteSubType="deleteSubType" />
+                <v-tab-item class="tabContent" eager id="activitiesCodes" value="activitiesCodes">
+                    <codes-list :activityCodes="activityCodes" v-on:addActivityCode="addActivityCode" v-on:editActivityCode="editActivityCode" v-on:deleteActivityCode="deleteActivityCode" :subActivityCodes="subActivityCodes" v-on:addSubActivityCode="addSubActivityCode" v-on:editSubActivityCode="editSubActivityCode" v-on:deleteSubActivityCode="deleteSubActivityCode" />
+                </v-tab-item>
+
+                <v-tab-item class="tabContent" eager id="typesCodes" value="typesCodes">
+                    <types-codes-list :types="types" v-on:addType="addType" v-on:editType="editType" v-on:deleteType="deleteType" :subTypes="subTypes" v-on:addSubType="addSubType" v-on:editSubType="editSubType" v-on:deleteSubType="deleteSubType" />
                 </v-tab-item>
 
                 <v-tab-item class="tabContent" eager id="teams" value="teams">
@@ -52,6 +57,7 @@ import ClientsList from './activityManagement/clients/ClientsList.vue';
 import ProjectsList from './activityManagement/projects/ProjectsList.vue';
 import FeaturesList from './activityManagement/features/FeaturesList.vue';
 import CodesList from './activityManagement/codes/CodesList.vue';
+import TypesCodesList from './activityManagement/codes/TypesCodesList.vue';
 import TeamsList from './activityManagement/teams/TeamsList.vue';
 export default {
     components: {
@@ -60,6 +66,7 @@ export default {
         ProjectsList,
         FeaturesList,
         CodesList,
+        TypesCodesList,
         TeamsList,
     },
     data: () => ({
