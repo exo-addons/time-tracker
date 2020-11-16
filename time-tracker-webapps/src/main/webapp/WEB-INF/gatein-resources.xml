@@ -3,7 +3,7 @@
                   xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
 
     <portal-skin>
-        <skin-name>${exo.skin.name}</skin-name>
+        <skin-name>Enterprise</skin-name>
         <skin-module>time-tracker</skin-module>
         <css-path>/css/platform.css</css-path>
         <css-priority>10</css-priority>
@@ -19,7 +19,7 @@
 
 
     <portal-skin>
-        <skin-name>${exo.skin.name}</skin-name>
+        <skin-name>Enterprise</skin-name>
         <skin-module>customModuleTimeTracker</skin-module>
         <css-path>/css/activityManagement.css</css-path>
         <css-priority>11</css-priority>

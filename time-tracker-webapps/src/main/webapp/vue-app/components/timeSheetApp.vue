@@ -1,5 +1,5 @@
 <template>
-<v-app class="VuetifyApp" color="transaprent" id="timeTrackingApp">
+<v-app class="VuetifyApp timeTrackingApp" color="transaprent" id="timeTrackingApp">
     <main>
             <v-container px-0 py-0>
       <v-layout class="transparent">
