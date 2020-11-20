@@ -297,10 +297,6 @@ export default {
 </script>
 
 <style>
-.drawerContent {
-    padding: 15px 27px;
-}
-
 .sliderValue .v-text-field__slot {
     max-width: 50px;
 }

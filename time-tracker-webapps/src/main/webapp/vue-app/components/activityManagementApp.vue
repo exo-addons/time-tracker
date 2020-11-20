@@ -1,5 +1,5 @@
 <template>
-<v-app class="VuetifyApp" color="transaprent" id="activityManagementApp">
+<v-app class="VuetifyApp timeTrackingApp " color="transaprent" id="activityManagementApp">
     <main>
         <div :class="alert_type" class="alert" id v-if="alert">
             <i :class="alertIcon"></i>

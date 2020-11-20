@@ -20,7 +20,6 @@ const config = merge(webpackCommonConfig, {
         activityManagement: './src/main/webapp/vue-app/activityManagement.js',
         timeTracking: './src/main/webapp/vue-app/timeTracking.js',
         timeSheet: './src/main/webapp/vue-app/timeSheet.js'
-
     },
     output: {
         path: path.join(__dirname, 'target/time-tracker/'),

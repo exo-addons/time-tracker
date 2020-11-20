@@ -1,7 +1,7 @@
 <template>
   <v-app
     id="timeTrackingApp"
-    class="VuetifyApp"
+    class="VuetifyApp timeTrackingApp"
     color="transaprent">
     <main>
       <v-container px-0 py-0>

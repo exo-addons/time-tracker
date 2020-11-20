@@ -220,10 +220,6 @@ div#middle-topNavigation-container .UIIntermediateContainer >.UIRowContainer {
     background: #fff;
 }
 
-.drawerContent {
-    padding: 15px 27px;
-}
-
 h4 {
     text-align: center;
 }

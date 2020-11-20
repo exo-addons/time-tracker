@@ -67,9 +67,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.drawerContent {
-    padding: 15px 27px;
-}
-</style>

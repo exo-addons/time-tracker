@@ -22,10 +22,11 @@ module.exports = merge(webpackCommonConfig, {
     },
     entry: {
         activityManagement: './src/main/webapp/vue-app/activityManagement-dev.js',
-        timeTracking: './src/main/webapp/vue-app/timeTracking-dev.js'
+        timeTracking: './src/main/webapp/vue-app/timeTracking-dev.js',
+        timeSheet: './src/main/webapp/vue-app/timeSheet-dev.js'
     },
     output: {
-        path: path.join(exoServerPath, 'target/time-tracker/'),
+        path: path.join(exoServerPath, '/time-tracker/'),
         filename: 'js/[name].bundle.js'
     },
     devServer: {
