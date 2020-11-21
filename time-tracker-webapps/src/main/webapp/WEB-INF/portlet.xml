@@ -19,6 +19,7 @@
             <mime-type>text/html</mime-type>
         </supports>
         <supported-locale>en</supported-locale>
+        <resource-bundle>locale.portlet.Time-tracker</resource-bundle>
         <portlet-info>
             <title>Activity management</title>
             <keywords>time-tracker</keywords>
@@ -38,6 +39,7 @@
             <mime-type>text/html</mime-type>
         </supports>
         <supported-locale>en</supported-locale>
+        <resource-bundle>locale.portlet.Time-tracker</resource-bundle>
         <portlet-info>
             <title>Time Tracking</title>
             <keywords>time-tracker</keywords>
@@ -57,6 +59,7 @@
             <mime-type>text/html</mime-type>
         </supports>
         <supported-locale>en</supported-locale>
+        <resource-bundle>locale.portlet.Time-tracker</resource-bundle>
         <portlet-info>
             <title>Time Sheet</title>
             <keywords>time-tracker</keywords>

@@ -48,7 +48,6 @@ const config = {
         new ExtractTextWebpackPlugin('css/timeTracking.css'),
         new ExtractTextWebpackPlugin('css/timeSheet.css'),
     ]
-
 };
 
 module.exports = config;
