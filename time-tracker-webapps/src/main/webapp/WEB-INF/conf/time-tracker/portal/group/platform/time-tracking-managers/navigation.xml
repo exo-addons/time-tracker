@@ -9,13 +9,6 @@
             <name>time-tracking-management</name>
             <label>Time Tracking management</label>
             <page-reference>group::/platform/time-tracking-managers::time-tracking-management</page-reference>
-            <node>
-                <uri>time-tracking-management</uri>
-                <name>time-tracking-management</name>
-                <label>Time Tracking management</label>
-                <page-reference>group::/platform/time-tracking-managers::time-tracking-management</page-reference>
-            </node>
-           
         </node>
     </page-nodes>
 </node-navigation>
