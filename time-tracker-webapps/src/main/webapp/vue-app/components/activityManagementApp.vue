@@ -851,11 +851,6 @@ export default {
 </script>
 
 <style>
-#activityManagementApp {
-    overflow: hidden;
-    padding: 10px 20px;
-}
-
 select {
     width: auto;
 }
