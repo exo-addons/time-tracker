@@ -8,13 +8,9 @@
         <v-layout class="transparent">
           <v-btn
             icon
-            small
-            color="transparent"
             class="uiApplicationIconButton"
             @click="openTimeTrackingDrawer()">
-            <v-icon
-              class="timeTrackingIcon"
-              left>
+            <v-icon class="timeTrackingIcon">
               mdi-clock
             </v-icon>
           </v-btn>
@@ -80,9 +76,3 @@ openTimeTrackingDrawer() {
     },
 };
 </script>
-
-<style>
-  .timeTrackingIcon {
-    color: #a8b3c5 !important;
-  }
-</style>
