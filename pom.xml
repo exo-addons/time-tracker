@@ -22,7 +22,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <parent>
         <artifactId>addons-parent-pom</artifactId>
         <groupId>org.exoplatform.addons</groupId>
-        <version>13-M01</version>
+        <version>14-M01</version>
     </parent>
     <groupId>org.exoplatform.addons.time-tracker</groupId>
     <artifactId>time-tracker</artifactId>
@@ -42,8 +42,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <org.exoplatform.commons.version>6.1.0-M16</org.exoplatform.commons.version>
-        <org.exoplatform.social.version>6.1.0-M16</org.exoplatform.social.version>
+        <org.exoplatform.commons.version>6.2.x-SNAPSHOT</org.exoplatform.commons.version>
+        <org.exoplatform.social.version>6.2.x-SNAPSHOT</org.exoplatform.social.version>
         <org.lombok.version>1.18.2</org.lombok.version>
         <org.jackson.version>2.4.2</org.jackson.version>
     </properties>
