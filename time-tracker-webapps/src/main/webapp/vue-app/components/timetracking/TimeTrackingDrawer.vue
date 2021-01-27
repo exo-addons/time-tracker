@@ -1,5 +1,6 @@
 <template>
-<exo-drawer ref="timeTrackerDrawer" right class="">
+    <div>
+<exo-drawer ref="timeTrackerDrawer" right class="logTimeDrawer">
     <div :class="alert_type" class="alert" id v-if="alert">
         <i :class="alertIcon"></i>
         {{message}}
@@ -40,14 +41,14 @@
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
-
         </div>
-        <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
-        <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     </template>
     <template slot="footer">
     </template>
 </exo-drawer>
+    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
+    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
+    </div>
 </template>
 
 <script>
