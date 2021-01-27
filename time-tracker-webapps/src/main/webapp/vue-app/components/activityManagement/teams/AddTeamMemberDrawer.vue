@@ -7,7 +7,7 @@
         <div>
             <v-form ref="form" v-model="valid">
 
-                <v-row>
+                <div>
                     <v-label for="role">
                         Role
                     </v-label>
@@ -16,14 +16,14 @@
                             {{ item}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="userName">
                         Members
                     </v-label>
                     <exo-identity-suggester ref="autoFocusInput3" v-model="suggestedMembers" :labels="suggesterLabels" name="inviteMembers" type-of-relations="member_of_space" :search-options="searchOptions" include-users multiple />
-                </v-row>
+                </div>
 
             </v-form>
         </div>

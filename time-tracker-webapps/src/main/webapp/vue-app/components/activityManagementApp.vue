@@ -914,26 +914,11 @@ select {
     letter-spacing: .5px;
 }
 
-.drawerContent {
-    margin-top: 50px;
-    margin-bottom: 60px;
-}
-
-.drawerHeader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border-bottom: 1px solid #0000001f;
-    background: white;
-    z-index: 9999;
-}
-
 .drawerIcons {
     flex-direction: row !important;
 }
 
-.drawerFooter {
+/*.drawerFooter {
     padding: 10px !important;
     position: fixed;
     bottom: 0;
@@ -941,7 +926,7 @@ select {
     width: 100%;
     border-top: 1px solid #f0f4fe !important;
     background: white;
-}
+}*/
 
 .infoContent {
     border-top: 1px solid #e1e8ee;

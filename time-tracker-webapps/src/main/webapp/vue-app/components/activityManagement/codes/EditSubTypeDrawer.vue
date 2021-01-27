@@ -6,12 +6,12 @@
     <template slot="content">
         <div>
             <v-form ref="form" v-model="valid">
-                <v-row>
+                <div>
                     <v-label for="code">
                         Code
                     </v-label>
                     <input ref="code" v-model="subType.code" type="text" name="code" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
+                </div>
 
                 <v-row>
                     <v-label for="label">

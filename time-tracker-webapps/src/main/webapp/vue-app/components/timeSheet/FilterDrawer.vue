@@ -1,5 +1,5 @@
 <template>
-<exo-drawer ref="filterDrawer" right class="">
+<exo-drawer ref="filterDrawer" right class="timeSheetFilterDrawer">
     <template slot="title">
         Filter
     </template>
@@ -62,7 +62,7 @@
         <div>
             <form ref="form1">
 
-                <v-row>
+                <div>
                     <v-label for="activity">
                         Activity
                     </v-label>
@@ -71,8 +71,8 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="location">
                         Location
                     </v-label>
@@ -81,8 +81,8 @@
                             {{ item}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="office">
                         Office
                     </v-label>
@@ -91,8 +91,8 @@
                             {{ item}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="type">
                         Type
                     </v-label>
@@ -101,9 +101,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="subType">
                         Sub type
                     </v-label>
@@ -112,9 +112,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="activityCode">
                         Activity Code
                     </v-label>
@@ -123,9 +123,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="subActivityCode">
                         Sub Activity Code
                     </v-label>
@@ -134,9 +134,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="client">
                         Client
                     </v-label>
@@ -145,9 +145,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="project">
                         Project
                     </v-label>
@@ -156,9 +156,9 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="feature">
                         Feature
                     </v-label>
@@ -167,7 +167,7 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
             </form>
         </div>

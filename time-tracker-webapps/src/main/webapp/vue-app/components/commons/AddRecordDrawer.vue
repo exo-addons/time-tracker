@@ -1,44 +1,42 @@
 <template>
-<exo-drawer ref="addTTEntryDrawer" right class="">
+<exo-drawer ref="addTTEntryDrawer" right class="addTTEntryDrawer">
     <template slot="title">
         Add Entry
     </template>
     <template slot="content">
         <div>
-
             <v-form ref="form">
-                <v-row align="center" justify="center">
-
+                <div align="center" justify="center">
                     <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px">
                         <template v-slot:activator="{ on, attrs }">
                             <v-text-field v-model="date" centered prepend-icon="event" readonly v-bind="attrs" v-on="on"></v-text-field>
                         </template>
                         <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
                     </v-menu>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="activity">
                         Activity
                     </v-label>
 
                     <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
 
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="description">
                         Description
                     </v-label>
                     <input id="desc" ref="description" v-model="activityRecord.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="time">
                         Time spent (hours)
                     </v-label>
                     <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="location">
                         Location
                     </v-label>
@@ -47,8 +45,8 @@
                             {{ item}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="office">
                         Office
                     </v-label>
@@ -57,12 +55,12 @@
                             {{item}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="projectVersion"> Project Version </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
@@ -71,7 +69,7 @@
                             {{ item.name}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
             </v-form>
 

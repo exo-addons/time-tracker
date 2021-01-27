@@ -6,7 +6,7 @@
     <template slot="content">
         <div>
             <v-form ref="form" v-model="valid">
-                <v-row>
+                <div>
                     <v-label for="type">
                         Type *
                     </v-label>
@@ -15,8 +15,8 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="subType">
                         Sub Type *
                     </v-label>
@@ -25,8 +25,8 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="activityCode">
                         Activity *
                     </v-label>
@@ -35,8 +35,8 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="subActivityCode">
                         Sub Activity *
                     </v-label>
@@ -45,14 +45,14 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="label">
                         Label *
                     </v-label>
                     <input ref="label" v-model="editedActivity.label" type="text" name="label" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="project">
                         Project *
                     </v-label>
@@ -61,8 +61,8 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
-                <v-row>
+                </div>
+                <div>
                     <v-label for="feature">
                         Feature
                     </v-label>
@@ -71,14 +71,14 @@
                             {{ item.label}}
                         </option>
                     </select>
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="teams">
                         Teams *
                     </v-label>
                     <v-autocomplete v-model="editedActivity.teams" :items="teams" menu-props="closeOnClick"  outlined dense chips small-chips multiple item-text="name" item-value="id"></v-autocomplete>
-                </v-row>
+                </div>
 
             </v-form>
         </div>

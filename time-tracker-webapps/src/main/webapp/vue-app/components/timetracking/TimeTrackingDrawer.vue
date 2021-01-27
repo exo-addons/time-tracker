@@ -15,7 +15,7 @@
         </v-btn>
     </template>
     <template slot="content">
-        <v-row align="center" justify="center">
+        <div align="center" justify="center">
 
             <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y min-width="290px">
                 <template v-slot:activator="{ on, attrs }">
@@ -23,12 +23,12 @@
                 </template>
                 <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
             </v-menu>
-        </v-row>
+        </div>
 
-        <v-row align="center" justify="center">
+        <div align="center" justify="center">
             <h4>Total number of hours: {{total}}</h4>
-        </v-row>
-        <v-row>
+        </div>
+        <div>
             <v-list class="actList" v-if="activityRecords.length>0">
                 <v-list-item :key="item.id" v-for="item in activityRecords" @click="editActivityRecord(item)" class="actItem">
                     <v-list-item-action>
@@ -41,7 +41,7 @@
                 </v-list-item>
             </v-list>
 
-        </v-row>
+        </div>
         <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
         <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     </template>
