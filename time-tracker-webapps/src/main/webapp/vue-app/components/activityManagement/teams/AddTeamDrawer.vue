@@ -6,19 +6,19 @@
     <template slot="content">
         <div>
             <v-form ref="form" v-model="valid">
-                <v-row>
+                <div>
                     <v-label for="name">
                         Name
                     </v-label>
                     <input ref="name" v-model="team.name" type="text" name="name" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
+                </div>
 
-                <v-row>
+                <div>
                     <v-label for="description">
                         Description
                     </v-label>
                     <input ref="description" v-model="team.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
-                </v-row>
+                </div>
 
             </v-form>
         </div>
