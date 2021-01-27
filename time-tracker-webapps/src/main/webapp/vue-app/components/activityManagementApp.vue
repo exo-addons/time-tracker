@@ -98,6 +98,7 @@ export default {
             this.getSubActivityCodes();
             this.getTypes();
             this.getSubTypes();
+            this.getFeatures();
             this.getTeams();
         },
 
