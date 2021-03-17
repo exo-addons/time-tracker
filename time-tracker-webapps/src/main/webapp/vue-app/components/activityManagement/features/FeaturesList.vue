@@ -1,12 +1,14 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="headers" :items="features" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="headers" :items="features" :search="search" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Feature list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="search" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" type="button" @click="openAddFeatureDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Feature
                                 </button>
@@ -39,7 +41,7 @@ editFeatureDrawer,
     },
     props:['features'],
     data: () => ({
-       
+       search: '',
         valid: true,
         
         editedIndex: -1,

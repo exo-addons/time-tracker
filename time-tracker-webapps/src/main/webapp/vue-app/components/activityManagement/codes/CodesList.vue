@@ -1,12 +1,14 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="activityHeaders" :items="activityCodes" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="activityHeaders" :items="activityCodes" :search="searchActivities" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Activity Code list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="searchActivities" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" type="button" @click="openAddActivityCodeDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add ActivityCode
                                 </button>
@@ -29,12 +31,14 @@
 
 
         <v-flex>
-            <v-data-table :headers="subActivityCodeHeaders" :items="subActivityCodes" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="subActivityCodeHeaders" :items="subActivityCodes" :search="searchSubActivities" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Sub Activity Code list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="searchSubActivities" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" subActivityCode="button" @click="openAddSubActivityCodeDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Activity Code
                                 </button>
@@ -81,7 +85,8 @@ export default {
     },
     props:['activityCodes','subActivityCodes'],
     data: () => ({
-       
+       searchActivities: '',
+       searchSubActivities: '',
         valid: true,
         
         editedIndex: -1,

@@ -20,8 +20,8 @@
                     <v-label for="subType">
                         Sub Type *
                     </v-label>
-                    <select v-model="editedActivity.subType" name="subType" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in subTypes" :key="item.id" :value="item">
+                    <select v-model="editedActivity.subType" name="subType" :disabled="!editedActivity.type.id" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in filtredSubTypes" :key="item.id" :value="item">
                             {{ item.code}} - {{ item.label}}
                         </option>
                     </select>
@@ -183,7 +183,14 @@ export default {
                 && this.isNotEmpty(this.editedActivity.subActivityCode)
                 && this.isNotEmpty(this.editedActivity.subType
                 && this.isNotEmpty(this.editedActivity.type))))
-                }
+                },
+         filtredSubTypes() {
+      return this.subTypes.filter(subType => {
+        return (
+          this.editedActivity.type.id && subType.type.id===this.editedActivity.type.id
+        );
+      });
+    }
         },
     methods: {
         isNotEmpty(str){

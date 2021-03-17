@@ -1,12 +1,14 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="typeHeaders" :items="types" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="typeHeaders" :items="types" :search="searchType" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Type list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="searchType" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" type="button" @click="openAddTypeDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Type
                                 </button>
@@ -27,12 +29,14 @@
 
 
         <v-flex>
-            <v-data-table :headers="subTypeHeaders" :items="subTypes" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="subTypeHeaders" :items="subTypes" :search="searchSubType" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Sub Type list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="searchSubType" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" type="button" @click="openAddSubTypeDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Type Code
                                 </button>
@@ -82,7 +86,8 @@ export default {
     },
     props:['types','subTypes'],
     data: () => ({
-       
+       searchType: '',
+       searchSubType: '',
         valid: true,
         
         editedIndex: -1,

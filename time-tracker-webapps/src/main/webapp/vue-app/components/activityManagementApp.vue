@@ -919,17 +919,11 @@ select {
     flex-direction: row !important;
 }
 
-/*.drawerFooter {
-    padding: 10px !important;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    border-top: 1px solid #f0f4fe !important;
-    background: white;
-}*/
-
 .infoContent {
     border-top: 1px solid #e1e8ee;
 }
+
+.inputFilter {
+          max-width: 250px !important;
+        }
 </style>

@@ -1,12 +1,14 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="headers" :items="clients" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="headers" :items="clients" :search="search" sort-by="id" sort-desc class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Client list</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-text-field v-model="search" placeholder="Filter" prepend-inner-icon="fa-filter" class="inputFilter pa-0 mr-3 my-auto"  clearable />  
                         <button class="btn btn-primary pull-left" type="button" @click="openAddClientDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Client
                                 </button>
@@ -39,9 +41,8 @@ editClientDrawer,
     },
     props:['clients'],
     data: () => ({
-       
-        valid: true,
-        
+        search: '',       
+        valid: true,        
         editedIndex: -1,
         editedItem: {
             code: '',
@@ -50,9 +51,7 @@ editClientDrawer,
         defaultItem: {
             code: '',
             label: '',
-           
         },
-             
     }),
 
     computed: {
