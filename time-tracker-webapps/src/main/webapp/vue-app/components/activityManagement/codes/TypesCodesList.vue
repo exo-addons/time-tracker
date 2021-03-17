@@ -39,6 +39,9 @@
 
                     </v-toolbar>
                 </template>
+                <template v-slot:item.type="{ item }">
+                    {{item.code}} - {{item.label}}
+                </template>
                 <template v-slot:item.action="{ item }">
                      <v-icon small class="mr-2" @click="openEditSubTypeDrawer(item)">
                         edit
@@ -106,7 +109,7 @@ export default {
                 text: 'code',
                 align: 'center',
                 sortable: true,
-                value: 'activityCode.label',
+                value: 'code',
             },
             {
                 text: 'Actions',
@@ -134,7 +137,7 @@ export default {
                 text: 'type',
                 align: 'center',
                 sortable: true,
-                value: 'type.label',
+                value: 'type',
             },
             {
                 text: 'Actions',

@@ -16,6 +16,27 @@
 
                     </v-toolbar>
                 </template>
+                <template v-slot:item.type="{ item }">
+                    {{item.type.code}} - {{item.type.label}}
+                </template>
+                <template v-slot:item.subType="{ item }">
+                    {{item.subType.code}} - {{item.subType.label}}
+                </template>
+                <template v-slot:item.activityCode="{ item }">
+                    {{item.activityCode.code}} - {{item.activityCode.label}}
+                </template>
+                <template v-slot:item.subActivityCode="{ item }">
+                    {{item.subActivityCode.code}} - {{item.subActivityCode.label}}
+                </template>
+                <template v-slot:item.project.client="{ item }">
+                    {{item.project.client.code}} - {{item.project.client.label}}
+                </template>
+                <template v-slot:item.project="{ item }">
+                    {{item.project.code}} - {{item.project.label}}
+                </template>
+                <template v-slot:item.feature="{ item }">
+                    {{item.feature.code}} - {{item.feature.label}}
+                </template>
                 <template v-slot:item.action="{ item }">
                      <v-icon small class="mr-2" @click="openEditDrawer(item)">
                         edit
@@ -94,42 +115,42 @@ editActivityDrawer,
                 text: 'type',
                 align: 'center',
                 sortable: true,
-                value: 'type.label',
+                value: 'type',
             },{
                 text: 'subType',
                 align: 'center',
                 sortable: true,
-                value: 'subType.label',
+                value: 'subType',
             },
             {
                 text: 'activity',
                 align: 'center',
                 sortable: true,
-                value: 'activityCode.label',
+                value: 'activityCode',
             },
             {
                 text: 'subActivity',
                 align: 'center',
                 sortable: true,
-                value: 'subActivityCode.label',
+                value: 'subActivityCode',
             },
             {
                 text: 'client  ',
                 align: 'center',
                 sortable: true,
-                value: 'project.client.label',
+                value: 'project.client',
             },
             {
                 text: 'project',
                 align: 'center',
                 sortable: true,
-                value: 'project.label',
+                value: 'project',
             },
             {
                 text: 'feature',
                 align: 'center',
                 sortable: true,
-                value: 'feature.label',
+                value: 'feature',
             },
             {
                 text: 'Actions',

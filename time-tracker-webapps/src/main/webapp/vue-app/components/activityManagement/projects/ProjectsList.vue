@@ -13,6 +13,9 @@
 
                     </v-toolbar>
                 </template>
+                <template v-slot:item.client="{ item }">
+                    {{item.code}} - {{item.label}}
+                </template>
                 <template v-slot:item.action="{ item }">
                      <v-icon small class="mr-2" @click="openEditDrawer(item)">
                         edit
@@ -75,7 +78,7 @@ editProjectDrawer,
                 text: 'client',
                 align: 'center',
                 sortable: true,
-                value: 'client.label',
+                value: 'client',
             },
             {
                 text: 'Actions',
