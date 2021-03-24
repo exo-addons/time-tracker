@@ -28,7 +28,7 @@
 
                     <select v-model="project.client" name="client" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in clients" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>                </div>
                

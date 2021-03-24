@@ -37,6 +37,8 @@ public class Type implements Serializable {
 
   private String            label;
 
+  private String            displayLabel;
+
 
   /**
    * <p>Constructor for Type.</p>
@@ -55,6 +57,7 @@ public class Type implements Serializable {
     this.id = id;
     this.code = code;
     this.label = label;
+    this.displayLabel = code +" - "+label;
 
   }
 

@@ -39,6 +39,8 @@ public class SubType implements Serializable {
 
   private Type            type;
 
+  private String            displayLabel;
+
 
   /**
    * <p>Constructor for SubType.</p>
@@ -59,6 +61,7 @@ public class SubType implements Serializable {
     this.code = code;
     this.label = label;
     this.type = type;
+    this.displayLabel = code +" - "+label;
   }
 
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="activityHeaders" :items="activityCodes" :search="searchActivities" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="activityHeaders" :items="activityCodes" :search="searchActivities" sort-by="label" class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Activity Code list</v-toolbar-title>
@@ -31,7 +31,7 @@
 
 
         <v-flex>
-            <v-data-table :headers="subActivityCodeHeaders" :items="subActivityCodes" :search="searchSubActivities" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="subActivityCodeHeaders" :items="subActivityCodes" :search="searchSubActivities" sort-by="label"  class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Sub Activity Code list</v-toolbar-title>

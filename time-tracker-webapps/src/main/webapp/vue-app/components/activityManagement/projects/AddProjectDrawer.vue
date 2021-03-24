@@ -26,7 +26,7 @@
                     </v-label>
                     <select v-model="project.client" name="client" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in clients" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -75,17 +75,22 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.project)
-            this.project = this.defaultItem
+            this.resetForm()
             this.$refs.addProjectDrawer.close()
         },
         cancel() {
-            this.project = this.defaultItem
+            this.resetForm()
             this.$refs.addProjectDrawer.close()
         },
         open() {
-            this.project = this.defaultItem
+            this.resetForm()
             this.$refs.addProjectDrawer.open()
         },
+        resetForm(){
+          this.project.label=''
+          this.project.code=''
+          this.project.client={id: '',  code: '', label: ''}
+        }
 
     }
 }

@@ -42,6 +42,8 @@ public class Feature implements Serializable {
 
   private String            exo;
 
+  private String            displayLabel;
+
   /**
    * <p>Constructor for Feature.</p>
    */
@@ -63,6 +65,7 @@ public class Feature implements Serializable {
     this.label = label;
     this.spec = spec;
     this.exo = exo;
+    this.displayLabel = code +" - "+label;
   }
 
 }

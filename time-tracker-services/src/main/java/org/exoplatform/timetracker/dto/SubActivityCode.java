@@ -36,6 +36,8 @@ public class SubActivityCode implements Serializable {
 
   private String       label;
 
+  private String            displayLabel;
+
   /**
    * <p>Constructor for SubActivityCode.</p>
    */
@@ -53,6 +55,7 @@ public class SubActivityCode implements Serializable {
     this.id = id;
     this.code = code;
     this.label = label;
+    this.displayLabel = code +" - "+label;
   }
 
 }

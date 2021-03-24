@@ -101,14 +101,25 @@ export default {
             this.getFeatures();
             this.getTeams();
         },
+        compare(a, b) {
+            const clientNameA = a.displayLabel.toUpperCase();
+            const clientNameB = b.displayLabel.toUpperCase();
 
+            let comparison = 0;
+            if (clientNameA > clientNameB) {
+              comparison = 1;
+            } else if (clientNameA < clientNameB) {
+              comparison = -1;
+            }
+            return comparison;
+        },
         getClients() {
             fetch(`/portal/rest/timetracker/clientsmgn/client`, {
                     credentials: 'include',
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.clients = resp;
+                    this.clients = resp.sort(this.compare);
                 });
 
         },
@@ -199,7 +210,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.projects = resp;
+                  this.projects = resp.sort(this.compare);
                 });
 
         },
@@ -290,7 +301,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.features = resp;
+                  this.features = resp.sort(this.compare);
                 });
 
         },
@@ -381,7 +392,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.activityCodes = resp;
+                  this.activityCodes = resp.sort(this.compare);
                 });
 
         },
@@ -472,7 +483,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.subActivityCodes = resp;
+                  this.subActivityCodes = resp.sort(this.compare);
                 });
 
         },
@@ -563,7 +574,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.types = resp;
+                  this.types = resp.sort(this.compare);
                 });
 
         },
@@ -654,7 +665,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.subTypes = resp;
+                  this.subTypes = resp.sort(this.compare);
                 });
 
         },

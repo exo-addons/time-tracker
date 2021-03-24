@@ -63,7 +63,7 @@ export default {
         open() {
             this.activityCode = {code: '',label: ''}
             this.$refs.addActivityCodeDrawer.open()
-        },
+        }
 
     }
 }

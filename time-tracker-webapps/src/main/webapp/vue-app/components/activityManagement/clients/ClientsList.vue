@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="headers" :items="clients" :search="search" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="headers" :items="clients" :search="search" sort-by="label" class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Client list</v-toolbar-title>

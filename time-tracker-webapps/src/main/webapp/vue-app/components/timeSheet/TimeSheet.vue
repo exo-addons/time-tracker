@@ -599,7 +599,7 @@ export default {
                     }
                 })
                 .then((response) => {
-                    this.filters.push(response)
+                    this.getFilters()
                     this.displaySusccessMessage('filter added');
                 })
                 .catch((result) => {

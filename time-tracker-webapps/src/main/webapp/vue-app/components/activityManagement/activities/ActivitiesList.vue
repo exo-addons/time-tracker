@@ -5,7 +5,7 @@
             {{message}}
         </div>
         <v-flex>
-            <v-data-table :headers="headers" :items="activities" :search="search" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="headers" :items="activities" :search="search" sort-by="label" class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Activitiy list</v-toolbar-title>
@@ -16,27 +16,6 @@
                          <i class="uiIconSocSimplePlus uiIconSocWhite"></i>Add Activity</button>
 
                     </v-toolbar>
-                </template>
-                <template v-slot:item.type="{ item }">
-                    {{item.type.code}} - {{item.type.label}}
-                </template>
-                <template v-slot:item.subType="{ item }">
-                    {{item.subType.code}} - {{item.subType.label}}
-                </template>
-                <template v-slot:item.activityCode="{ item }">
-                    {{item.activityCode.code}} - {{item.activityCode.label}}
-                </template>
-                <template v-slot:item.subActivityCode="{ item }">
-                    {{item.subActivityCode.code}} - {{item.subActivityCode.label}}
-                </template>
-                <template v-slot:item.project.client="{ item }">
-                    {{item.project.client.code}} - {{item.project.client.label}}
-                </template>
-                <template v-slot:item.project="{ item }">
-                    {{item.project.code}} - {{item.project.label}}
-                </template>
-                <template v-slot:item.feature="{ item }">
-                    {{item.feature.code}} - {{item.feature.label}}
                 </template>
                 <template v-slot:item.action="{ item }">
                      <v-icon small class="mr-2" @click="openEditDrawer(item)">
@@ -108,58 +87,64 @@ editActivityDrawer,
     computed: {
             headers() {
             return [{
-                text: 'label',
+                text: 'Label',
                 align: 'center',
                 sortable: true,
                 value: 'label',
             },
             {
-                text: 'type',
+                text: 'Type',
                 align: 'center',
                 sortable: true,
-                value: 'type',
+                value: 'type.displayLabel',
             },{
-                text: 'subType',
+                text: 'Sub Type',
                 align: 'center',
                 sortable: true,
-                value: 'subType',
+                value: 'subType.displayLabel',
             },
             {
-                text: 'activity',
+                text: 'Activity',
                 align: 'center',
                 sortable: true,
-                value: 'activityCode',
+                value: 'activityCode.displayLabel',
             },
             {
-                text: 'subActivity',
+                text: 'Sub Activity',
                 align: 'center',
                 sortable: true,
-                value: 'subActivityCode',
+                value: 'subActivityCode.displayLabel',
             },
             {
-                text: 'client  ',
+                text: 'Client  ',
                 align: 'center',
                 sortable: true,
-                value: 'project.client',
+                value: 'project.client.displayLabel',
             },
             {
-                text: 'project',
+                text: 'Project',
                 align: 'center',
                 sortable: true,
-                value: 'project',
+                value: 'project.displayLabel',
             },
             {
-                text: 'feature',
+                text: 'Feature',
                 align: 'center',
                 sortable: true,
-                value: 'feature',
+                value: 'feature.displayLabel',
             },
             {
-                text: 'Actions',
+                text: 'Team',
                 align: 'center',
                 sortable: true,
-                value: 'action',
+                value: 'teamNames',
             },
+            {
+              text: 'Actions',
+              align: 'center',
+              sortable: true,
+              value: 'action',
+            }
             ]
 
         }
@@ -176,7 +161,14 @@ editActivityDrawer,
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.activities = resp;
+                  const activities = resp;
+                  activities.forEach(function(item, index) {
+                    const teams = item.teams.map(function (item) {
+                      return item['name'];
+                    });
+                    item.teamNames=teams.join()
+                  });
+                  this.activities=activities;
                 });
 
         },
@@ -309,6 +301,13 @@ editActivityDrawer,
            const type =  this.fieldList.find(x => x.value === item.type)
            if(type!=null) {return type.title}
            return item.type.value
+        },
+        getTeamNames(item){
+          const teams = item.teams.map(function (item) {
+            return item['name'];
+          });
+          item.teamNames=teams.join()
+          return teams.join()
         }
 
     }

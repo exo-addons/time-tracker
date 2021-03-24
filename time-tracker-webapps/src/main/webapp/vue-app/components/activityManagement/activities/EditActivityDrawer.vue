@@ -12,7 +12,7 @@
                     </v-label>
                     <select v-model="activity.type" name="type" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in types" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -22,7 +22,7 @@
                     </v-label>
                     <select v-model="activity.subType" name="subType" :disabled="!activity.type.id" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in filtredSubTypes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -32,7 +32,7 @@
                     </v-label>
                     <select v-model="activity.activityCode" name="activityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in activityCodes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                     </v-label>
                     <select v-model="activity.subActivityCode" name="subActivityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in subActivityCodes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -58,7 +58,7 @@
                     </v-label>
                     <select v-model="activity.project" name="project" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in projects" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -68,7 +68,7 @@
                     </v-label>
                     <select v-model="activity.feature" name="feature" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in features" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>

@@ -25,7 +25,7 @@
                     </v-label>
                     <select v-model="subType.type" name="type" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in types" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>

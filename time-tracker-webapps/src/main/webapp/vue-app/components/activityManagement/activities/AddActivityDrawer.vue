@@ -12,7 +12,7 @@
                     </v-label>
                     <select v-model="editedActivity.type" name="type" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in types" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -22,7 +22,7 @@
                     </v-label>
                     <select v-model="editedActivity.subType" name="subType" :disabled="!editedActivity.type.id" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in filtredSubTypes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -32,7 +32,7 @@
                     </v-label>
                     <select v-model="editedActivity.activityCode" name="activityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in activityCodes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                     </v-label>
                     <select v-model="editedActivity.subActivityCode" name="subActivityCode" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in subActivityCodes" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -58,7 +58,7 @@
                     </v-label>
                     <select v-model="editedActivity.project" name="project" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in projects" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -68,7 +68,7 @@
                     </v-label>
                     <select v-model="editedActivity.feature" name="feature" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in features" :key="item.id" :value="item">
-                            {{ item.code}} - {{ item.label}}
+                            {{ item.displayLabel}}
                         </option>
                     </select>
                 </div>
@@ -206,18 +206,27 @@ export default {
             }
             this.editedActivity.teams = teams
             this.$emit('save', this.editedActivity)
-            this.editedActivity = this.defaultItem
+            this.resetForm()
             this.$refs.addActivityDrawer.close()
         },
         cancel() {
-            this.editedActivity = this.defaultItem
+            this.resetForm()
             this.$refs.addActivityDrawer.close()
         },
         open() {
-            this.editedActivity = this.defaultItem
+            this.resetForm()
             this.$refs.addActivityDrawer.open()
         },
-
+        resetForm(){
+          this.editedActivity.type={id: '',  code: '', label: ''}
+          this.editedActivity.subType={id: '',  code: '', label: ''}
+          this.editedActivity.activityCode={id: '',  code: '', label: ''}
+          this.editedActivity.subActivityCode={id: '',  code: '', label: ''}
+          this.editedActivity.project={id: '',  code: '', label: ''}
+          this.editedActivity.feature={id: '',  code: '', label: ''}
+          this.editedActivity.label=''
+          this.editedActivity.teams=[]
+        }
     }
 }
 </script>

@@ -73,17 +73,23 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.feature)
-            this.feature = this.defaultItem
+            this.resetForm()
             this.$refs.addFeatureDrawer.close()
         },
         cancel() {
-            this.feature = this.defaultItem
+            this.resetForm()
             this.$refs.addFeatureDrawer.close()
         },
         open() {
-            this.feature = this.defaultItem
+            this.resetForm()
             this.$refs.addFeatureDrawer.open()
         },
+        resetForm(){
+          this.feature.label=''
+          this.feature.code=''
+          this.feature.spec=''
+          this.feature.exo=''
+        }
 
     }
 }

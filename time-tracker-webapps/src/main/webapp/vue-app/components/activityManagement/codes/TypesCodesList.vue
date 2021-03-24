@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-flex>
-            <v-data-table :headers="typeHeaders" :items="types" :search="searchType" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="typeHeaders" :items="types" :search="searchType" sort-by="label" class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Type list</v-toolbar-title>
@@ -29,7 +29,7 @@
 
 
         <v-flex>
-            <v-data-table :headers="subTypeHeaders" :items="subTypes" :search="searchSubType" sort-by="id" sort-desc class="elevation-1">
+            <v-data-table :headers="subTypeHeaders" :items="subTypes" :search="searchSubType" sort-by="label" class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Sub Type list</v-toolbar-title>

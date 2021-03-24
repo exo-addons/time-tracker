@@ -42,6 +42,8 @@ public class Project implements Serializable {
 
   private Client            client;
 
+  private String            displayLabel;
+
   /**
    * <p>Constructor for Project.</p>
    */
@@ -61,6 +63,7 @@ public class Project implements Serializable {
     this.code = code;
     this.label = label;
     this.client = client;
+    this.displayLabel = code +" - "+label;
   }
 
 }

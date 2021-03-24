@@ -57,7 +57,7 @@
         </v-flex>
         <v-divider vertical />
         <v-flex class="sm12 md8" flat>
-            <v-data-table v-if="selectedTeam!=null" :headers="headers" :items="members" sort-by="id" sort-desc>
+            <v-data-table v-if="selectedTeam!=null" :headers="headers" :items="members" sort-by="fullName">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
 

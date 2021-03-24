@@ -57,17 +57,22 @@ export default {
     methods: {
         save() {
             this.$emit('save', this.client)
-            this.client = this.defaultItem
+            this.resetForm()
             this.$refs.addClientDrawer.close()
         },
         cancel() {
-            this.client = this.defaultItem
+            this.resetForm()
             this.$refs.addClientDrawer.close()
         },
         open() {
-            this.client = this.defaultItem
+            this.resetForm()
             this.$refs.addClientDrawer.open()
         },
+        resetForm(){
+          this.client.label=''
+          this.client.code=''
+        }
+
 
     }
 }
