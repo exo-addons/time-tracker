@@ -29,6 +29,7 @@ import org.exoplatform.timetracker.dto.TeamMember;
 import org.exoplatform.timetracker.service.TeamService;
 import org.gatein.api.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -213,6 +214,35 @@ public class TeamStorage {
       e.printStackTrace();
     }
     return null;
+  }
+
+
+  /**
+   * <p>getEmployees.</p>
+   *
+   * @param userName a {@link java.lang.String} object.
+   * @return a {@link java.util.List} object.
+   * @throws java.lang.Exception if any.
+   */
+  public List<TeamMember> getEmployees(String userName)  throws Exception {
+    try {
+      Group group = groupHandler.findGroupById("/spaces/exo_employees");
+      List<Membership> memberships = Arrays.asList(membershipHandler.findAllMembershipsByGroup(group).load(0, -1));
+      if(memberships.size()==0){
+        new ArrayList<TeamMember>();
+      }
+      return memberships.stream().map(teamMemberEntity -> {
+        try {
+          return toDTO(teamMemberEntity);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return null;
+      }).collect(Collectors.toList());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new ArrayList<TeamMember>();
   }
 
 

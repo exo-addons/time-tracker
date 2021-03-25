@@ -139,6 +139,18 @@ public class TeamService {
         return teamStorage.getMembersByTeam(teamID);
     }
 
+    /**
+     * Retrieves the list of Employees
+     * empty
+     *
+     * @return List of {@link org.exoplatform.timetracker.dto.Team} that contains the list of Teams
+     * @param userName a {@link java.lang.String} object.
+     * @throws java.lang.Exception if any.
+     */
+    public List<TeamMember> getEmployeesList(String userName) throws Exception {
+        return teamStorage.getEmployees(userName);
+    }
+
 
     /**
      * Retrieves the list of Teams with offset, limit and a keyword that can be

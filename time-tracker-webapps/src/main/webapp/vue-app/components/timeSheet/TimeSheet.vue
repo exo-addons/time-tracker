@@ -65,7 +65,7 @@
     </v-card>
     <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
     <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
-    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
+    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
 
@@ -125,6 +125,7 @@ export default {
         office: '',
         valid: true,
         search: '',
+        employee: '',
         awaitingSearch: false,
         dialog: false,
         itemToDelete: 0,
@@ -146,6 +147,7 @@ export default {
         clients: [],
         features: [],
         filters: [],
+        employees: [],
 
     }),
 
@@ -274,6 +276,12 @@ export default {
                     value: 'activity.subActivityCode.label',
                 },
                 {
+                    text: 'User',
+                    align: 'center',
+                    sortable: true,
+                    value: 'userName',
+                },
+                {
                     text: 'Actions',
                     align: 'center',
                     sortable: true,
@@ -296,6 +304,7 @@ export default {
             this.feature = val.feature
             this.location = val.location
             this.office = val.office
+            this.employee = val.employee
             this.getActivityRecords(true).then(data => {
                 this.activityRecordsList = data.items
                 this.totalRecords = data.total
@@ -316,7 +325,7 @@ export default {
             this.dateRangeText = this.date.join(' ~ ')
             this.fromDate = this.date[0]
             this.toDate = this.date[1]
-
+            this.getEmployees()
             this.getClients()
             this.getProjects();
             this.getActivityCodes();
@@ -325,23 +334,8 @@ export default {
             this.getSubTypes();
             this.getActivities();
             this.getFilters();
-
-            /*             this.getActivityRecords()
-                            .then(data => {
-                                this.activityRecordsList = data.items
-                                this.totalRecords = data.total
-                            }) */
-
         },
 
-        /*         edit(item) {
-
-                },
-
-                delete_(item) {
-
-                },
-         */
         close() {
             this.dialog = false;
             this.editedItem = this.defaultItem;
@@ -406,7 +400,7 @@ export default {
                 if (typeof itemsPerPage === 'undefined') {
                     limit_ = 10
                 }
-                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}`, {
+                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
@@ -447,7 +441,18 @@ export default {
 
         },
 
-        getClients() {
+        getEmployees() {
+            fetch(`/portal/rest/timetracker/teamsmgn/employees`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.employees = resp;
+                });
+
+        },
+
+      getClients() {
             fetch(`/portal/rest/timetracker/clientsmgn/client`, {
                     credentials: 'include',
                 })

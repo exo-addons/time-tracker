@@ -96,7 +96,7 @@ public class FiltersManagementREST implements ResourceContainer {
    */
   @POST
   @Path("filter")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new Filter", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -130,7 +130,7 @@ public class FiltersManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("filter/{filterId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @ApiOperation(value = "Deletes an existing Filter identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),

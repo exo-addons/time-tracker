@@ -35,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -338,6 +339,37 @@ public class TeamManagementREST implements ResourceContainer {
     }
     LOG.info("service=time-tracker operation=delete-team-member parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
+  }
+
+
+  /**
+   * <p>getTeamMembers.</p>
+   *
+   * @param teamId a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
+  @GET
+  @Path("employees")
+  @RolesAllowed("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Retrieves all employees related to current user", httpMethod = "GET", response = Response.class, produces = "application/json")
+  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
+          @ApiResponse(code = 500, message = "Internal server error") })
+  public Response getEmployees(@ApiParam(value = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
+    try {
+      Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
+      if (sourceIdentity == null) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      List<TeamMember> employees = new ArrayList<>();
+      if(ConversationState.getCurrent().getIdentity().isMemberOf("/platform/time-tracking-managers")){
+        employees = teamService.getEmployeesList(sourceIdentity.getRemoteId());
+      }
+      return Response.ok(employees).build();
+    } catch (Exception e) {
+      LOG.error("Unknown error occurred while getting TeamMembers", e);
+      return Response.serverError().build();
+    }
   }
 
 

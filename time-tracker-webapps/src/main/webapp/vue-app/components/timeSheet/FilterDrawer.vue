@@ -61,6 +61,16 @@
     <template slot="content">
         <div>
             <form ref="form1">
+                <div v-if="employees.length>0">
+                  <v-label for="employees">
+                    Employee
+                  </v-label>
+                  <select v-model="employee" name="employee" class="input-block-level ignore-vuetify-classes my-3">
+                    <option v-for="item in employees" :key="item.userName" :value="item.userName">
+                      {{ item.fullName}}
+                    </option>
+                  </select>
+                </div>
 
                 <div>
                     <v-label for="activity">
@@ -168,7 +178,6 @@
                         </option>
                     </select>
                 </div>
-
             </form>
         </div>
     </template>
@@ -199,7 +208,7 @@
 <script>
 export default {
 
-    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'filters'],
+    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'employees', 'filters'],
 
     data: () => ({
         showName: false,
@@ -232,6 +241,7 @@ export default {
             this.feature = 0
             this.location = ""
             this.office = ""
+            this.employee = ""
         },
         aplyFilter() {
             const filter_ = {
@@ -244,7 +254,8 @@ export default {
                 project: this.project,
                 feature: this.feature,
                 location: this.location,
-                office: this.office
+                office: this.office,
+                employee: this.employee
             }
             this.$emit('addFilter', filter_);
             this.$refs.filterDrawer.close();
@@ -260,6 +271,7 @@ export default {
             this.feature = filter.fields.feature
             this.location = filter.fields.location
             this.office = filter.fields.office
+            this.employee = filter.fields.employee
         },
         cancel() {
             this.$refs.filterDrawer.close();
@@ -283,7 +295,8 @@ export default {
                 project: this.project,
                 feature: this.feature,
                 location: this.location,
-                office: this.office
+                office: this.office,
+              employee: this.employee
             }
             this.$emit('saveFilter', filter_);
         },
