@@ -310,6 +310,19 @@ export default {
                 this.totalRecords = data.total
             })
         },
+
+        compare(a, b) {
+          const userNameA = a.fullName.toUpperCase();
+          const userNameB = b.fullName.toUpperCase();
+
+          let comparison = 0;
+          if (userNameA > userNameB) {
+            comparison = 1;
+          } else if (userNameA < userNameB) {
+            comparison = -1;
+          }
+          return comparison;
+        },
         toggleFilterDrawer() {
             this.$refs.filterDrawer.open()
         },
@@ -447,7 +460,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                    this.employees = resp;
+                    this.employees = resp.sort(this.compare);
                 });
 
         },

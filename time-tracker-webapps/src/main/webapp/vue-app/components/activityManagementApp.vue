@@ -102,13 +102,13 @@ export default {
             this.getTeams();
         },
         compare(a, b) {
-            const clientNameA = a.displayLabel.toUpperCase();
-            const clientNameB = b.displayLabel.toUpperCase();
+            const displayLabelA = a.displayLabel.toUpperCase();
+            const displayLabelB = b.displayLabel.toUpperCase();
 
             let comparison = 0;
-            if (clientNameA > clientNameB) {
+            if (displayLabelA > displayLabelB) {
               comparison = 1;
-            } else if (clientNameA < clientNameB) {
+            } else if (displayLabelA < displayLabelB) {
               comparison = -1;
             }
             return comparison;
