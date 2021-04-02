@@ -5,7 +5,6 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.timetracker.dto.Client;
-import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.dto.SalesOrder;
 import org.junit.Test;
 
@@ -122,7 +121,7 @@ public class SalesOrderServiceTest extends TestCase {
             try {
                 salesOrderService.deleteSalesOrder(10L, "root");
             } catch (EntityNotFoundException e) {
-                // Expected project should exist in DB
+                // Expected order should exist in DB
             }
             SalesOrder order = createSalesOrders(1).get(0);
             assertEquals(1, salesOrderService.getSalesOrdersList().size());
