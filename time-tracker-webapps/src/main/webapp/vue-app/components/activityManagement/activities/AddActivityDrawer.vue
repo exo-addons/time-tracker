@@ -77,7 +77,7 @@
                     <v-label for="teams">
                         Teams *
                     </v-label>
-                  <v-select
+                  <v-autocomplete
                       ref="select"
                       v-model="editedActivity.teams"
                       :items="teams"

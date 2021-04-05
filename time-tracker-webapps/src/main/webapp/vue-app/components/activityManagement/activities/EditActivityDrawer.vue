@@ -77,7 +77,7 @@
                     <v-label for="teals">
                         Teams
                     </v-label>
-                  <v-select
+                  <v-autocomplete
                       ref="selectEdit"
                       v-model="teamIds"
                       :items="teams"
