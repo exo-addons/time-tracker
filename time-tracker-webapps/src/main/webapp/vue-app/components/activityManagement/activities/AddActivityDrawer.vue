@@ -77,7 +77,19 @@
                     <v-label for="teams">
                         Teams *
                     </v-label>
-                    <v-autocomplete v-model="editedActivity.teams" :items="teams" menu-props="closeOnClick"  outlined dense chips small-chips multiple item-text="name" item-value="id"></v-autocomplete>
+                  <v-autocomplete
+                      ref="select"
+                      v-model="editedActivity.teams"
+                      :items="teams"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="name"
+                      item-value="id"
+                      @click.stop/>
                 </div>
 
             </v-form>
@@ -192,6 +204,11 @@ export default {
       });
     }
         },
+  mounted() {
+    window.addEventListener("click",() => {
+      this.$refs.select.blur();
+    });
+  },
     methods: {
         isNotEmpty(str){
               return(str!=null && str.id!==null && str.id!=="")
