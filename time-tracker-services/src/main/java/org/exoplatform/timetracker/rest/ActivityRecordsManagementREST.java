@@ -34,10 +34,23 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.service.rest.Util;
-import org.exoplatform.timetracker.dto.ActivityRecord;
+import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.service.ActivityRecordService;
 
 import io.swagger.annotations.*;
+
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>ActivityRecordsManagementREST class.</p>
@@ -55,6 +68,11 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   private final String          portalContainerName = "portal";
 
   private final ActivityRecordService activityRecordService;
+
+  private final String DATE_FORMAT = "yyyy-MM-dd";
+
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
 
   /**
    * <p>Constructor for ActivityRecordsManagementREST.</p>
@@ -110,8 +128,6 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    * @param office a {@link java.lang.String} object.
    * @param sortBy a {@link java.lang.String} object.
    * @param sortDesc a {@link java.lang.Boolean} object.
-   * @param page a int.
-   * @param limit a int.
    * @param export a {@link java.lang.Boolean} object.
    * @return a {@link javax.ws.rs.core.Response} object.
    */
@@ -139,8 +155,6 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                                          @QueryParam("office") String office,
                                          @QueryParam("sortby") String sortBy,
                                          @QueryParam("sortdesc") Boolean sortDesc,
-                                         @QueryParam("page") int page,
-                                         @QueryParam("limit") int limit,
                                          @QueryParam("export") Boolean export) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -150,11 +164,66 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
-      return Response.ok(activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, page, limit, sortBy, sortDesc)).build();
+      RecordsAccessList recordsAccessList =  activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
+
+
+      List<ActivityRecord> act = new ArrayList<>();
+      List<ActivityRecord> activityRecordList = new ArrayList<>();
+      LocalDate from_ = LocalDate.now();
+      LocalDate to_  = LocalDate.now();
+          try {
+            if (StringUtils.isNotEmpty(fromDate)) {
+              from_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(fromDate));
+            }else{
+              String from = recordsAccessList.getActivityRecords().get(recordsAccessList.getSize().intValue()-1).getActivityDate();
+              from_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(from));
+            }
+            if (StringUtils.isNotEmpty(toDate)) {
+              to_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(toDate));
+            }else{
+              String to = recordsAccessList.getActivityRecords().get(0).getActivityDate();
+              to_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(to));
+            }
+
+
+            for (LocalDate d : getDatesBetween(from_,to_)){
+              String day = d.format(formatter);
+              act=recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
+              if(act.size()>0){
+                float TimeSum  = act.stream().map(x -> x.getTime()).reduce(0.0f, (a, b) -> a + b);
+                for(ActivityRecord activityRecord : act){
+                  activityRecord.setDailyTimeSum(TimeSum);
+                  activityRecordList.add(activityRecord);
+                }
+
+              }else{
+                Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                DayOfWeek dayOfWeek = d.getDayOfWeek();
+                if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
+                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(8),"",null,null,null,null));
+                }else {
+                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null));
+                }
+              }
+            }
+          } catch (Exception e) {
+            LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
+          }
+      return Response.ok(activityRecordList).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);
       return Response.serverError().build();
     }
+  }
+
+  public static List<LocalDate> getDatesBetween(
+          LocalDate startDate, LocalDate endDate) {
+
+    long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+    return IntStream.iterate(0, i -> i + 1)
+            .limit(numOfDaysBetween+1)
+            .mapToObj(i -> startDate.plusDays(i))
+            .collect(Collectors.toList());
   }
 
   /**

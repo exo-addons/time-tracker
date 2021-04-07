@@ -143,7 +143,7 @@ export default {
         cancel() {
             this.$refs.addTTEntryDrawer.close()
         },
-        open() {  
+        open() {
             if(!this.activityRecord.time){
         this.getLastActivityRecord()
             .then(data => {

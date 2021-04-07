@@ -150,7 +150,7 @@ export default {
         cancel() {
             this.$refs.addTTEntryDrawer.close()
         },
-        open() {           
+        open(timeRecord) {
         this.getLastActivityRecord()
             .then(data => {
                 if (data.items.length > 0) {
@@ -158,6 +158,11 @@ export default {
                     this.activityRecord.time = null
                 }
             })
+          if(timeRecord){
+            this.activityRecord.activityTime=timeRecord.activityTime
+            this.activityRecord.activityDate=timeRecord.activityDate
+            this.date=timeRecord.activityDate
+          }
             this.$refs.addTTEntryDrawer.open()
             window.setTimeout(() => this.$refs.description.focus(), 200);
         },

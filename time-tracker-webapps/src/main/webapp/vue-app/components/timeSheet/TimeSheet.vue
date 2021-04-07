@@ -8,7 +8,8 @@
         <v-card-text>
             <v-layout>
 
-                <v-data-table :headers="headers" :items="activityRecordsList" :options.sync="options" :server-items-length="totalRecords" :loading="loading" elevation="0">
+                <v-data-table :headers="headers" :items="activityRecordsList"  elevation="0" :item-class="itemRowBackground" :loading="loading"
+                              loading-text="Loading... Please wait" disable-pagination hide-default-footer>
                     <template v-slot:top>
                         <v-toolbar color="white" flat>
                             <template>
@@ -49,15 +50,19 @@
                         {{roundVlaue(item)}}
                     </template>
                     <template v-slot:item.action="{ item }">
-                        <v-icon small class="mr-2" @click="editActivityRecord(item)">
+                        <v-icon  small class="mr-2" @click="openAddTTEntryDrawer(item)">
+                            add
+                        </v-icon>
+                        <v-icon  v-if="item.id" small class="mr-2" @click="editActivityRecord(item)">
                             edit
                         </v-icon>
-                        <v-icon small @click="deleteItem(item)">
+                        <v-icon  v-if="item.id" small @click="deleteItem(item)">
                             delete
                         </v-icon>
                     </template>
 
                     <template v-slot:no-data>No Activities</template>
+
                 </v-data-table>
             </v-layout>
 
@@ -155,17 +160,18 @@ export default {
         this.initialize()
     },
     watch: {
-        options: {
+/*        options: {
             handler() {
                 this.getActivityRecords()
                     .then(data => {
-                        this.activityRecordsList = data.items
-                        this.totalRecords = data.total
+                      this.activityRecordsList = data
+                        /!*this.activityRecordsList = data.items
+                        this.totalRecords = data.total*!/
                     })
 
             },
             deep: true,
-        },
+        },*/
         dialog(val) {
             return val === true || this.close() === true;
         },
@@ -310,6 +316,15 @@ export default {
                 this.totalRecords = data.total
             })
         },
+      itemRowBackground: function (item) {
+        if (item.activityTime.day === 6||item.activityTime.day === 0) {
+          return "weekend";
+        }else if(!item.activity){
+          return "not-valid";
+        }else if(!item.location || !item.office || item.dailyTimeSum!==8){
+          return "to-be-fixed";
+        }
+      },
 
         compare(a, b) {
           const userNameA = a.fullName.toUpperCase();
@@ -326,14 +341,14 @@ export default {
         toggleFilterDrawer() {
             this.$refs.filterDrawer.open()
         },
-        openAddTTEntryDrawer() {
-            this.$refs.addTTEntryDrawer.open()
+        openAddTTEntryDrawer(item) {
+            this.$refs.addTTEntryDrawer.open(item)
         },
 
         initialize() {
             const date = new Date();
             const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
-            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
             this.date = [firstDay.toISOString().substr(0, 10), lastDay.toISOString().substr(0, 10)]
             this.dateRangeText = this.date.join(' ~ ')
             this.fromDate = this.date[0]
@@ -347,6 +362,10 @@ export default {
             this.getSubTypes();
             this.getActivities();
             this.getFilters();
+            this.getActivityRecords(true).then(data => {
+              this.activityRecordsList = data.items
+              this.totalRecords = data.total
+          })
         },
 
         close() {
@@ -382,48 +401,23 @@ export default {
             this.alert = true;
             setTimeout(() => (this.alert = false), 5000);
         },
-        getActivityRecords(init) {
+        getActivityRecords(toExport) {
             this.loading = true
             return new Promise((resolve, reject) => {
-                const {
-                    sortBy,
-                    sortDesc,
-                    page,
-                    itemsPerPage
-                } = this.options
-                let sort = ""
-                let desc = false
-                let offset = page
-                let limit_ = itemsPerPage
-                const toExport = false
-                if (typeof sortBy !== 'undefined' && sortBy.length > 0) {
-                    sort = sortBy[0]
-                    if (sortDesc.length > 0) {
-                        desc = sortDesc[0]
-                    }
-                }
-                if (init) {
-                    this.options.page = 1
-                }
-                if (typeof page === 'undefined') {
-                    offset = 0
-                } else {
-                    offset = (page - 1) * itemsPerPage
-                }
-                if (typeof itemsPerPage === 'undefined') {
-                    limit_ = 10
-                }
+              const sort = ""
+              const desc = false
+              const offset = 0
+              const limit_ = 0
+
                 fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
                     .then((resp) => {
-                        const items = resp.activityRecords
-                        const total = resp.size
+                        const items = resp
                         this.loading = false
                         resolve({
-                            items,
-                            total,
+                          items,
                         })
 
                     })
@@ -648,17 +642,16 @@ export default {
                     }
                 })
                 .then((response) => {
-                    this.getActivityRecords()
-                        .then(data => {
-                            this.activityRecordsList = data.items
-                            this.totalRecords = data.total
-                        })
+                    this.getActivityRecords().then(data => {
+                      this.activityRecordsList = data.items
+                    })
 
-                    //this.activities.push(activity)
                     this.displaySusccessMessage('activity added');
                 })
                 .catch((result) => {
-                    this.getActivityRecords();
+                    this.getActivityRecords().then(data => {
+                      this.activityRecordsList = data.items
+                    });
                     result.text().then((body) => {
                         this.displayErrorMessage(body);
                     });
@@ -684,7 +677,6 @@ export default {
                     this.getActivityRecords()
                         .then(data => {
                             this.activityRecordsList = data.items
-                            this.totalRecords = data.total
                         })
 
                     this.displaySusccessMessage('activity added');
@@ -693,7 +685,6 @@ export default {
                     this.getActivityRecords()
                         .then(data => {
                             this.activityRecordsList = data.items
-                            this.totalRecords = data.total
                         })
 
                     result.text().then((body) => {
@@ -749,7 +740,6 @@ export default {
                     this.getActivityRecords()
                         .then(data => {
                             this.activityRecordsList = data.items
-                            this.totalRecords = data.total
                         })
 
                     this.displaySusccessMessage('client deleted');
@@ -759,7 +749,6 @@ export default {
                     this.getActivityRecords()
                         .then(data => {
                             this.activityRecordsList = data.items
-                            this.totalRecords = data.total
                         })
 
                     result.text().then((body) => {
@@ -833,5 +822,14 @@ export default {
 .btn-export {
     border-style: solid !important;
     margin-left: 10px;
+}
+.weekend {
+  background-color: #b3b3b3;
+}
+.not-valid {
+  background-color: #ff9999;
+}
+.to-be-fixed {
+  background-color: #ffcc80;
 }
 </style>

@@ -102,7 +102,10 @@ export default {
     methods: {
 
         save() {
+          if(!this.activityRecord.activity.id){
             this.activityRecord.activity = {id:this.activityRecord.activity}
+          }
+
             this.$emit('save', this.activityRecord)
             this.$refs.editDrawer.close()
         },

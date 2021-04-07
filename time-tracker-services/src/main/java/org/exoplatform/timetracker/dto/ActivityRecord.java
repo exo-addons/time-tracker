@@ -49,6 +49,8 @@ public class ActivityRecord implements Serializable {
 
   private Float               time;
 
+  private Float               dailyTimeSum;
+
   private SalesOrder        salesOrder;
 
   private String            projectVersion;
