@@ -22,7 +22,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <parent>
         <artifactId>addons-parent-pom</artifactId>
         <groupId>org.exoplatform.addons</groupId>
-        <version>14-M04</version>
+        <version>14-M05</version>
     </parent>
     <groupId>org.exoplatform.addons.time-tracker</groupId>
     <artifactId>time-tracker</artifactId>
@@ -105,16 +105,4 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- Maven Plugin for JS and CSS bundling and Unit Test execution -->
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <version>${com.github.eirslett.frontend.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>
