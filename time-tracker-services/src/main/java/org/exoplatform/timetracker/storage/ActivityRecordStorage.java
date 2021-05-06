@@ -212,6 +212,16 @@ public class ActivityRecordStorage {
         return recordsAccessList;
     }
 
+    /**
+     * <p>get Last Activity Record.</p>
+     *
+     * @param userName a {@link String} object.
+     * @return a {@link org.exoplatform.timetracker.dto.RecordsAccessList} object.
+     */
+    public ActivityRecord getLastActivityRecord(String userName) {
+        return toDTO(activityRecordDAO.getLastActivityRecord(userName));
+    }
+
 
     /**
      * <p>countActivityRecords.</p>

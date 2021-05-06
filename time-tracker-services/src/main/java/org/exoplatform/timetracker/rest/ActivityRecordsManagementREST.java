@@ -215,6 +215,36 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+  /**
+   * <p>get Last ActivityRecord.</p>
+   *
+   * @param uriInfo a {@link javax.ws.rs.core.UriInfo} object.
+   * @param userName a {@link java.lang.String} object.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
+  @GET
+  @Path("activityrecord/last")
+  @RolesAllowed("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
+  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
+      @ApiResponse(code = 500, message = "Internal server error") })
+  public Response getActivityRecordsList(@Context UriInfo uriInfo,
+                                         @QueryParam("userName") String userName) {
+    try {
+      Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
+      if (sourceIdentity == null) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      if (StringUtils.isEmpty(userName)){
+        userName=sourceIdentity.getRemoteId();
+      }
+      return Response.ok(activityRecordService.getLastActivityRecord(userName)).build();
+    } catch (Exception e) {
+      LOG.error("Unknown error occurred while getting ActivityRecords", e);
+      return Response.serverError().build();
+    }
+  }
 
   public static List<LocalDate> getDatesBetween(
           LocalDate startDate, LocalDate endDate) {

@@ -71,6 +71,26 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
     }
 
     /**
+     * <p>get Last Activity Record.</p>
+     *
+     * @param userName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
+    public ActivityRecordEntity getLastActivityRecord(String userName) {
+
+        TypedQuery<ActivityRecordEntity> query = getEntityManager().createNamedQuery("ActivityRecordEntity.getLastActivityRecord", ActivityRecordEntity.class)
+                .setParameter("userName", userName).setMaxResults(1);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            LOG.error("Error occurred when trying to get last activity by user {}",  userName, e);
+            return null;
+        }
+    }
+
+    /**
      * <p>getActivityRecords.</p>
      *
      * @param search a {@link java.lang.String} object.

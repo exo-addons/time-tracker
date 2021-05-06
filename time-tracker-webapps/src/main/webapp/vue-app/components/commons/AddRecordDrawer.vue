@@ -118,17 +118,15 @@ export default {
                 getLastActivityRecord() {
             return new Promise((resolve, reject) => {
 
-                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=&activity=0&type=0&subType=0&activityCode=0&subActivityCode=0&client=0&project=0&feature=0&fromDate=&toDate=&location=&office=&sortby=id&sortdesc=true&page=0&limit=1&export=false`, {
+                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/last`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
                     .then((resp) => {
-                        const items = resp.activityRecords
-                        const total = resp.size
+                        const item = resp
                         this.loading = false
                         resolve({
-                            items,
-                            total,
+                          item,
                         })
 
                     })
@@ -153,8 +151,8 @@ export default {
         open(timeRecord) {
         this.getLastActivityRecord()
             .then(data => {
-                if (data.items.length > 0) {
-                    this.activityRecord = data.items[0]
+                if (data.item) {
+                    this.activityRecord = data.item
                     this.activityRecord.time = null
                 }
             })

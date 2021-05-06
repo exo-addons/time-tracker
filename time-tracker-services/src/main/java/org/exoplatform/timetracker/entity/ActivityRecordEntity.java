@@ -35,7 +35,8 @@ import lombok.Data;
 @Table(name = "ADDONS_TT_ACTIVITY_RECORD")
 @Data
 @NamedQueries({
-        @NamedQuery(name = "ActivityRecordEntity.getActivityRecordsByDay", query = "SELECT activity FROM ActivityRecordEntity activity where activity.activityDate = :day and activity.userName = :userName ") })
+        @NamedQuery(name = "ActivityRecordEntity.getActivityRecordsByDay", query = "SELECT activity FROM ActivityRecordEntity activity where activity.activityDate = :day and activity.userName = :userName "),
+        @NamedQuery(name = "ActivityRecordEntity.getLastActivityRecord", query = "SELECT activity FROM ActivityRecordEntity activity where  activity.userName = :userName ORDER BY  activity.id DESC") })
 public class ActivityRecordEntity {
 
 

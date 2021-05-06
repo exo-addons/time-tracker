@@ -178,6 +178,17 @@ public class ActivityRecordService {
    * empty
    *
    * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @param userName a {@link java.lang.String} object.
+   */
+  public ActivityRecord getLastActivityRecord( String userName) {
+    return activityRecordstorage.getLastActivityRecord(userName);
+  }
+
+  /**
+   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
+   * empty
+   *
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
    * @param search a {@link java.lang.String} object.
    * @param activity a {@link java.lang.Long} object.
    * @param type a {@link java.lang.Long} object.
