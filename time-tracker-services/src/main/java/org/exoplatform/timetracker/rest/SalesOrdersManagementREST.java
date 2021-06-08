@@ -96,7 +96,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
    */
   @POST
   @Path("salesOrder")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new SalesOrder", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -128,7 +128,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("salesOrder")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing SalesOrder identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -162,7 +162,7 @@ public class SalesOrdersManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("salesOrder/{salesOrderId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing SalesOrder identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),

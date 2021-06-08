@@ -95,7 +95,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @POST
   @Path("activityCode")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new ActivityCode", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -127,7 +127,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("activityCode")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing ActivityCode identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -161,7 +161,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("activityCode/{activityCodeId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing ActivityCode identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -222,7 +222,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @POST
   @Path("subActivityCode")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new SubActivityCode", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -254,7 +254,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("subActivityCode")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing SubActivityCode identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -288,7 +288,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("subActivityCode/{subActivityCodeId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing SubActivityCode identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -350,7 +350,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @POST
   @Path("type")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new Type", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -382,7 +382,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("type")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing Type identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -416,7 +416,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("type/{typeId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing Type identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -477,7 +477,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @POST
   @Path("subType")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new SubType", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -510,7 +510,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("subType")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing SubType identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -544,7 +544,7 @@ public class CodesManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("subType/{subTypeId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing SubType identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),

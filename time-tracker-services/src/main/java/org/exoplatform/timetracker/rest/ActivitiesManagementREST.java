@@ -131,7 +131,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
      */
     @POST
     @Path("activity")
-    @RolesAllowed("administrators")
+    @RolesAllowed("time-tracking-managers")
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Creates a new Activity", httpMethod = "POST", response = Response.class, notes = "empty response")
     @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -163,7 +163,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
      */
     @PUT
     @Path("activity")
-    @RolesAllowed("administrators")
+    @RolesAllowed("time-tracking-managers")
     @ApiOperation(value = "Updates an existing Activity identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
     @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
             @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -197,7 +197,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
      */
     @DELETE
     @Path("activity/{activityId}")
-    @RolesAllowed("administrators")
+    @RolesAllowed("time-tracking-managers")
     @ApiOperation(value = "Deletes an existing Activity identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
     @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
             @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),

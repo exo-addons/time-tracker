@@ -123,7 +123,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @POST
   @Path("team")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new Team", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -155,7 +155,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("team")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing Team identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -189,7 +189,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("team")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing Team identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -250,7 +250,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @POST
   @Path("teamMember")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new TeamMember", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -282,7 +282,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @POST
   @Path("teamMember/all")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new TeamMember", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -315,7 +315,7 @@ public class TeamManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("teamMember")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing TeamMember identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
           @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),

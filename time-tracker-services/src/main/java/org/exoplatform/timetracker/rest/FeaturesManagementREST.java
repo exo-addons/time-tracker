@@ -96,7 +96,7 @@ public class FeaturesManagementREST implements ResourceContainer {
    */
   @POST
   @Path("feature")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Creates a new Feature", httpMethod = "POST", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
@@ -128,7 +128,7 @@ public class FeaturesManagementREST implements ResourceContainer {
    */
   @PUT
   @Path("feature")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Updates an existing Feature identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
@@ -162,7 +162,7 @@ public class FeaturesManagementREST implements ResourceContainer {
    */
   @DELETE
   @Path("feature/{featureId}")
-  @RolesAllowed("administrators")
+  @RolesAllowed("time-tracking-managers")
   @ApiOperation(value = "Deletes an existing Feature identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
   @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
