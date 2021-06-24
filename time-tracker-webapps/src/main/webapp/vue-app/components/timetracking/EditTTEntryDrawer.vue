@@ -44,7 +44,7 @@
                         </option>
                     </select>
                 </div>
-               
+
                 <div>
                     <v-label for="location">
                         Location
@@ -65,7 +65,22 @@
                         </option>
                     </select>
                 </div>
-                
+                <div>
+                    <v-label for="projectVersion">
+                        Project Version
+                    </v-label>
+                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
+                </div>
+                <div>
+                    <v-label for="salesOrder">
+                        Sales Order
+                    </v-label>
+                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
+                            {{ item.name}}
+                        </option>
+                    </select>
+                </div>
 
             </v-form>
 
@@ -99,7 +114,6 @@ export default {
     }),
     created() {
         //  this.initialize()
-        console.log(this.activityRecord)
     },
 
     methods: {
