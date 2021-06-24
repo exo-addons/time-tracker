@@ -81,31 +81,19 @@
         </v-flex>
 
         <v-flex>
-            <div>
-                    <v-label for="defaultFeatureSubActivity">
-                        Default subactivity for features
-                    </v-label>
-                    <select v-model="otherSettings.defaultFeatureSubActivity" name="defaultFeatureSubActivity" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in subActivityCodes" :key="item.id" :value="item">
-                            {{ item.displayLabel}}
-                        </option>
-                    </select>
-                    </div>
-                    <div>
-                    <v-label for="label">
-                        Users Space
-                    </v-label>
-                    <input ref="usersSpace" v-model="otherSettings.usersSpace" type="text" name="usersSpace" class="input-block-level ignore-vuetify-classes my-3" />
-                </div>
-                <div class="d-flex">
-            <v-spacer />
-
-            <v-btn class="btn btn-primary" @click="saveSettings()">
-                <template>
-                    Save
-                </template>
-            </v-btn>
-        </div>
+            <v-card outlined style="padding: 16px;">
+             <v-form ref="form">
+                        <v-text-field v-model="otherSettings.usersSpace" label="Users Space"></v-text-field>
+                        <v-select v-model="otherSettings.defaultFeatureSubActivity" :items="subActivityCodes" item-text="displayLabel" item-value="id" label="Default subactivity for features"></v-select>  
+                        <v-card-actions>
+                            <div class="flex-grow-1"></div>
+                            <div class="uiAction">
+                                <button :disabled="!valid" @click="saveSettings()" class="btn btn-primary" type="button">Save</button>
+                            </div>
+                        </v-card-actions>
+                    </v-form>
+                </v-card>
+           
         </v-flex>
 
         <add-office-drawer ref="addOfficeDrawer" v-on:save="addOffice" />

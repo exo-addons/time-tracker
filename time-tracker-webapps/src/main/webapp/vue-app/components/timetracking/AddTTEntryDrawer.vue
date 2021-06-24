@@ -57,7 +57,7 @@
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
-                    <select v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                    <select v-if="salesOrders.length>0" v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in salesOrders" :key="item.id" :value="item">
                             {{ item.name}}
                         </option>
@@ -103,6 +103,18 @@ export default {
     created() {
 
         //  this.initialize()
+    },
+    watch: {
+
+        activityRecord(val) {
+
+        const activity = this.activities.find(x => x.id === val.activity);
+        if(activity && activity.project && activity.project.client){
+            this.salesOrders=activity.project.client.salesOrders
+
+        }
+        }
+
     },
 
     methods: {

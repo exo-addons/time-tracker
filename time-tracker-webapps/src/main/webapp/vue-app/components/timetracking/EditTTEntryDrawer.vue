@@ -59,8 +59,8 @@
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
-                    <select v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in salesOrders" :key="item.id" :value="item">
+                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
                             {{ item.name}}
                         </option>
                     </select>
@@ -98,6 +98,7 @@ export default {
     }),
     created() {
         //  this.initialize()
+        console.log(this.activityRecord)
     },
 
     methods: {
