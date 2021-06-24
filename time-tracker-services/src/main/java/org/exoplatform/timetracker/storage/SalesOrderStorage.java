@@ -59,10 +59,10 @@ public class SalesOrderStorage {
     if (salesOrder == null) {
       throw new IllegalArgumentException("SalesOrder is mandatory");
     }
-    SalesOrderEntity salesOrderEntity = toEntity(salesOrder);
     salesOrder.setId(null);
+    SalesOrderEntity salesOrderEntity = toEntity(salesOrder);
     salesOrderEntity = salesOrderDAO.create(salesOrderEntity);
-    return toDTO(salesOrderEntity);
+    return toDTOWoClient(salesOrderEntity);
   }
 
   /**
@@ -118,6 +118,19 @@ public class SalesOrderStorage {
     SalesOrderEntity SalesOrderEntity = salesOrderDAO.find(SalesOrderId);
     return toDTO(SalesOrderEntity);
   }
+  /**
+   * <p>getSalesOrderById.</p>
+   *
+   * @param clientId a long.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   */
+  public List<SalesOrder> getSalesOrderByClienId(long clientId) {
+    if (clientId <= 0) {
+      throw new IllegalArgumentException("SalesOrderId must be a positive integer");
+    }
+    List<SalesOrderEntity> salesOrderEntities = salesOrderDAO.getSalesOrderByClienId(clientId);
+    return salesOrderEntities.stream().map(this::toDTOWoClient).collect(Collectors.toList());
+  }
 
   /**
    * <p>getSalesOrders.</p>
@@ -152,6 +165,15 @@ public class SalesOrderStorage {
                         salesOrderEntity.getName(),
                         salesOrderEntity.getDescription(),
                         clientStorage.toDTO(salesOrderEntity.getClientEntity()));
+  }
+  public SalesOrder toDTOWoClient(SalesOrderEntity salesOrderEntity) {
+    if (salesOrderEntity == null) {
+      return null;
+    }
+    return new SalesOrder(salesOrderEntity.getId(),
+                        salesOrderEntity.getName(),
+                        salesOrderEntity.getDescription(),
+                        salesOrderEntity.getClientEntity().getId());
   }
 
   /**

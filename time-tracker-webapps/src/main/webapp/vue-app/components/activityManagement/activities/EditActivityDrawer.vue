@@ -146,7 +146,7 @@ export default {
         },
   mounted() {
     window.addEventListener("click",() => {
-      this.$refs.selectEdit.blur();
+      //this.$refs.selectEdit.blur();
     });
   },
     methods: {

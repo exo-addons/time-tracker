@@ -13,9 +13,10 @@
                 <v-tab href="#clients" key="clients">Clients</v-tab>
                 <v-tab href="#projects" key="projects">Projects</v-tab>
                 <v-tab href="#features" key="features">Features</v-tab>
-                .<v-tab href="#activitiesCodes" key="activitiesCodes">Activities codes</v-tab>
-                .<v-tab href="#typesCodes" key="typesCodes">Types codes</v-tab>
-                .<v-tab href="#teams" key="teams">Teams</v-tab>
+                <v-tab href="#activitiesCodes" key="activitiesCodes">Activities codes</v-tab>
+                <v-tab href="#typesCodes" key="typesCodes">Types codes</v-tab>
+                <v-tab href="#teams" key="teams">Teams</v-tab>
+                <v-tab href="#ttsettings" key="ttsettings">Settings</v-tab>
             </v-tabs>
 
             <v-tabs-items class="infoContent" v-model="selectedTab">
@@ -44,6 +45,10 @@
                 <v-tab-item class="tabContent" eager id="teams" value="teams">
                     <teams-list :teams="teams" v-on:addTeam="addTeam" v-on:editTeam="editTeam" v-on:deleteTeam="deleteTeam" />
                 </v-tab-item>
+                
+                <v-tab-item class="tabContent" eager id="ttsettings" value="ttsettings">
+                    <time-tracking-settings :otherSettings="otherSettings" v-on:saveOtherSettings="saveOtherSettings" v-on:getOtherSettings="getOtherSettings" :offices="offices" v-on:addOffice="addOffice" v-on:editOffice="editOffice" v-on:deleteOffice="deleteOffice" :locations="locations" v-on:addLocation="addLocation" v-on:editLocation="editLocation" v-on:deleteLocation="deleteLocation"  :workTimePlans="workTimePlans" v-on:addWorkTime="addWorkTime" v-on:editWorkTime="editWorkTime" v-on:deleteWorkTime="deleteWorkTime" :subActivityCodes="subActivityCodes" />
+                </v-tab-item>
             </v-tabs-items>
         </template>
 
@@ -59,6 +64,7 @@ import FeaturesList from './activityManagement/features/FeaturesList.vue';
 import CodesList from './activityManagement/codes/CodesList.vue';
 import TypesCodesList from './activityManagement/codes/TypesCodesList.vue';
 import TeamsList from './activityManagement/teams/TeamsList.vue';
+import TimeTrackingSettings from './activityManagement/timeTrackingSettings/TimeTrakingSettings.vue';
 export default {
     components: {
         ActivitiesList,
@@ -68,6 +74,7 @@ export default {
         CodesList,
         TypesCodesList,
         TeamsList,
+        TimeTrackingSettings,
     },
     data: () => ({
         alert: false,
@@ -83,6 +90,10 @@ export default {
         types: [],
         subTypes: [],
         teams: [],
+        offices: [],
+        locations: [],
+        workTimePlans: [],
+        otherSettings: {},
     }),
 
     created() {
@@ -100,6 +111,10 @@ export default {
             this.getSubTypes();
             this.getFeatures();
             this.getTeams();
+            this.getWorkTimePlans();
+            this.getLocations();
+            this.getOffices();
+            this.getOtherSettings();
         },
         compare(a, b) {
             const displayLabelA = a.displayLabel.toUpperCase();
@@ -841,6 +856,323 @@ export default {
                     });
                 });
         },
+
+        
+        getWorkTimePlans() {
+            fetch(`/portal/rest/timetracker/settings/worktime`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.workTimePlans = resp.sort(this.compare);
+                });
+
+        },
+
+        deleteWorkTimePlan(item) {
+            fetch(`/portal/rest/timetracker/settings/worktime/` + item.id, {
+                    method: 'delete',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.confirmDialog = false;
+                    this.getWorkTimePlans();
+                    this.displaySusccessMessage('workTimePlan deleted');
+                })
+                .catch((result) => {
+                    this.confirmDialog = false;
+                    this.getWorkTimePlans();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        addWorkTimePlan(workTimePlan) {
+            this.workTimePlans.push(workTimePlan)
+            fetch(`/portal/rest/timetracker/settings/worktime`, {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(workTimePlan),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getWorkTimePlans();
+                    this.displaySusccessMessage('workTimePlan added');
+                })
+                .catch((result) => {
+                    this.getWorkTimePlans();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        editWorkTimePlan(workTimePlan) {
+            fetch(`/portal/rest/timetracker/settings/worktime`, {
+                    method: 'put',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(workTimePlan),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getWorkTimePlans();
+                    this.displaySusccessMessage('workTimePlan updated');
+                })
+                .catch((result) => {
+                    this.getWorkTimePlans();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+
+        getLocations() {
+            fetch(`/portal/rest/timetracker/settings/location`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.locations = resp.sort(this.compare);
+                });
+
+        },
+
+        deleteLocation(item) {
+            fetch(`/portal/rest/timetracker/settings/location/` + item.code, {
+                    method: 'delete',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.confirmDialog = false;
+                    this.getLocations();
+                    this.displaySusccessMessage('location deleted');
+                })
+                .catch((result) => {
+                    this.confirmDialog = false;
+                    this.getLocations();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        addLocation(location) {
+            this.locations.push(location)
+            fetch(`/portal/rest/timetracker/settings/location`, {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(location),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getLocations();
+                    this.displaySusccessMessage('location added');
+                })
+                .catch((result) => {
+                    this.getLocations();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        editLocation(location) {
+            fetch(`/portal/rest/timetracker/settings/location`, {
+                    method: 'put',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(location),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getLocations();
+                    this.displaySusccessMessage('location updated');
+                })
+                .catch((result) => {
+                    this.getLocations();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+
+
+        getOffices() {
+            fetch(`/portal/rest/timetracker/settings/office`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.offices = resp.sort(this.compare);
+                });
+
+        },
+
+        deleteOffice(item) {
+            fetch(`/portal/rest/timetracker/settings/office/` + item.code, {
+                    method: 'delete',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.confirmDialog = false;
+                    this.getOffices();
+                    this.displaySusccessMessage('office deleted');
+                })
+                .catch((result) => {
+                    this.confirmDialog = false;
+                    this.getOffices();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        addOffice(office) {
+            this.offices.push(office)
+            fetch(`/portal/rest/timetracker/settings/office`, {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(office),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getOffices();
+                    this.displaySusccessMessage('office added');
+                })
+                .catch((result) => {
+                    this.getOffices();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        editOffice(office) {
+            fetch(`/portal/rest/timetracker/settings/office`, {
+                    method: 'put',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(office),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getOffices();
+                    this.displaySusccessMessage('office updated');
+                })
+                .catch((result) => {
+                    this.getOffices();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+        getOtherSettings() {
+            fetch(`/portal/rest/timetracker/settings/other`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.otherSettings = resp;
+                });
+
+        },
+
+
+        saveOtherSettings(otherSettings) {
+            fetch(`/portal/rest/timetracker/settings/others`, {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(otherSettings),
+                })
+                .then((result) => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                })
+                .then((response) => {
+                    this.getOtherSettings();
+                    this.displaySusccessMessage('office updated');
+                })
+                .catch((result) => {
+                    this.getOffices();
+                    result.text().then((body) => {
+                        this.displayErrorMessage(body);
+                    });
+                });
+        },
+
+
 
         displaySusccessMessage(message) {
             this.message = message;

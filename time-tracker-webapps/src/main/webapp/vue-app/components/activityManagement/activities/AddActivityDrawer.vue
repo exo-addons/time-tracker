@@ -206,7 +206,7 @@ export default {
         },
   mounted() {
     window.addEventListener("click",() => {
-      this.$refs.select.blur();
+     // this.$refs.select.blur();
     });
   },
     methods: {

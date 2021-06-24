@@ -19,35 +19,16 @@ package org.exoplatform.timetracker.dao;
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.timetracker.entity.ClientEntity;
-import org.exoplatform.timetracker.entity.SalesOrderEntity;
-
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.timetracker.entity.OfficeEntity;
 
 /**
  * <p>
- * SalesOrderDAO class.
+ * TypeDAO class.
  * </p>
  *
  * @author Krout MedAmine
  * @version $Id: $Id
  */
-public class SalesOrderDAO extends GenericDAOJPAImpl<SalesOrderEntity, Long> {
-  private static final Log LOG = ExoLogger.getLogger(SalesOrderDAO.class);
-  public List<SalesOrderEntity> getSalesOrderByClienId(Long clientId) {
-
-    TypedQuery<SalesOrderEntity> query = getEntityManager().createNamedQuery("SalesOrderEntity.getSalesOrderByClienId", SalesOrderEntity.class)
-            .setParameter("clientId", clientId);
-    try {
-      return query.getResultList();
-    } catch (NoResultException e) {
-      return new ArrayList<SalesOrderEntity>();
-    } catch (Exception e) {
-      LOG.error("Error occurred when trying to get list of Sales Order by ClientId {}", clientId, e);
-      return new ArrayList<SalesOrderEntity>();
-    }
-  }
+public class OfficeDAO extends GenericDAOJPAImpl<OfficeEntity, String> {
+  private static final Log LOG = ExoLogger.getLogger(OfficeDAO.class);
 }
