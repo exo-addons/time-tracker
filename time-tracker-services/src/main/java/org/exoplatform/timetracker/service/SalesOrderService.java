@@ -126,11 +126,20 @@ public class SalesOrderService {
   /**
    * Retrieves the list of Activities with offset, limit and a keyword that can be
    * empty
-   *
    * @return List of {@link org.exoplatform.timetracker.dto.SalesOrder} that contains the list of Activities
    */
   public List<SalesOrder> getSalesOrdersList() {
     return salesOrderStorage.getSalesOrders();
+  }
+
+  /**
+   * Retrieves the list of Activities with offset, limit and a keyword that can be
+   * empty
+   * @param clientId technical identifier of client
+   * @return List of {@link org.exoplatform.timetracker.dto.SalesOrder} that contains the list of sos
+   */
+  public List<SalesOrder> getSalesOrderByClienId(Long clientId) {
+    return salesOrderStorage.getSalesOrderByClienId(clientId);
   }
 
 }

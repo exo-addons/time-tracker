@@ -18,58 +18,44 @@ package org.exoplatform.timetracker.dto;
 
 import java.io.Serializable;
 
-import org.exoplatform.timetracker.entity.ClientEntity;
-
 import lombok.Data;
 
 /**
- * <p>SalesOrder class.</p>
+ * <p>
+ * Type class.
+ * </p>
  *
  * @author Krout MedAmine
  * @version $Id: $Id
  */
 
 @Data
-public class SalesOrder implements Serializable {
+public class Location implements Serializable {
 
+  private String code;
 
-  private Long              id;
-
-  private String            name;
-
-  private String            description;
-
-  private Client            client;
-
-  private long            clientId;
+  private String label;
 
   /**
-   * <p>Constructor for SalesOrder.</p>
+   * <p>
+   * Constructor for Type.
+   * </p>
    */
-  public SalesOrder() {
+  public Location() {
   }
 
   /**
-   * <p>Constructor for SalesOrder.</p>
+   * <p>
+   * Constructor for Type.
+   * </p>
    *
-   * @param id a {@link java.lang.Long} object.
-   * @param name a {@link java.lang.String} object.
-   * @param description a {@link java.lang.String} object.
-   * @param client a {@link org.exoplatform.timetracker.dto.Client} object.
+   * @param code a {@link String} location Code.
+   * @param label a {@link String} location label.
    */
-  public SalesOrder(Long id, String name, String description, Client client) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.client = client;
-  }
+  public Location(String code, String label) {
+    this.code = code;
+    this.label = label;
 
-  public SalesOrder(Long id, String name, String description, Long clientId) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.clientId = clientId;
   }
-
 
 }

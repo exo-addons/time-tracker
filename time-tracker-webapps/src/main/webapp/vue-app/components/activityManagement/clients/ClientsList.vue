@@ -15,6 +15,21 @@
 
                     </v-toolbar>
                 </template>
+                <template v-slot:item.salesOrders="{ item }">
+                    <div v-if="item.salesOrders && item.salesOrders.length>0" >  
+                     <v-chip  v-for="sales in item.salesOrders" :key="sales.name"
+                            class="ma-2"
+                            color="blue"
+                            outlined
+                            pill
+                            small>
+                            <span class="pr-2">
+                                {{ sales.name }}
+                            </span>
+                        </v-chip>
+                        </div>
+                        <div v-else> <span class="pr-2">There no Sales orders for this client</span></div>
+                </template>
                 <template v-slot:item.action="{ item }">
                      <v-icon small class="mr-2" @click="openEditDrawer(item)">
                         edit
@@ -67,6 +82,12 @@ editClientDrawer,
                 align: 'center',
                 sortable: true,
                 value: 'code',
+            },
+            {
+                text: 'Sales Orders',
+                align: 'center',
+                sortable: true,
+                value: 'salesOrders',
             },
             {
                 text: 'Actions',

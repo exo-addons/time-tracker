@@ -87,6 +87,30 @@ public class SalesOrdersManagementREST implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+  /**
+   * <p>getSalesOrders.</p>
+   *
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
+  @GET
+  @Path("salesOrder/{clientId}")
+  @RolesAllowed("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
+  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
+      @ApiResponse(code = 500, message = "Internal server error") })
+  public Response getSalesOrders(@ApiParam(value = "SalesOrder technical id to delete", required = true) @PathParam("clientId") Long clientId){
+    try {
+      Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
+      if (sourceIdentity == null) {
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+      }
+      return Response.ok(salesOrderService.getSalesOrderByClienId(clientId)).build();
+    } catch (Exception e) {
+      LOG.error("Unknown error occurred while getting SalesOrders", e);
+      return Response.serverError().build();
+    }
+  }
 
   /**
    * <p>createSalesOrder.</p>

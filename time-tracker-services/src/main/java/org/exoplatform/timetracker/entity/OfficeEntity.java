@@ -14,69 +14,56 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.exoplatform.timetracker.dto;
+package org.exoplatform.timetracker.entity;
 
-import java.io.Serializable;
-import java.util.List;
+import javax.persistence.*;
+
+import org.exoplatform.commons.api.persistence.ExoEntity;
 
 import lombok.Data;
 
 /**
  * <p>
- * Client class.
+ * TypeEntity class.
  * </p>
  *
  * @author Krout MedAmine
  * @version $Id: $Id
  */
-
+@Entity(name = "OfficeEntity")
+@ExoEntity
+@Table(name = "ADDONS_TT_OFFICE")
 @Data
-public class Client implements Serializable {
+@NamedQueries({})
+public class OfficeEntity {
 
-  private static final long serialVersionUID = -4686045812635563243L;
+  @Id
+  @Column(name = "CODE")
+  private String code;
 
-  private Long              id;
-
-  private Long              clientId;
-
-  private String            code;
-
-  private String            label;
-
-  private String            displayLabel;
-
-  private List<SalesOrder> salesOrders;
+  @Column(name = "LABEL")
+  private String label;
 
   /**
    * <p>
-   * Constructor for Client.
+   * Constructor for OfficeEntity.
    * </p>
    */
-  public Client() {
+  public OfficeEntity() {
   }
 
   /**
    * <p>
-   * Constructor for Client.
+   * Constructor for TypeEntity.
    * </p>
    *
-   * @param id a {@link java.lang.Long} object.
-   * @param code a {@link java.lang.String} object.
-   * @param label a {@link java.lang.String} object.
+   * @param code a {@link String} object.
+   * @param label a {@link String} object.
    */
-  public Client(Long id, String code, String label) {
-    this.id = id;
+  public OfficeEntity(String code, String label) {
     this.code = code;
     this.label = label;
-    this.displayLabel = code + " - " + label;
-  }
 
-  public Client(Long id, String code, String label, List<SalesOrder> salesOrders) {
-    this.id = id;
-    this.code = code;
-    this.label = label;
-    this.displayLabel = code + " - " + label;
-    this.salesOrders = salesOrders;
   }
 
 }

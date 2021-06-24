@@ -19,6 +19,7 @@ package org.exoplatform.timetracker.storage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.gatein.api.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ClientDAO;
@@ -145,9 +146,9 @@ public class ClientStorage {
     if (clientEntity == null) {
       return null;
     }
-    return new Client(clientEntity.getId(),
-                        clientEntity.getCode(),
-                        clientEntity.getLabel());
+    SalesOrderStorage salesOrderStorage = CommonsUtils.getService(SalesOrderStorage.class);
+
+    return new Client(clientEntity.getId(), clientEntity.getCode(), clientEntity.getLabel(),salesOrderStorage.getSalesOrderByClienId(clientEntity.getId()));
   }
 
   /**

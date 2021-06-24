@@ -311,4 +311,47 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                      newDataType="float"
                      tableName="ADDONS_TT_ACTIVITY_RECORD"/>
   </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-7">
+    <createTable tableName="ADDONS_TT_LOCATION">
+      <column name="CODE" type="VARCHAR(50)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_LOCATION_CODE" />
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+    </createTable>
+    <createTable tableName="ADDONS_TT_OFFICE">
+      <column name="CODE" type="VARCHAR(50)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_OFFICE_CODE" />
+      </column>
+      <column name="LABEL" type="VARCHAR(200)">
+      </column>
+    </createTable>
+    <createTable tableName="ADDONS_TT_WORK_TIME">
+      <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_WORK_TIME_ID" />
+      </column>
+      <column name="FROM" type="TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="TO" type="TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="OFFICE_CODE" type="VARCHAR(50)">
+        <constraints foreignKeyName="FK_TT_TIME_OFFICE"
+                     references="ADDONS_TT_OFFICE(CODE)"/>
+      </column>
+      <column name="TIME" type="int">
+      </column>
+      <column name="PERIOD" type="VARCHAR(50)">
+      </column>
+      <column name="TEAM" type="VARCHAR(50)">
+      </column>
+      <column name="USER_ID" type="VARCHAR(50)">
+      </column>
+      <column name="DEFAULT_TIME" type="BOOLEAN">
+      </column>
+    </createTable>
+    <createSequence sequenceName="SEQ_WORK_TIME_ID" startValue="1"/>
+  </changeSet>
 </databaseChangeLog>
