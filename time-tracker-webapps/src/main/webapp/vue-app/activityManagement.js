@@ -9,9 +9,14 @@ const vuetify = new Vuetify({
 });
 
 $(document).ready(() => {
-    new Vue({
-        render: (h) => h(activityManagementApp),
-        vuetify,
-    }).$mount('#activityManagementApp');
-
-});
+    const lang = eXo && eXo.env && eXo.env.portal && eXo.env.portal.language;
+    const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.addon.timeTracking-${lang}.json`;
+  
+    exoi18n.loadLanguageAsync(lang, url).then(i18n => {
+        const vueApp = new Vue({
+            render: (h) => h(activityManagementApp),
+            i18n,
+            vuetify
+        }).$mount('#activityManagementApp');
+    });
+  });
