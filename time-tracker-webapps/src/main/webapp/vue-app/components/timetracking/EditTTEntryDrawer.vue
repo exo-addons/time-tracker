@@ -55,7 +55,7 @@
                     </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div>
+                <div v-if="activityRecord.salesOrder">
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
