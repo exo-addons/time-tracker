@@ -21,7 +21,7 @@
 
             <v-tabs-items class="infoContent" v-model="selectedTab">
                 <v-tab-item class="tabContent" eager id="activities" value="activities">
-                    <activities-list :projects="projects" :features="features" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :types="types" :subTypes="subTypes" :teams="teams" />
+                    <activities-list :projects="projects" :features="features" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :types="types" :subTypes="subTypes" :teams="teams"  :otherSettings="otherSettings" />
                 </v-tab-item>
                 <v-tab-item class="tabContent" eager id="clients" value="clients">
                     <clients-list :clients="clients" v-on:addClient="addClient" v-on:editClient="editClient" v-on:delete="deleteClient" />

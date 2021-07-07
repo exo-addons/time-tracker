@@ -8,7 +8,7 @@
             <v-form ref="form" v-model="valid">
                 <div>
                     <v-label for="name">
-                        Code
+                        Name
                     </v-label>
                     <input ref="name" v-model="so.name" type="text" name="name" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>

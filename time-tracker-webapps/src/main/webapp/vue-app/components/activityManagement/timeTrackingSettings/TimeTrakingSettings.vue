@@ -84,7 +84,7 @@
             <v-card outlined style="padding: 16px;">
              <v-form ref="form">
                         <v-text-field v-model="otherSettings.usersSpace" label="Users Space"></v-text-field>
-                        <v-select v-model="otherSettings.defaultFeatureSubActivity" :items="subActivityCodes" item-text="displayLabel" item-value="id" label="Default subactivity for features"></v-select>  
+                        <v-select v-model="defaultFeatureSubActivityId" :items="subActivityCodes" item-text="displayLabel" item-value="id" label="Default subactivity for features"></v-select>  
                         <v-card-actions>
                             <div class="flex-grow-1"></div>
                             <div class="uiAction">
@@ -223,6 +223,13 @@ export default {
             },
             ]
 
+        },
+        defaultFeatureSubActivityId(){
+            if(this.otherSettings.defaultFeatureSubActivity){
+            return this.otherSettings.defaultFeatureSubActivity.id
+            }else{
+                return ''
+            }
         }
     },
 
@@ -305,6 +312,9 @@ export default {
         },
 
         saveSettings() {
+            if(this.defaultFeatureSubActivityId){
+               this.otherSettings.defaultFeatureSubActivity.id=this.defaultFeatureSubActivityId 
+            }
             this.$emit('saveOtherSettings', this.otherSettings)
         },
         

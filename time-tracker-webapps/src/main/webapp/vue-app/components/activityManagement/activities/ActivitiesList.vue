@@ -28,8 +28,8 @@
                 <template v-slot:no-data>No activities</template>
             </v-data-table>
         </v-flex>
-        <add-activity-drawer ref="addActivityDrawer"  :projects="projects" :features="features"  :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" v-on:save="save" />
-        <edit-activity-drawer ref="editActivityDrawer" :activity="editedItem" :projects="projects" :features="features"   :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" v-on:save="update" />
+        <add-activity-drawer ref="addActivityDrawer"  :projects="projects" :features="features"  :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" :otherSettings="otherSettings" v-on:save="save" />
+        <edit-activity-drawer ref="editActivityDrawer" :activity="editedItem" :projects="projects" :features="features"   :activityCodes="activityCodes" :subActivityCodes="subActivityCodes"  :types="types" :subTypes="subTypes" :teams="teams" :otherSettings="otherSettings" v-on:save="update" />
     </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
         addActivityDrawer,
 editActivityDrawer,
     },
-    props:['projects','features','activityCodes','subActivityCodes','types','subTypes','teams'],
+    props:['projects','features','activityCodes','subActivityCodes','types','subTypes','teams', 'otherSettings'],
     data: () => ({
         search: '',
         alert: false,
