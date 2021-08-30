@@ -8,6 +8,18 @@
 
             <v-form ref="form">
 
+                 <div>
+                    <v-label for="description">
+                        description
+                    </v-label>
+                    <input ref="description" v-model="activityRecord.description" type="text" name="description" placeholder="What are you working on ?" class="input-block-level ignore-vuetify-classes my-3" />
+                </div>
+                <div>
+                    <v-label for="time">
+                        Time spent (hours)
+                    </v-label>
+                    <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
+                </div>
                 <div>
                     <v-label for="activity">
                         Activity
@@ -16,19 +28,23 @@
                     <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
 
                 </div>
-
                 <div>
-                    <v-label for="description">
-                        description
+                    <v-label for="projectVersion">
+                        Project Version
                     </v-label>
-                    <input ref="description" v-model="activityRecord.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
+                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div>
-                    <v-label for="time">
-                        Time spent (hours)
+                <div v-if="activityRecord.salesOrder">
+                    <v-label for="salesOrder">
+                        Sales Order
                     </v-label>
-                    <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
+                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
+                            {{ item.name}}
+                        </option>
+                    </select>
                 </div>
+               
                 <div>
                     <v-label for="location">
                         Location
@@ -49,22 +65,7 @@
                         </option>
                     </select>
                 </div>
-                <div>
-                    <v-label for="projectVersion">
-                        Project Version
-                    </v-label>
-                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
-                </div>
-                <div v-if="activityRecord.salesOrder">
-                    <v-label for="salesOrder">
-                        Sales Order
-                    </v-label>
-                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
-                            {{ item.name}}
-                        </option>
-                    </select>
-                </div>
+                
 
             </v-form>
 

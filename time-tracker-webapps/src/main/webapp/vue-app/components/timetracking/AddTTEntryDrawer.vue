@@ -7,6 +7,19 @@
         <div>
 
             <v-form ref="form">
+                <div>
+                    <v-label for="description">
+                        Description
+                    </v-label>
+                    <input id="desc" ref="description" v-model="activityRecord.description" type="text" name="description" placeholder="What are you working on ?" class="input-block-level ignore-vuetify-classes my-3" />
+                </div>
+
+                <div>
+                    <v-label for="time">
+                        Time spent (hours)
+                    </v-label>
+                    <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
+                </div>
 
                 <div>
                     <v-label for="activity">
@@ -18,16 +31,18 @@
                 </div>
 
                 <div>
-                    <v-label for="description">
-                        Description
-                    </v-label>
-                    <input id="desc" ref="description" v-model="activityRecord.description" type="text" name="description" class="input-block-level ignore-vuetify-classes my-3" />
+                    <v-label for="projectVersion"> Project Version </v-label>
+                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div>
-                    <v-label for="time">
-                        Time spent (hours)
+                <div v-if="salesOrders.length>0">
+                    <v-label for="salesOrder">
+                        Sales Order
                     </v-label>
-                    <input ref="time" v-model="activityRecord.time" type="text" name="time" class="input-block-level ignore-vuetify-classes my-3" />
+                    <select v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in salesOrders" :key="item.id" :value="item">
+                            {{ item.name}}
+                        </option>
+                    </select>
                 </div>
                 <div>
                     <v-label for="location">
@@ -39,6 +54,7 @@
                         </option>
                     </select>
                 </div>
+
                 <div>
                     <v-label for="office">
                         Office
@@ -46,20 +62,6 @@
                     <select v-model="activityRecord.office" name="office" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in offices" :key="item" :value="item">
                             {{item}}
-                        </option>
-                    </select>
-                </div>
-                <div>
-                    <v-label for="projectVersion"> Project Version </v-label>
-                    <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
-                </div>
-                <div v-if="salesOrders.length>0">
-                    <v-label for="salesOrder">
-                        Sales Order
-                    </v-label>
-                    <select v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in salesOrders" :key="item.id" :value="item">
-                            {{ item.name}}
                         </option>
                     </select>
                 </div>
