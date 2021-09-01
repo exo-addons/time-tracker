@@ -115,7 +115,7 @@
 
 <script>
 export default {
-    props: ['activity', 'projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams'],
+    props: ['activity', 'projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams', 'otherSettings'],
     data: () => ({
         defaultItem: {
             type: '',

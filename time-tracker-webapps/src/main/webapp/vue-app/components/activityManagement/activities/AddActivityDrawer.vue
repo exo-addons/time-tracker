@@ -115,7 +115,7 @@
 
 <script>
 export default {
-    props: ['projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams'],
+    props: ['projects', 'features', 'activityCodes', 'subActivityCodes', 'types', 'subTypes', 'teams', 'otherSettings'],
     data: () => ({
         defaultItem: {
               type: {
@@ -209,6 +209,14 @@ export default {
      // this.$refs.select.blur();
     });
   },
+  watch: {
+    'editedActivity.feature'(val) {
+        if(!val.subActivityCode&& val){
+            this.editedActivity.subActivityCode=this.otherSettings.defaultFeatureSubActivity;
+
+        }
+    }
+    },
     methods: {
         isNotEmpty(str){
               return(str!=null && str.id!==null && str.id!=="")

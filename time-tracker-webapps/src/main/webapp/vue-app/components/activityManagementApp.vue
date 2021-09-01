@@ -21,7 +21,7 @@
 
             <v-tabs-items class="infoContent" v-model="selectedTab">
                 <v-tab-item class="tabContent" eager id="activities" value="activities">
-                    <activities-list :projects="projects" :features="features" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :types="types" :subTypes="subTypes" :teams="teams" />
+                    <activities-list :projects="projects" :features="features" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :types="types" :subTypes="subTypes" :teams="teams"  :otherSettings="otherSettings" />
                 </v-tab-item>
                 <v-tab-item class="tabContent" eager id="clients" value="clients">
                     <clients-list :clients="clients" v-on:addClient="addClient" v-on:editClient="editClient" v-on:delete="deleteClient" />
@@ -47,7 +47,7 @@
                 </v-tab-item>
                 
                 <v-tab-item class="tabContent" eager id="ttsettings" value="ttsettings">
-                    <time-tracking-settings :otherSettings="otherSettings" v-on:saveOtherSettings="saveOtherSettings" v-on:getOtherSettings="getOtherSettings" :offices="offices" v-on:addOffice="addOffice" v-on:editOffice="editOffice" v-on:deleteOffice="deleteOffice" :locations="locations" v-on:addLocation="addLocation" v-on:editLocation="editLocation" v-on:deleteLocation="deleteLocation"  :workTimePlans="workTimePlans" v-on:addWorkTime="addWorkTime" v-on:editWorkTime="editWorkTime" v-on:deleteWorkTime="deleteWorkTime" :subActivityCodes="subActivityCodes" />
+                    <time-tracking-settings  :otherSettings="otherSettings" v-on:saveOtherSettings="saveOtherSettings" v-on:getOtherSettings="getOtherSettings" :offices="offices" v-on:addOffice="addOffice" v-on:editOffice="editOffice" v-on:deleteOffice="deleteOffice" :locations="locations" v-on:addLocation="addLocation" v-on:editLocation="editLocation" v-on:deleteLocation="deleteLocation"  :workTimePlans="workTimePlans" v-on:addWorkTime="addWorkTime" v-on:editWorkTime="editWorkTime" v-on:deleteWorkTime="deleteWorkTime" :subActivityCodes="subActivityCodes" />
                 </v-tab-item>
             </v-tabs-items>
         </template>
@@ -103,6 +103,10 @@ export default {
     methods: {
 
         initialize() {
+            this.getWorkTimePlans();
+            this.getLocations();
+            this.getOffices();
+            this.getOtherSettings();
             this.getClients()
             this.getProjects();
             this.getActivityCodes();
@@ -111,10 +115,6 @@ export default {
             this.getSubTypes();
             this.getFeatures();
             this.getTeams();
-            this.getWorkTimePlans();
-            this.getLocations();
-            this.getOffices();
-            this.getOtherSettings();
         },
         compare(a, b) {
             const displayLabelA = a.displayLabel.toUpperCase();
@@ -864,7 +864,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                  this.workTimePlans = resp.sort(this.compare);
+                  this.workTimePlans = resp;
                 });
 
         },
@@ -956,7 +956,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                  this.locations = resp.sort(this.compare);
+                  this.locations = resp;
                 });
 
         },
@@ -1049,7 +1049,7 @@ export default {
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
-                  this.offices = resp.sort(this.compare);
+                  this.offices = resp;
                 });
 
         },

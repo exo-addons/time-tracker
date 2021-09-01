@@ -87,8 +87,8 @@
                         Location
                     </v-label>
                     <select v-model="location" name="location" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in locations" :key="item" :value="item">
-                            {{ item}}
+                        <option v-for="item in locations" :key="item.code" :value="item.code">
+                            {{ item.label}}
                         </option>
                     </select>
                 </div>
@@ -97,8 +97,8 @@
                         Office
                     </v-label>
                     <select v-model="office" name="office" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in offices" :key="item" :value="item">
-                            {{ item}}
+                        <option v-for="item in offices" :key="item.code" :value="item.code">
+                            {{ item.label}}
                         </option>
                     </select>
                 </div>
@@ -208,7 +208,7 @@
 <script>
 export default {
 
-    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'employees', 'filters'],
+    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'employees', 'filters', 'locations', 'offices'],
 
     data: () => ({
         showName: false,
@@ -223,8 +223,6 @@ export default {
         feature: 0,
         location: "",
         office: "",
-        locations: ["", "Home", "eXo TN", "eXo FR", "eXo", "Ext"],
-        offices: ["", "FR", "TN", "LX", "VN", "UA"],
         filter: {},
         filterName: ""
     }),

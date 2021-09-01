@@ -46,14 +46,14 @@
     <template slot="footer">
     </template>
 </exo-drawer>
-    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
-    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
+    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" v-on:save="save"></add-tracking-entry-drawer>
+    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     </div>
 </template>
 
 <script>
-import AddTrackingEntryDrawer from './AddTTEntryDrawer.vue';
-import EditTrackingEntryDrawer from './EditTTEntryDrawer.vue';
+import AddTrackingEntryDrawer from '../commons/AddTTEntryDrawer.vue';
+import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
 export default {
     components: {
         AddTrackingEntryDrawer,
@@ -63,6 +63,8 @@ export default {
         date: new Date().toISOString().substr(0, 10),
         menu2: false,
         activities: [],
+        offices: [],
+        locations: [],
         activityRecords: [],
         activityRecord: {},
         alert: false,
@@ -101,6 +103,28 @@ export default {
                 .then((resp) => {
                     this.activities = resp;
                 });
+        },
+
+        getOffices() {
+            fetch(`/portal/rest/timetracker/settings/office`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.offices = resp;
+                });
+
+        },
+
+        getLocations() {
+            fetch(`/portal/rest/timetracker/settings/location`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.locations = resp;
+                });
+
         },
 
         save(activityRecord) {
@@ -161,6 +185,8 @@ export default {
             this.$refs.timeTrackerDrawer.close()
         },
         open() {
+        this.getOffices()
+        this.getLocations()    
         this.getActivityRecords()
 
         this.getActivities()
@@ -173,7 +199,7 @@ export default {
         editActivityRecord(item) {
 
             this.activityRecord = item
-            this.$refs.editTTEntryDrawer.open()
+            this.$refs.editTTEntryDrawer.open(item)
         },
 
         displaySusccessMessage(message) {
