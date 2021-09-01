@@ -93,6 +93,11 @@ export default {
         json_fields: {
 
             'Date': 'activityDate',
+            'Month': 'month',
+            'Day': 'day',
+            'Year': 'year',
+            'Week Day': 'weekDay',
+            'TS Code': 'tsCode',
             'Activity label': 'activity.label',
             'description': 'description',
             'Time': 'time',
@@ -807,6 +812,18 @@ export default {
         async exportData() {
             const response = await this.getActivityRecords(true);
             console.log(response);
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            response.items.forEach(function(item){
+                const date_ = new Date(item.activityTime.time)
+                item.day =  days[date_.getDay()];
+                item.weekDay =  date_.getDay();
+                item.month = date_.getMonth();
+                item.year = date_.getFullYear();
+                if(item.office && item.activity){
+                    item.tsCode= `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.activityCode.code}`
+                }
+                
+            });
             return response.items;
         },
 
