@@ -34,23 +34,13 @@
                     <v-label for="projectVersion"> Project Version </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div v-if="salesOrders.length>0">
-                    <v-label for="salesOrder">
-                        Sales Order
-                    </v-label>
-                    <select v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in salesOrders" :key="item.id" :value="item">
-                            {{ item.name}}
-                        </option>
-                    </select>
-                </div>
                 <div>
                     <v-label for="location">
                         Location
                     </v-label>
                     <select v-model="activityRecord.location" name="location" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in locations" :key="item" :value="item">
-                            {{ item}}
+                        <option v-for="item in locations" :key="item.code" :value="item.code">
+                            {{ item.label}}
                         </option>
                     </select>
                 </div>
@@ -60,8 +50,8 @@
                         Office
                     </v-label>
                     <select v-model="activityRecord.office" name="office" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in offices" :key="item" :value="item">
-                            {{item}}
+                        <option v-for="item in offices" :key="item.code" :value="item.code">
+                            {{item.label}}
                         </option>
                     </select>
                 </div>
@@ -69,11 +59,11 @@
                     <v-label for="projectVersion"> Project Version </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div>
+                <div v-if="salesOrders.length>0">
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
-                    <select v-if="salesOrders.length>0" v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                    <select  v-model="activityRecord.salesOrder" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
                         <option v-for="item in salesOrders" :key="item.id" :value="item">
                             {{ item.name}}
                         </option>
@@ -104,12 +94,10 @@
 
 <script>
 export default {
-    props: ['activities'],
+    props: ['activities','locations','offices'],
     data: () => ({
         activityRecord: {},
-        salesOrders: [],
-        locations: ["Home", "eXo TN", "eXo FR", "eXo", "Ext"],
-        offices: ["FR", "TN", "LX", "VN", "UA"]
+        salesOrders: []
     }),
      computed: {
          isDisabled: function(){
@@ -121,8 +109,21 @@ export default {
         //  this.initialize()
     },
 
+    watch:{
+    'activityRecord.activity'(newVal){
+        if(newVal && !newVal.id){
+            newVal=this.activities.find(act => act.id === newVal)
+        }
+        if(newVal && newVal.project && newVal.project.client){
+            this.salesOrders=newVal.project.client.salesOrders         
+        }else{
+            this.salesOrders=[]
+        }
+    }
+   },
+
     methods: {
-                getLastActivityRecord() {
+        getLastActivityRecord() {
             return new Promise((resolve, reject) => {
 
                 fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/last`, {
@@ -141,6 +142,7 @@ export default {
 
         },
 
+
         isNotEmpty(str){
               return(str!=null && str!=="")
             },
@@ -149,7 +151,9 @@ export default {
         },
 
         save() {
+            if(!this.activityRecord.activity.id) {
             this.activityRecord.activity = {id:this.activityRecord.activity}
+            }
             this.$emit('save', this.activityRecord)
             this.activityRecord = {}
             this.$refs.addTTEntryDrawer.close()
@@ -164,6 +168,7 @@ export default {
                 if (data.item) {
                     this.activityRecord = data.item
                     this.activityRecord.time = null
+                    this.activityRecord.salesOrder = null
                 }
             })
             }else{

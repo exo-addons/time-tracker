@@ -98,13 +98,13 @@
 
         <add-office-drawer ref="addOfficeDrawer" v-on:save="addOffice" />
 
-        <add-location-drawer ref="addLocationDrawer"  v-on:save="addLocationCode" />
+        <add-location-drawer ref="addLocationDrawer"  v-on:save="addLocation" />
 
         <add-work-time-drawer ref="addWorkTimeDrawer"  v-on:save="addWorkTime" />      
 
         <edit-office-drawer ref="editOfficeDrawer" v-on:save="editOffice" />
 
-        <edit-location-drawer ref="editLocationDrawer"  v-on:save="editLocationCode" />
+        <edit-location-drawer ref="editLocationDrawer"  v-on:save="editLocation" />
 
         <edit-work-time-drawer ref="editWorkTimeDrawer"  v-on:save="editWorkTimeCode" />
 

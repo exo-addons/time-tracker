@@ -34,24 +34,13 @@
                     </v-label>
                     <input ref="projectVersion" v-model="activityRecord.projectVersion" type="text" name="projectVersion" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
-                <div v-if="activityRecord.salesOrder">
-                    <v-label for="salesOrder">
-                        Sales Order
-                    </v-label>
-                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
-                            {{ item.name}}
-                        </option>
-                    </select>
-                </div>
-
                 <div>
                     <v-label for="location">
                         Location
                     </v-label>
                     <select v-model="activityRecord.location" name="location" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in locations" :key="item" :value="item">
-                            {{ item}}
+                        <option v-for="item in locations" :key="item.code" :value="item.code">
+                            {{ item.label}}
                         </option>
                     </select>
                 </div>
@@ -60,8 +49,8 @@
                         Office
                     </v-label>
                     <select v-model="activityRecord.office" name="office" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in offices" :key="item" :value="item">
-                            {{item}}
+                        <option v-for="item in offices" :key="item.code" :value="item.code">
+                            {{item.label}}
                         </option>
                     </select>
                 </div>
@@ -75,8 +64,8 @@
                     <v-label for="salesOrder">
                         Sales Order
                     </v-label>
-                    <select v-model="activityRecord.salesOrder.id" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
-                        <option v-for="item in activityRecord.activity.project.client.salesOrders" :key="item.id" :value="item">
+                    <select v-model="so" name="salesOrder" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in salesOrders" :key="item.id" :value="item.id">
                             {{ item.name}}
                         </option>
                     </select>
@@ -106,30 +95,53 @@
 
 <script>
 export default {
-    props: ['activityRecord', 'activities'],
+    props: ['activities','locations','offices'],
     data: () => ({
         salesOrders: [],
-        locations: ["Home", "eXo TN", "eXo FR", "eXo", "Ext"],
-        offices: ["FR", "TN", "LX", "VN", "UA"]
+        activityRecord:{},
+        so:"",
     }),
     created() {
         //  this.initialize()
     },
 
+    watch:{
+        'activityRecord.activity'(newVal){
+            if(newVal && !newVal.id){
+                newVal=this.activities.find(act => act.id === newVal)
+            }
+            if(newVal && newVal.project && newVal.project.client){
+                this.salesOrders=newVal.project.client.salesOrders         
+            }else{
+                this.salesOrders=[]
+            }
+        }
+    },
     methods: {
 
         save() {
+            if(!this.activityRecord.activity.id) {
             this.activityRecord.activity = {id:this.activityRecord.activity}
+            }
+            if(this.so) {
+            this.activityRecord.salesOrder = {id:this.so}
+            }
             this.$emit('save', this.activityRecord)
             this.$refs.editDrawer.close()
         },
         cancel() {
             this.$refs.editDrawer.close()
         },
-        open() {
+        open(activityRecord) {
+            this.salesOrders=activityRecord.activity.project.client.salesOrders    
+            this.activityRecord=activityRecord
+            if(this.activityRecord.salesOrder){
+                this.so=this.activityRecord.salesOrder.id
+            }else{
+                this.so=""
+            }
             this.$refs.editDrawer.open()
         },
-
     }
 }
 </script>

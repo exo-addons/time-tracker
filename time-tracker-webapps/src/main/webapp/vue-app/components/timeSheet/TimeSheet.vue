@@ -68,9 +68,9 @@
 
         </v-card-text>
     </v-card>
-    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" v-on:save="save"></add-tracking-entry-drawer>
-    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
-    <filter-drawer ref="filterDrawer" :activities="activities" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
+    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" v-on:save="save"></add-tracking-entry-drawer>
+    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
+    <filter-drawer ref="filterDrawer" :activities="activities" :offices="offices" :locations="locations" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
 
@@ -78,8 +78,9 @@
 import filterDrawer from './FilterDrawer.vue';
 
 import downloadExcel from "vue-json-excel";
-import AddTrackingEntryDrawer from '../commons/AddRecordDrawer.vue';
-import EditTrackingEntryDrawer from '../commons/EditRecorddrawer.vue';
+import AddTrackingEntryDrawer from '../commons/AddTTEntryDrawer.vue';
+import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
+
 export default {
     components: {
         downloadExcel,
@@ -103,7 +104,7 @@ export default {
             'Project': 'activity.project.label',
             'Client': 'activity.project.client.label',
             'Feature': 'activity.feature.label',
-            'Sales Order': 'salesOrder',
+            'Sales Order': 'salesOrder.name',
             'Project Version': 'projectVersion',
             'User Name': 'userName',
 
@@ -153,6 +154,8 @@ export default {
         features: [],
         filters: [],
         employees: [],
+        locations: [],
+        offices: [],
 
     }),
 
@@ -243,7 +246,7 @@ export default {
                     text: 'SO',
                     align: 'center',
                     sortable: true,
-                    value: 'salesOrder',
+                    value: 'salesOrder.name',
                 },
                 {
                     text: 'Type',
@@ -342,7 +345,7 @@ export default {
             this.$refs.filterDrawer.open()
         },
         openAddTTEntryDrawer(item) {
-            this.$refs.addTTEntryDrawer.open(item)
+            this.$refs.addTTEntryDrawer.open(item,true)
         },
 
         initialize() {
@@ -362,6 +365,8 @@ export default {
             this.getSubTypes();
             this.getActivities();
             this.getFilters();
+            this.getOffices();
+            this.getLocations();
             this.getActivityRecords(true).then(data => {
               this.activityRecordsList = data.items
               this.totalRecords = data.total
@@ -770,7 +775,33 @@ export default {
         editActivityRecord(item) {
 
             this.activityRecord = item
-            this.$refs.editTTEntryDrawer.open()
+            this.$refs.editTTEntryDrawer.open(item)
+        },
+
+        
+
+        getOffices() {
+            fetch(`/portal/rest/timetracker/settings/office`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.offices = resp;
+                  this.offices.unshift({'code':"",'label':""})
+                });
+
+        },
+
+        getLocations() {
+            fetch(`/portal/rest/timetracker/settings/location`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.locations = resp;
+                  this.locations.unshift({'code':"",'label':""})
+                });
+
         },
 
         async exportData() {
