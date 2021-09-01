@@ -17,12 +17,12 @@
                                 <button class="btn btn-primary pull-left" type="button" @click="openAddTTEntryDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Activity
                                 </button>
-
-                                <download-excel :fetch="exportData" :fields="json_fields" name="timeSheet.xls">
-                                    <button class="btn btn-export" type="button">
-                                        <i class="uiIconExport"></i> Export
+                                <button class="btn btn-export" type="button" @click="exportToExcel(json_fields)">
+                                        <i class="uiIconExport"></i> Export All
                                     </button>
-                                </download-excel>
+                                <button class="btn btn-export" type="button" @click="exportToExcel(json_fields_fr)">
+                                        <i class="uiIconExport"></i> Export FR
+                                    </button>
 
                                 <v-spacer />
                                 <!-- <v-col cols="12" md="3" sm="6">
@@ -77,20 +77,31 @@
 <script>
 import filterDrawer from './FilterDrawer.vue';
 
-import downloadExcel from "vue-json-excel";
+import XLSX from 'xlsx'
 import AddTrackingEntryDrawer from '../commons/AddTTEntryDrawer.vue';
 import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
 
 export default {
     components: {
-        downloadExcel,
         filterDrawer,
         AddTrackingEntryDrawer,
         EditTrackingEntryDrawer,
     },
 
     data: () => ({
-        json_fields: {
+
+    json_fields_fr: {
+
+            'Date': 'activityDate',
+            'Month': 'month',
+            'Week Day': 'weekDay',
+            'Time': 'time',
+            'TS Code': 'tsCode',
+            'Comment': 'comment',
+            'User Name': 'userName',
+        }, 
+
+    json_fields: {
 
             'Date': 'activityDate',
             'Month': 'month',
@@ -98,22 +109,22 @@ export default {
             'Year': 'year',
             'Week Day': 'weekDay',
             'TS Code': 'tsCode',
-            'Activity label': 'activity.label',
+            'Activity label': 'activityName',
             'description': 'description',
             'Time': 'time',
             'Location': 'location',
-            'Type': 'activity.type.label',
-            'Sub Type': 'activity.subType.label',
-            'Activity Code': 'activity.activityCode.label',
-            'Sub Activity Code': 'activity.subActivityCode.label',
-            'Project': 'activity.project.label',
-            'Client': 'activity.project.client.label',
-            'Feature': 'activity.feature.label',
-            'Sales Order': 'salesOrder.name',
+            'Type': 'typeName',
+            'Sub Type': 'subTypeName',
+            'Activity Code': 'activityCodeName',
+            'Sub Activity Code': 'subActivityCodeName',
+            'Project': 'projectName',
+            'Client': 'clientName',
+            'Feature': 'featureName',
+            'Sales Order': 'salesOrderName',
             'Project Version': 'projectVersion',
             'User Name': 'userName',
 
-        },
+        },  
         //filtered: "grey-color",
         date: [],
         dateRangeText: '',
@@ -168,18 +179,6 @@ export default {
         this.initialize()
     },
     watch: {
-/*        options: {
-            handler() {
-                this.getActivityRecords()
-                    .then(data => {
-                      this.activityRecordsList = data
-                        /!*this.activityRecordsList = data.items
-                        this.totalRecords = data.total*!/
-                    })
-
-            },
-            deep: true,
-        },*/
         dialog(val) {
             return val === true || this.close() === true;
         },
@@ -808,26 +807,79 @@ export default {
                 });
 
         },
+        exportToExcel(fileds) { // On Click Excel download button
 
-        async exportData() {
-            const response = await this.getActivityRecords(true);
-            console.log(response);
-            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            response.items.forEach(function(item){
-                const date_ = new Date(item.activityTime.time)
-                item.day =  days[date_.getDay()];
-                item.weekDay =  date_.getDay();
-                item.month = date_.getMonth();
-                item.year = date_.getFullYear();
-                if(item.office && item.activity){
-                    item.tsCode= `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.activityCode.code}`
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            this.getActivityRecords()
+            .then(data => {
+                const items = data.items
+
+                items.forEach(function(item) {
+                    const date_ = new Date(item.activityTime.time)
+                    item.day = days[date_.getDay()];
+                    item.weekDay = date_.getDay();
+                    item.month = date_.getMonth();
+                    item.year = date_.getFullYear();
+                    if (item.office && item.activity) {
+                        item.tsCode = `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.activityCode.code}`
+                    }
+                    if (item.activity) {
+                        item.activityName = item.activity.label
+                        if (item.activity.type) {
+                            item.typeName = item.activity.type.label
+                        }
+                        if (item.activity.subType) {
+                            item.activityCodeName = item.activity.subType.label
+                        }
+                        if (item.activity.activityCode) {
+                            item.subTypeName = item.activity.activityCode.label
+                        }
+                        if (item.activity.subActivityCode) {
+                            item.subActivityCodeName = item.activity.subActivityCode.label
+                        }
+                        if (item.activity.project) {
+                            item.projectName = item.activity.project.label
+                        }
+                        if (item.activity.project && item.activity.project.client) {
+                            item.clientName = item.activity.project.client.label
+                        }
+                        if (item.activity.feature) {
+                            item.featureName = item.activity.feature.label
+                        }
+                    }
+                    if (item.salesOrder) {
+                        item.salesOrderName = item.salesOrder.name
+                    }
+
+                });
+
+
+                const newItems = []
+                items.forEach(function(item) {
+                    const obj = {}
+
+                    for (const [key, value] of Object.entries(fileds)) {
+                        obj[key] = item[value];
+                    }
+
+                    newItems.push(obj)
+                });
+                const records = XLSX.utils.json_to_sheet(newItems)
+
+                const wb = XLSX.utils.book_new()
+
+                XLSX.utils.book_append_sheet(wb, records, 'TimeSeet')
+                let userName = this.employee
+                if(!userName){
+                    userName = eXo.env.portal.userName;
                 }
-                
-            });
-            return response.items;
-        },
+                XLSX.writeFile(wb, `TimeSheet_${userName}_${this.dateRangeText}.xlsx`)
+            })
 
     },
+
+
+}
 };
 </script>
 

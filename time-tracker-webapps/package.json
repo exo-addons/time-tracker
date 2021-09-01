@@ -20,7 +20,8 @@
     "@ckeditor/ckeditor5-build-classic": "^16.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.1",
     "dom-to-image": "^2.6.0",
-    "vue-json-excel": "^0.2.98"
+    "vue-json-excel": "^0.2.98",
+    "xlsx": "^0.14.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
