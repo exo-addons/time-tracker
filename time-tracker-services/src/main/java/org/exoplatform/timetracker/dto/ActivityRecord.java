@@ -61,6 +61,8 @@ public class ActivityRecord implements Serializable {
 
   private Date         createdDate;
 
+  private String         userFullName;
+
   /**
    * <p>Constructor for ActivityRecord.</p>
    */
@@ -96,7 +98,8 @@ public class ActivityRecord implements Serializable {
                         Client client,
                         Activity activity,
                         SalesOrder salesOrder,
-                        Date         createdDate) {
+                        Date         createdDate,
+                        String         userFullName) {
     this.id = id;
     this.userName = userName;
     this.activityDate = activityDate;
@@ -110,6 +113,7 @@ public class ActivityRecord implements Serializable {
     this.client = client;
     this.activity = activity;
     this.createdDate = createdDate;
+    this.userFullName = userFullName;
   }
 
 }

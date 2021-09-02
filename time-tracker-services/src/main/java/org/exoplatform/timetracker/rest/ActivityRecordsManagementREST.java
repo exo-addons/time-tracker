@@ -27,12 +27,14 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.identity.model.Identity;
+import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.service.rest.Util;
 import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.service.ActivityRecordService;
@@ -165,7 +167,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
         userName=sourceIdentity.getRemoteId();
       }
       RecordsAccessList recordsAccessList =  activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
-
+      IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
 
       List<ActivityRecord> act = new ArrayList<>();
       List<ActivityRecord> activityRecordList = new ArrayList<>();
@@ -200,9 +202,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                 Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 DayOfWeek dayOfWeek = d.getDayOfWeek();
                 if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
-                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(8),"",null,null,null,null));
+                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(8),"",null,null,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName()));
                 }else {
-                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null));
+                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName()));
                 }
               }
             }

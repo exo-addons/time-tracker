@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
 import org.gatein.api.EntityNotFoundException;
 
@@ -269,6 +271,7 @@ public class ActivityRecordStorage {
         if (activityRecordEntity == null) {
             return null;
         }
+        IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
         return new ActivityRecord(activityRecordEntity.getId(),
                 activityRecordEntity.getUserName(),
                 activityRecordEntity.getActivityDate(),
@@ -281,7 +284,7 @@ public class ActivityRecordStorage {
                 clientStorage.toDTO(activityRecordEntity.getClientEntity()),
                 activityStorage.toDTO(activityRecordEntity.getActivityEntity()),
                 salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity()),
-                activityRecordEntity.getCreatedDate());
+                activityRecordEntity.getCreatedDate(),identityManager.getOrCreateUserIdentity(activityRecordEntity.getUserName()).getProfile().getFullName());
     }
 
     /**

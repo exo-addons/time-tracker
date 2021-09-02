@@ -98,7 +98,7 @@ export default {
             'Time': 'time',
             'TS Code': 'tsCode',
             'Comment': 'comment',
-            'User Name': 'userName',
+            'User Name': 'userFullName',
         }, 
 
     json_fields: {
@@ -122,7 +122,7 @@ export default {
             'Feature': 'featureName',
             'Sales Order': 'salesOrderName',
             'Project Version': 'projectVersion',
-            'User Name': 'userName',
+            'User Name': 'userFullName',
 
         },  
         //filtered: "grey-color",
@@ -292,7 +292,7 @@ export default {
                     text: 'User',
                     align: 'center',
                     sortable: true,
-                    value: 'userName',
+                    value: 'userFullName',
                 },
                 {
                     text: 'Actions',
@@ -865,14 +865,14 @@ export default {
                     newItems.push(obj)
                 });
                 const records = XLSX.utils.json_to_sheet(newItems)
-
-                const wb = XLSX.utils.book_new()
-
-                XLSX.utils.book_append_sheet(wb, records, 'TimeSeet')
                 let userName = this.employee
                 if(!userName){
                     userName = eXo.env.portal.userName;
                 }
+                const wb = XLSX.utils.book_new()
+
+                XLSX.utils.book_append_sheet(wb, records, userName)
+                
                 XLSX.writeFile(wb, `TimeSheet_${userName}_${this.dateRangeText}.xlsx`)
             })
 
