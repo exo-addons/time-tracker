@@ -39,6 +39,10 @@ public class WorkTime implements Serializable {
 
   private Date    to;
 
+  private String    fromDate;
+
+  private String    toDate;
+
   private Float   time;
 
   private String  period;
@@ -66,6 +70,8 @@ public class WorkTime implements Serializable {
    * @param id a {@link String} WorkTime object Id.
    * @param from a {@link Date} WorkTime from date.
    * @param to a {@link Date} WorkTime from date.
+   * @param fromDate a {@link Date} WorkTime from date .
+   * @param toDate a {@link Date} WorkTime from date.
    * @param time a {@link float} number of hours.
    * @param period a {@link String} period type can be week, day or mounth.
    * @param team a {@link String} related team.
@@ -76,6 +82,8 @@ public class WorkTime implements Serializable {
   public WorkTime(Long id,
                   Date from,
                   Date to,
+                  String fromDate,
+                  String toDate,
                   float time,
                   String period,
                   String team,
@@ -85,6 +93,8 @@ public class WorkTime implements Serializable {
     this.id = id;
     this.from = from;
     this.to = to;
+    this.fromDate = fromDate;
+    this.toDate = toDate;
     this.time = time;
     this.office = office;
     this.team = team;

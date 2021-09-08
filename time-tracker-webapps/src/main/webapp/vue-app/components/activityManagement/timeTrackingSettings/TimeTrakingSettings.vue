@@ -82,15 +82,29 @@
 
         <v-flex>
             <v-card outlined style="padding: 16px;">
-             <v-form ref="form">
-                        <v-text-field v-model="otherSettings.usersSpace" label="Users Space"></v-text-field>
-                        <v-select v-model="defaultFeatureSubActivityId" :items="subActivityCodes" item-text="displayLabel" item-value="id" label="Default subactivity for features"></v-select>  
-                        <v-card-actions>
-                            <div class="flex-grow-1"></div>
-                            <div class="uiAction">
-                                <button :disabled="!valid" @click="saveSettings()" class="btn btn-primary" type="button">Save</button>
-                            </div>
-                        </v-card-actions>
+                <v-form ref="form">
+                    <div>
+                        <v-label for="label">
+                            Users Space 
+                        </v-label>
+                        <input ref="label" v-model="otherSettings.usersSpace" type="text" name="label" class="input-block-level ignore-vuetify-classes my-3" />
+                    </div>
+                    <div>
+                        <v-label for="subActivityCode">
+                            Default Sub Activity
+                        </v-label>
+                            <select v-model="otherSettings.defaultFeatureSubActivity" name="subActivityCode" class="input-block-level ignore-vuetify-classes my-3">
+                            <option v-for="item in subActivityCodes" :key="item.id" :value="item">
+                                {{ item.displayLabel}}
+                            </option>
+                            </select>
+                    </div>
+                    <v-card-actions>
+                        <div class="flex-grow-1"></div>
+                        <div class="uiAction">
+                            <button :disabled="!valid" @click="saveSettings()" class="btn btn-primary" type="button">Save</button>
+                        </div>
+                    </v-card-actions>
                     </v-form>
                 </v-card>
            
@@ -100,13 +114,13 @@
 
         <add-location-drawer ref="addLocationDrawer"  v-on:save="addLocation" />
 
-        <add-work-time-drawer ref="addWorkTimeDrawer"  v-on:save="addWorkTime" />      
+        <add-work-time-drawer ref="addWorkTimeDrawer"  v-on:save="addWorkTime" :offices="offices"  :teams="teams" />      
 
         <edit-office-drawer ref="editOfficeDrawer" v-on:save="editOffice" />
 
         <edit-location-drawer ref="editLocationDrawer"  v-on:save="editLocation" />
 
-        <edit-work-time-drawer ref="editWorkTimeDrawer"  v-on:save="editWorkTimeCode" />
+        <edit-work-time-drawer ref="editWorkTimeDrawer"  v-on:save="editWorkTime" :offices="offices"  :teams="teams"/>
 
        
     </div>
@@ -128,7 +142,7 @@ export default {
         editLocationDrawer,
         editWorkTimeDrawer, 
     },
-    props:['offices','locations','workTimePlans','subActivityCodes','otherSettings'],
+    props:['offices','locations','workTimePlans','subActivityCodes','otherSettings','teams'],
     data: () => ({
         valid: true,
         editedIndex: -1,
@@ -196,24 +210,42 @@ export default {
                 text: 'From',
                 align: 'center',
                 sortable: true,
-                value: 'from',
+                value: 'fromDate',
             },{
                 text: 'To',
                 align: 'center',
                 sortable: true,
-                value: 'to',
-            },
-            {
-                text: 'Office',
-                align: 'center',
-                sortable: true,
-                value: 'office',
+                value: 'toDate',
             },
             {
                 text: 'Hours',
                 align: 'center',
                 sortable: true,
-                value: 'hoursNumber',
+                value: 'time',
+            },
+            {
+                text: 'Office',
+                align: 'center',
+                sortable: true,
+                value: 'office.label',
+            },
+            {
+                text: 'Employee',
+                align: 'center',
+                sortable: true,
+                value: 'userId',
+            },
+            {
+                text: 'Period',
+                align: 'center',
+                sortable: true,
+                value: 'period',
+            },
+            {
+                text: 'Default',
+                align: 'center',
+                sortable: true,
+                value: 'defaultTime',
             },
             {
                 text: 'Actions',
@@ -307,14 +339,11 @@ export default {
         },
         
         editWorkTime(workTime) {
-            this.workTimePlans.push(workTime)
             this.$emit('editWorkTime', workTime)
         },
 
         saveSettings() {
-            if(this.defaultFeatureSubActivityId){
-               this.otherSettings.defaultFeatureSubActivity.id=this.defaultFeatureSubActivityId 
-            }
+
             this.$emit('saveOtherSettings', this.otherSettings)
         },
         
@@ -344,5 +373,20 @@ select {
 
 #codesManagementApp .v-data-table {
  width: 100%;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    overflow: hidden;
+    top: 5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    height: 20px;
+    background-color: #f2f2f2;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 </style>

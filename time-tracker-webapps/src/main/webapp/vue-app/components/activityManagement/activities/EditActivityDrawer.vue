@@ -166,10 +166,13 @@ export default {
             this.$refs.editActivityDrawer.close()
         },
         open() {
+            setTimeout(() => {
             this.teamIds=[]
+            
             if (this.activity.teams!== undefined && this.activity.teams.length > 0) {
                 this.teamIds = this.activity.teams.map(a => a.id);
             }
+            }, 100);
             this.$refs.editActivityDrawer.open()
         },
 

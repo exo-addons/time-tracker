@@ -15,7 +15,7 @@
                                     <v-date-picker v-model="date" range no-title scrollable>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.menu.save(date),setDates()">OK</v-btn>
+                                        <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                                     </v-date-picker>
                     </v-menu>
                 </div>
@@ -30,12 +30,54 @@
                         </option>
                     </select>
                 </div>
+
+                <div>
+                    <v-label for="userName">
+                        Employee
+                    </v-label>
+                    <exo-identity-suggester ref="autoFocusInput3" v-model="suggestedMembers" :labels="suggesterLabels" name="inviteMembers" type-of-relations="member_of_space" :search-options="searchOptions" include-users multiple />
+                </div>
+
+                
+                <!-- <div>
+                    <v-label for="team">
+                        Team
+                    </v-label>
+                    <select v-model="workTime.team" name="team" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in teams" :key="item.id" :value="item.id">
+                            {{ item.name}}
+                        </option>
+                    </select>
+                </div>
+ -->
                 <div>
                     <v-label for="hours">
-                        Label
+                        Hours
                     </v-label>
-                    <input ref="hours" v-model="workTime.hoursNumber" type="text" name="hoursNumber" class="input-block-level ignore-vuetify-classes my-3" />
+                    <input ref="hours" v-model="workTime.time" type="text" name="hoursNumber" class="input-block-level ignore-vuetify-classes my-3" />
                 </div>
+                <div>
+                    <v-label for="period">
+                        Periode
+                    </v-label>
+                    <select v-model="workTime.period" name="period" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in periods" :key="item" :value="item">
+                            {{item}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="d-flex flex-wrap pt-2">
+                      <form class="switchEnabled">
+                        <label class="col-form-label pt-0" max-rows="6"> Default:</label>
+                        <label class="switch">
+                          <input
+                            v-model="workTime.defaultTime"
+                            type="checkbox">
+                        </label>
+                      </form>
+                    </div>
+
                 </v-form>
         </div>
     </template>
@@ -59,7 +101,7 @@
 
 <script>
 export default {
-    props:['offices'],
+    props:['offices','teams'],
 
     data: () => ({
         date: [],
@@ -69,8 +111,15 @@ export default {
             from: '',
             to: '',
             office: '',
-            hoursNumber: '',
-        }
+            time: '',
+            defaultTime: false,
+        },
+        periods: ["Daily", "Weekly", "Monthly"],
+        suggestedMembers: [],
+        searchOptions:        {
+                  spaceURL: "exo_employees",
+                  currentUser:""
+                }
     }),
     
     ceated(){
@@ -99,8 +148,11 @@ export default {
 
     methods: {
         save() {
-            this.workTime.from=this.fromDate
-            this.workTime.to=this.toDate
+            this.workTime.fromDate=this.fromDate
+            this.workTime.toDate=this.toDate
+            if(this.workTime.office && !this.workTime.office.code) {
+            this.workTime.office = {code:this.workTime.office}
+            }
             this.$emit('save', this.workTime)
             this.workTime = {code: '',label: ''}
             this.$refs.addWorkTimeDrawer.close()
@@ -117,3 +169,19 @@ export default {
     }
 }
 </script>
+<style>
+.slider {
+    position: absolute;
+    cursor: pointer;
+    overflow: hidden;
+    top: 5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    height: 20px;
+    background-color: #f2f2f2;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+</style>

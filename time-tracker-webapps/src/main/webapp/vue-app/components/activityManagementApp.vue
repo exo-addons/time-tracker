@@ -47,7 +47,7 @@
                 </v-tab-item>
                 
                 <v-tab-item class="tabContent" eager id="ttsettings" value="ttsettings">
-                    <time-tracking-settings  :otherSettings="otherSettings" v-on:saveOtherSettings="saveOtherSettings" v-on:getOtherSettings="getOtherSettings" :offices="offices" v-on:addOffice="addOffice" v-on:editOffice="editOffice" v-on:deleteOffice="deleteOffice" :locations="locations" v-on:addLocation="addLocation" v-on:editLocation="editLocation" v-on:deleteLocation="deleteLocation"  :workTimePlans="workTimePlans" v-on:addWorkTime="addWorkTime" v-on:editWorkTime="editWorkTime" v-on:deleteWorkTime="deleteWorkTime" :subActivityCodes="subActivityCodes" />
+                    <time-tracking-settings  :otherSettings="otherSettings" v-on:saveOtherSettings="saveOtherSettings" v-on:getOtherSettings="getOtherSettings" :offices="offices" v-on:addOffice="addOffice" v-on:editOffice="editOffice" v-on:deleteOffice="deleteOffice" :locations="locations" v-on:addLocation="addLocation" v-on:editLocation="editLocation" v-on:deleteLocation="deleteLocation"  :workTimePlans="workTimePlans" v-on:addWorkTime="addWorkTimePlan" v-on:editWorkTime="editWorkTimePlan" v-on:deleteWorkTime="deleteWorkTimePlan" :subActivityCodes="subActivityCodes"  :teams="teams" />
                 </v-tab-item>
             </v-tabs-items>
         </template>

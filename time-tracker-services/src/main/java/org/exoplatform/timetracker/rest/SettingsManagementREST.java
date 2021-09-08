@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.swagger.jaxrs.PATCH;
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -39,6 +40,10 @@ import org.exoplatform.timetracker.dto.WorkTime;
 import org.exoplatform.timetracker.service.TimeTrackerSettingsService;
 
 import io.swagger.annotations.*;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
@@ -58,6 +63,10 @@ public class SettingsManagementREST implements ResourceContainer {
   private final String          portalContainerName = "portal";
 
   private final TimeTrackerSettingsService timeTrackerSettingsService;
+
+  private final String DATE_FORMAT = "yyyy-MM-dd";
+
+  private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 
   /**
    * <p>
@@ -120,6 +129,16 @@ public class SettingsManagementREST implements ResourceContainer {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
+      if (StringUtils.isNotEmpty(workTime.getFromDate())) {
+        workTime.setFrom(formatter.parse(workTime.getFromDate()));
+      }else{
+        return Response.status(Response.Status.BAD_REQUEST).build();
+      }
+      if (StringUtils.isNotEmpty(workTime.getToDate())) {
+        workTime.setTo(formatter.parse(workTime.getToDate()));
+      }else{
+        return Response.status(Response.Status.BAD_REQUEST).build();
+      }
       timeTrackerSettingsService.createWorkTime(workTime);
     } catch (EntityExistsException e) {
       LOG.warn(e);

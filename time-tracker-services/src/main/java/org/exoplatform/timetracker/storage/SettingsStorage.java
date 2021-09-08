@@ -16,6 +16,7 @@
  */
 package org.exoplatform.timetracker.storage;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,10 @@ public class SettingsStorage {
   private final LocationDAO locationDAO;
 
   private final OfficeDAO   officeDAO;
+
+  private final String DATE_FORMAT = "yyyy-MM-dd";
+
+  private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 
   /**
    * <p>
@@ -181,6 +186,8 @@ public class SettingsStorage {
     return new WorkTime(workTimeEntity.getId(),
                         workTimeEntity.getFrom(),
                         workTimeEntity.getTo(),
+                        formatter.format(workTimeEntity.getFrom()),
+                        formatter.format(workTimeEntity.getTo()),
                         workTimeEntity.getTime(),
                         workTimeEntity.getPeriod(),
                         workTimeEntity.getTeam(),
