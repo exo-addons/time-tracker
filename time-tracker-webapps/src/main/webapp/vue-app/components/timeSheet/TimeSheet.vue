@@ -20,9 +20,9 @@
                                 <button class="btn btn-export" type="button" @click="exportToExcel(json_fields)">
                                         <i class="uiIconExport"></i> Export All
                                     </button>
-                                <!-- <button class="btn btn-export" type="button" @click="exportToExcel(json_fields_fr)">
+                                    <button class="btn btn-export" type="button" @click="exportToExcel(json_fields_fr)">
                                         <i class="uiIconExport"></i> Export FR
-                                    </button> -->
+                                    </button>
 
                                 <v-spacer />
                                 <!-- <v-col cols="12" md="3" sm="6">
