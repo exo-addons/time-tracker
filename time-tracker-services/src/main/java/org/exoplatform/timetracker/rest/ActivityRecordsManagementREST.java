@@ -314,12 +314,6 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
         activityRecord.setActivity(null);
       }
       activityRecord.setUserName(sourceIdentity.getRemoteId());
-      if(activityRecord.getProject()!=null && !activityRecord.getActivity().getProject().getCode().equals("<PRJ>")){
-        activityRecord.setProject(null);
-      }
-      if(activityRecord.getClient()!=null && !activityRecord.getActivity().getProject().getClient().getCode().equals("<CLNT>")){
-        activityRecord.setClient(null);
-      }
       activityRecordService.createActivityRecord(activityRecord);
     } catch (EntityExistsException e) {
       LOG.warn(e);

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
 import org.gatein.api.EntityNotFoundException;
 
@@ -89,6 +90,15 @@ public class ActivityRecordStorage {
         activityRecordEntity.setId(null);
         activityRecordEntity.setCreatedDate(new Date());
         activityRecordEntity.setActivityTime(formatter.parse(activityRecordEntity.getActivityDate()));
+        if(activityRecord.getActivity()!=null) {
+            Activity activity = activityStorage.getActivityById(activityRecord.getActivity().getId());
+            if (activityRecord.getProject() != null && !activity.getProject().getCode().equals("<PRJ>")) {
+                activityRecord.setProject(null);
+            }
+            if (activityRecord.getClient() != null && !activity.getProject().getClient().getCode().equals("<CLNT>")) {
+                activityRecord.setClient(null);
+            }
+        }
         activityRecordEntity = activityRecordDAO.create(activityRecordEntity);
         return toDTO(activityRecordEntity);
     }
