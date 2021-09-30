@@ -26,7 +26,7 @@ public class FeatureServiceTest extends TestCase {
   public void testCreateFeature() throws Exception {
     // Given
     Feature feature = null;
-    Feature newFeature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
+    Feature newFeature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
     when(featureStorage.createFeature(any())).thenReturn(newFeature);
 
     // When
@@ -40,8 +40,8 @@ public class FeatureServiceTest extends TestCase {
   public void testUpdateFeature() throws Exception {
     // Given
     Feature newfeatureUpdated = null;
-    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
-    Feature featureUpdated = new Feature(1l,"testCodeUpdated","testLabelUpdated","testSpecUpdated","testExoUpdated");
+    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
+    Feature featureUpdated = new Feature(1l,"testCodeUpdated","testLabelUpdated","testSpecUpdated","testExoUpdated",null);
     when(featureStorage.getFeatureById(anyLong())).thenReturn(feature);
     when(featureStorage.updateFeature(feature)).thenReturn(featureUpdated);
 
@@ -61,7 +61,7 @@ public class FeatureServiceTest extends TestCase {
 
   public void testDeleteFeature() throws Exception  {
     // Given
-    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
+    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
     doNothing().when(featureStorage).deleteFeature(feature.getId());
     when(featureStorage.getFeatureById(feature.getId())).thenReturn(feature);
 
@@ -75,10 +75,10 @@ public class FeatureServiceTest extends TestCase {
 
   public void testGetFeaturesList() {
     // Given
-    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
-    Feature feature1 = new Feature(2l,"testCode1","testLabel1","testSpec1","testExo1");
-    Feature feature2 = new Feature(3l,"testCode2","testLabel2","testSpec2","testExo2");
-    Feature feature3 = new Feature(4l,"testCode3","testLabel3","testSpec3","testExo3");
+    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
+    Feature feature1 = new Feature(2l,"testCode1","testLabel1","testSpec1","testExo1",null);
+    Feature feature2 = new Feature(3l,"testCode2","testLabel2","testSpec2","testExo2",null);
+    Feature feature3 = new Feature(4l,"testCode3","testLabel3","testSpec3","testExo3",null);
     List<Feature> features = new ArrayList<>();
     features.add(feature);
     features.add(feature1);

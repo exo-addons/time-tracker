@@ -354,4 +354,34 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </createTable>
     <createSequence sequenceName="SEQ_WORK_TIME_ID" startValue="1"/>
   </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-8">
+    <addColumn tableName="ADDONS_TT_ACTIVITY_RECORD">
+      <column name="PROJECT_ID" type="BIGINT">
+        <constraints  foreignKeyName="FK_TT_ACTIVITY_RECORD_PROJECT"
+                     references="ADDONS_TT_PROJECT(ID)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="ADDONS_TT_FEATURE">
+      <column name="PROJECT_ID" type="BIGINT">
+        <constraints  foreignKeyName="FK_TT_FEATURE_PROJECT"
+                     references="ADDONS_TT_PROJECT(ID)"/>
+      </column>
+    </addColumn>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_TYPE"
+                         constraintName="UK_ADDONS_TT_TYPE"/>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_SUB_TYPE"
+                         constraintName="UK_ADDONS_TT_SUB_TYPE"/>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_ACTIVITY_CODE"
+                         constraintName="UK_ADDONS_TT_ACTIVITY_CODE"/>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_SUB_ACTIVITY_CODE"
+                         constraintName="UK_ADDONS_TT_SUB_ACTIVITY_CODE"/>
+    <addUniqueConstraint columnNames="NAME" tableName="ADDONS_TT_SALES_ORDER"
+                         constraintName="UK_ADDONS_TT_SALES_ORDER"/>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_FEATURE"
+                         constraintName="UK_ADDONS_TT_FEATURE"/>
+    <addUniqueConstraint columnNames="CODE" tableName="ADDONS_TT_PROJECT"
+                         constraintName="UK_ADDONS_TT_PROJECT"/>
+  </changeSet>
+
 </databaseChangeLog>

@@ -44,6 +44,8 @@ public class Feature implements Serializable {
 
   private String            displayLabel;
 
+  private Project    project;
+
   /**
    * <p>Constructor for Feature.</p>
    */
@@ -59,13 +61,14 @@ public class Feature implements Serializable {
    * @param spec a {@link java.lang.String} object.
    * @param exo a {@link java.lang.String} object.
    */
-  public Feature(Long id, String code, String label, String spec, String exo) {
+  public Feature(Long id, String code, String label, String spec, String exo, Project project) {
     this.id = id;
     this.code = code;
     this.label = label;
     this.spec = spec;
     this.exo = exo;
     this.displayLabel = code +" - "+label;
+    this.project = project;
   }
 
 }

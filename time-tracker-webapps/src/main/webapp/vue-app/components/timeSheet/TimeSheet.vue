@@ -92,12 +92,17 @@ export default {
 
     json_fields_fr: {
 
-            'Date': 'activityDate',
+            'Date': 'frDate',
             'Month': 'month',
             'Week Day': 'weekDay',
             'Time': 'time',
             'TS Code': 'tsCode',
+            'Sales Order': 'salesOrderName',
+            'Location': 'location',
             'Comment': 'comment',
+            'Référence Jour Férié et Week end': 'comment',
+            'jours ouvrés': 'comment',
+            'jours ouvrables': 'comment',
             'User Name': 'userFullName',
         }, 
 
@@ -820,6 +825,16 @@ export default {
                     item.weekDay = date_.getDay();
                     item.month = date_.getMonth();
                     item.year = date_.getFullYear();
+                    let dd = date_.getDate();
+                    let mm = date_.getMonth() + 1;
+            
+                    if (dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if (mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    item.frDate = `${dd}/${mm}/${date_.getFullYear()}`
                     if (item.office && item.activity) {
                         item.tsCode = `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.activityCode.code}`
                     }

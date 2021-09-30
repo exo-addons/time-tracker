@@ -28,7 +28,7 @@ public class FeatureStorageTest extends TestCase {
   public void testCreateFeature() throws Exception {
     // Given
      FeatureEntity featureEntity = new FeatureEntity(1l,"testCode","testLabel","testSpec","testExo");
-     Feature newFeature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
+     Feature newFeature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
      when(featureDAO.create(featureEntity)).thenReturn(featureEntity);
      Feature feature = null;
 
@@ -44,7 +44,7 @@ public class FeatureStorageTest extends TestCase {
     // Given
     FeatureEntity featureEntity = new FeatureEntity(1l,"testCode","testLabel","testSpec","testExo");
     FeatureEntity featureEntityUpdated = new FeatureEntity(1l,"testCodeUpdate","testLabelUpdate","testSpecUpdate","testExoUpdate");
-    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
+    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
     Feature newFeatureUpdated = null;
     when(featureDAO.find(feature.getId())).thenReturn(featureEntity);
     when(featureDAO.update(featureEntity)).thenReturn(featureEntityUpdated);
@@ -65,7 +65,7 @@ public class FeatureStorageTest extends TestCase {
   public void testDeleteFeature() {
     // Given
     FeatureEntity featureEntity = new FeatureEntity(1l,"testCode","testLabel","testSpec","testExo");
-    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo");
+    Feature feature = new Feature(1l,"testCode","testLabel","testSpec","testExo",null);
     when(featureDAO.find(feature.getId())).thenReturn(featureEntity);
     doNothing().when(featureDAO).delete(featureEntity);
 

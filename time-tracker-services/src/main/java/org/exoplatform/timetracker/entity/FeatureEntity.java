@@ -53,6 +53,10 @@ public class FeatureEntity {
   @Column(name = "EXO")
   private String exo;
 
+  @ManyToOne
+  @JoinColumn(name = "PROJECT_ID")
+  private ProjectEntity projectEntity;
+
   /**
    * <p>Constructor for FeatureEntity.</p>
    */

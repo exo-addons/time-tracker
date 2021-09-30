@@ -149,7 +149,7 @@ public class FeatureStorage {
                         featureEntity.getCode(),
                         featureEntity.getLabel(),
                         featureEntity.getSpec(),
-                        featureEntity.getExo());
+                        featureEntity.getExo(),null);
   }
 
   /**

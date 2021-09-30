@@ -46,8 +46,8 @@
     <template slot="footer">
     </template>
 </exo-drawer>
-    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" v-on:save="save"></add-tracking-entry-drawer>
-    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
+    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :clients="clients" :projects="projects" v-on:save="save"></add-tracking-entry-drawer>
+    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :clients="clients" :projects="projects" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     </div>
 </template>
 
@@ -65,6 +65,8 @@ export default {
         activities: [],
         offices: [],
         locations: [],
+        projects: [],
+        clients: [],
         activityRecords: [],
         activityRecord: {},
         alert: false,
@@ -126,6 +128,29 @@ export default {
                 });
 
         },
+
+        getProjects() {
+            fetch(`/portal/rest/timetracker/projectsmgn/project`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                  this.projects = resp.sort(this.compare);
+                });
+
+        },
+
+        getClients() {
+            fetch(`/portal/rest/timetracker/clientsmgn/client`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.clients = resp.sort(this.compare);
+                });
+
+        },
+
 
         save(activityRecord) {
             //  this.activityRecords.push(activity)
@@ -190,6 +215,8 @@ export default {
         this.getActivityRecords()
 
         this.getActivities()
+        this.getProjects()
+        this.getClients()
             this.$refs.timeTrackerDrawer.open()
         },
         addActivityRecord() {

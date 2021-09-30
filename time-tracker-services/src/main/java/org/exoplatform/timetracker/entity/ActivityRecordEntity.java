@@ -82,8 +82,9 @@ public class ActivityRecordEntity {
   @Column(name = "CREATED_DATE")
   protected Date         createdDate;
 
-
-
+  @ManyToOne
+  @JoinColumn(name = "PROJECT_ID")
+  private ProjectEntity projectEntity;
 
   /**
    * <p>Constructor for ActivityRecordEntity.</p>

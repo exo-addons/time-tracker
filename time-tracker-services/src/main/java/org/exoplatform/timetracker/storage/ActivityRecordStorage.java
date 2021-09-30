@@ -43,6 +43,8 @@ public class ActivityRecordStorage {
 
     private final ClientStorage clientStorage;
 
+    private final ProjectStorage projectStorage;
+
     private final ActivityStorage activityStorage;
 
     private final SalesOrderStorage salesOrderStorage;
@@ -63,11 +65,13 @@ public class ActivityRecordStorage {
     public ActivityRecordStorage(ActivityRecordDAO activityRecordDAO,
                                  ClientStorage clientStorage,
                                  ActivityStorage activityStorage,
-                                 SalesOrderStorage salesOrderStorage) {
+                                 SalesOrderStorage salesOrderStorage,
+                                 ProjectStorage projectStorage) {
         this.activityRecordDAO = activityRecordDAO;
         this.clientStorage = clientStorage;
         this.activityStorage = activityStorage;
         this.salesOrderStorage = salesOrderStorage;
+        this.projectStorage = projectStorage;
     }
 
     /**
@@ -284,7 +288,8 @@ public class ActivityRecordStorage {
                 clientStorage.toDTO(activityRecordEntity.getClientEntity()),
                 activityStorage.toDTO(activityRecordEntity.getActivityEntity()),
                 salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity()),
-                activityRecordEntity.getCreatedDate(),identityManager.getOrCreateUserIdentity(activityRecordEntity.getUserName()).getProfile().getFullName());
+                activityRecordEntity.getCreatedDate(),identityManager.getOrCreateUserIdentity(activityRecordEntity.getUserName()).getProfile().getFullName(),
+                projectStorage.toDTO(activityRecordEntity.getProjectEntity()));
     }
 
     /**

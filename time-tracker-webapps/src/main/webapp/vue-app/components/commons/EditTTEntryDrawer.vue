@@ -28,6 +28,27 @@
                     <v-autocomplete v-model="activityRecord.activity" :items="activities" menu-props="closeOnClick" class="input-block-level ignore-vuetify-classes my-3" outlined dense chips small-chips item-text="label" item-value="id"></v-autocomplete>
 
                 </div>
+                
+                <div v-if="activityRecord.project || selectedActivity && (!selectedActivity.project || (selectedActivity.project && (selectedActivity.project.code==='<PRJ>'||selectedActivity.project.code==='<EXO>')))">
+                    <v-label for="project">
+                        Project
+                    </v-label>
+                    <select  v-model="activityRecord.project" name="project" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in projects" :key="item.id" :value="item">
+                            {{ item.displayLabel}}
+                        </option>
+                    </select>
+               </div>
+                <div v-if="activityRecord.client || activityRecord.project || selectedActivity && ( (selectedActivity.project && selectedActivity.project.client && (selectedActivity.project.client.code==='<CLNT>')))">
+                    <v-label for="client">
+                        Client
+                    </v-label>
+                    <select  v-model="activityRecord.client" name="client" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in clients" :key="item.id" :value="item">
+                            {{ item.displayLabel}}
+                        </option>
+                    </select>
+                </div>
                 <div>
                     <v-label for="projectVersion">
                         Project Version
@@ -90,11 +111,12 @@
 
 <script>
 export default {
-    props: ['activities','locations','offices'],
+    props: ['activities','locations','offices','clients','projects'],
     data: () => ({
         salesOrders: [],
         activityRecord:{},
         so:"",
+        selectedActivity:{}
     }),
     created() {
         //  this.initialize()
@@ -104,6 +126,7 @@ export default {
         'activityRecord.activity'(newVal){
             if(newVal && !newVal.id){
                 newVal=this.activities.find(act => act.id === newVal)
+                this.selectedActivity=newVal
             }
             if(newVal && newVal.project && newVal.project.client){
                 this.salesOrders=newVal.project.client.salesOrders         
@@ -130,6 +153,7 @@ export default {
         open(activityRecord) {
             this.salesOrders=activityRecord.activity.project.client.salesOrders    
             this.activityRecord=activityRecord
+            this.selectedActivity=activityRecord.activity
             if(this.activityRecord.salesOrder){
                 this.so=this.activityRecord.salesOrder.id
             }else{

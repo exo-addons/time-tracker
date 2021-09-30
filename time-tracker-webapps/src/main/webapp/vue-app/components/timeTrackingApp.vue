@@ -53,7 +53,7 @@ export default {
         initialize() {
           //  this.getClients()
         },
-openTimeTrackingDrawer() {
+        openTimeTrackingDrawer() {
             this.$refs.timeTrackingDrawer.open()
         },
 

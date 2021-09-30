@@ -195,6 +195,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                 float TimeSum  = act.stream().map(x -> x.getTime()).reduce(0.0f, (a, b) -> a + b);
                 for(ActivityRecord activityRecord : act){
                   activityRecord.setDailyTimeSum(TimeSum);
+                  if(activityRecord.getProject()!=null){
+                    activityRecord.getActivity().setProject(activityRecord.getProject());
+                  }
+                  if(activityRecord.getClient()!=null){
+                    activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+                  }
                   activityRecordList.add(activityRecord);
                 }
 
@@ -202,9 +208,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                 Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 DayOfWeek dayOfWeek = d.getDayOfWeek();
                 if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
-                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(8),"",null,null,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName()));
+                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(8),"",null,null,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
                 }else {
-                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName()));
+                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
                 }
               }
             }
@@ -308,6 +314,12 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
         activityRecord.setActivity(null);
       }
       activityRecord.setUserName(sourceIdentity.getRemoteId());
+      if(activityRecord.getProject()!=null && !activityRecord.getActivity().getProject().getCode().equals("<PRJ>")){
+        activityRecord.setProject(null);
+      }
+      if(activityRecord.getClient()!=null && !activityRecord.getActivity().getProject().getClient().getCode().equals("<CLNT>")){
+        activityRecord.setClient(null);
+      }
       activityRecordService.createActivityRecord(activityRecord);
     } catch (EntityExistsException e) {
       LOG.warn(e);
