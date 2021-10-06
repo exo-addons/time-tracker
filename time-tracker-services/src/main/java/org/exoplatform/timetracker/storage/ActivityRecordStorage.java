@@ -322,6 +322,7 @@ public class ActivityRecordStorage {
                 activityRecord.getTime(),
                 activityRecord.getProjectVersion(),
                 clientStorage.toEntity(activityRecord.getClient()),
+                projectStorage.toEntity(activityRecord.getProject()),
                 activityStorage.toEntity(activityRecord.getActivity()),
                 salesOrderStorage.toEntity(activityRecord.getSalesOrder()),
                 activityRecord.getCreatedDate());

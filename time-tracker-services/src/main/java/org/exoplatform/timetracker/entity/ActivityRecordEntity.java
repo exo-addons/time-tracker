@@ -119,6 +119,7 @@ public class ActivityRecordEntity {
                               float time,
                               String projectVersion,
                               ClientEntity clientEntity,
+                              ProjectEntity projectEntity,
                               ActivityEntity activityEntity,
                               SalesOrderEntity salesOrderEntity,
                               Date createdDate) {
@@ -133,6 +134,7 @@ public class ActivityRecordEntity {
     this.salesOrderEntity = salesOrderEntity;
     this.projectVersion = projectVersion;
     this.clientEntity = clientEntity;
+    this.projectEntity = projectEntity;
     this.activityEntity = activityEntity;
     this.createdDate = createdDate;
   }

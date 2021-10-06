@@ -39,7 +39,7 @@
                         </option>
                     </select>
                </div>
-                <div v-if="activityRecord.client || activityRecord.project || selectedActivity && ( (selectedActivity.project && selectedActivity.project.client && (selectedActivity.project.client.code==='<CLNT>')))">
+                <div v-if="activityRecord.project || selectedActivity && (!selectedActivity.project || (selectedActivity.project && (selectedActivity.project.code==='<PRJ>'||selectedActivity.project.code==='<EXO>')))">
                     <v-label for="client">
                         Client
                     </v-label>
