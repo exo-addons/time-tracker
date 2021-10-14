@@ -821,9 +821,9 @@ export default {
 
                 items.forEach(function(item) {
                     const date_ = new Date(item.activityTime.time)
-                    item.day = days[date_.getDay()];
+                    item.day = days[date_.getDay()]+1;
                     item.weekDay = date_.getDay();
-                    item.month = date_.getMonth();
+                    item.month = date_.getMonth()+1;
                     item.year = date_.getFullYear();
                     let dd = date_.getDate();
                     let mm = date_.getMonth() + 1;
@@ -836,8 +836,9 @@ export default {
                     }
                     item.frDate = `${dd}/${mm}/${date_.getFullYear()}`
                     if (item.office && item.activity) {
-                        item.tsCode = `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.activityCode.code}`
-                    }
+                        item.tsCode = `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.subType.code}_${item.activity.project.client.code}`
+                    }  
+            
                     if (item.activity) {
                         item.activityName = item.activity.label
                         if (item.activity.type) {
