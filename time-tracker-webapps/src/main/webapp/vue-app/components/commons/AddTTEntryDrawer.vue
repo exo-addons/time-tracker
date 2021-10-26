@@ -127,7 +127,8 @@ export default {
         activityRecord: {},
         salesOrders: [],
         showDPicker:false,
-        selectedActivity:{}
+        selectedActivity:{},
+        userName:""
     }),
      computed: {
          isDisabled: function(){
@@ -183,7 +184,8 @@ export default {
 
         save() {
             this.activityRecord.activityDate = this.date
-            if(!this.activityRecord.activity.id) {
+            this.activityRecord.userName=this.userName
+            if(this.activityRecord.activity && !this.activityRecord.activity.id) {
             this.activityRecord.activity = {id:this.activityRecord.activity}
             }
             this.$emit('save', this.activityRecord)
@@ -213,6 +215,9 @@ export default {
         if(timeRecord){
         this.activityRecord.activityTime=timeRecord.activityTime
         this.activityRecord.activityDate=timeRecord.activityDate
+        this.activityRecord.userName=timeRecord.userName
+        this.activityRecord.userFullName=timeRecord.userFullName
+        this.userName=timeRecord.userName
         this.date=timeRecord.activityDate
         }
         this.$refs.addTTEntryDrawer.open()

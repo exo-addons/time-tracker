@@ -11,6 +11,8 @@ public class TimeTrackerSetting implements Serializable, Cloneable {
 
   private SubActivityCode   defaultFeatureSubActivity = null;
 
+  private Activity          weekEndHolidayActivity    = null;
+
   private String            usersSpace                = null;
 
   public TimeTrackerSetting clone() { // NOSONAR

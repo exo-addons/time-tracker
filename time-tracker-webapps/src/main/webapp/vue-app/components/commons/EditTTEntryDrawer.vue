@@ -151,7 +151,8 @@ export default {
             this.$refs.editDrawer.close()
         },
         open(activityRecord) {
-            this.salesOrders=activityRecord.activity.project.client.salesOrders    
+            if(activityRecord.activity && activityRecord.activity.project && activityRecord.activity.project.client)
+            {this.salesOrders=activityRecord.activity.project.client.salesOrders    }
             this.activityRecord=activityRecord
             this.selectedActivity=activityRecord.activity
             if(this.activityRecord.salesOrder){

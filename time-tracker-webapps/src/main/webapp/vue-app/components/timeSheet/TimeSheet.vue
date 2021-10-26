@@ -107,7 +107,7 @@ export default {
         }, 
 
     json_fields: {
-
+            'User Name': 'userFullName',
             'Date': 'activityDate',
             'Month': 'month',
             'Day': 'day',
@@ -126,9 +126,7 @@ export default {
             'Client': 'clientName',
             'Feature': 'featureName',
             'Sales Order': 'salesOrderName',
-            'Project Version': 'projectVersion',
-            'User Name': 'userFullName',
-
+            'Project Version': 'projectVersion',           
         },  
         //filtered: "grey-color",
         date: [],
@@ -821,8 +819,11 @@ export default {
 
                 items.forEach(function(item) {
                     const date_ = new Date(item.activityTime.time)
-                    item.day = days[date_.getDay()]+1;
+                    item.day = days[date_.getDay()];
                     item.weekDay = date_.getDay();
+                    if(date_.getDay()===0){
+                        item.weekDay = 7;
+                    }
                     item.month = date_.getMonth()+1;
                     item.year = date_.getFullYear();
                     let dd = date_.getDate();

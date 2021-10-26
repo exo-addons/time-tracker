@@ -99,6 +99,16 @@
                             </option>
                             </select>
                     </div>
+                    <div>
+                        <v-label for="weekEndHolidayActivity">
+                            Week End Holiday Activity
+                        </v-label>
+                            <select v-model="otherSettings.weekEndHolidayActivity.id" name="weekEndHolidayActivity" class="input-block-level ignore-vuetify-classes my-3">
+                            <option v-for="item in activities" :key="item.id" :value="item.id">
+                                {{ item.label}}
+                            </option>
+                            </select>
+                    </div>
                     <v-card-actions>
                         <div class="flex-grow-1"></div>
                         <div class="uiAction">
@@ -154,8 +164,13 @@ export default {
             code: '',
             label: ''
         },
+        activities: [],
              
     }),
+
+    created() {
+        this.getActivities()
+    },
 
     computed: {
             locationHeaders() {
@@ -265,10 +280,17 @@ export default {
         }
     },
 
-
     methods: {
 
-       
+       getActivities() {
+            fetch(`/portal/rest/timetracker/activitymgn/activity`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.activities = resp;
+                });
+        },
 
         deleteOffice(item) {
             const index = this.offices.indexOf(item)
@@ -343,7 +365,10 @@ export default {
         },
 
         saveSettings() {
-
+            if(this.otherSettings.weekEndHolidayActivity && this.otherSettings.weekEndHolidayActivity.id){
+                this.otherSettings.weekEndHolidayActivity =this.activities.find(act => act.id === this.otherSettings.weekEndHolidayActivity.id)
+            }
+            
             this.$emit('saveOtherSettings', this.otherSettings)
         },
         
