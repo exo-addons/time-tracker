@@ -93,7 +93,7 @@ export default {
         offices: [],
         locations: [],
         workTimePlans: [],
-        otherSettings: {},
+        otherSettings: {weekEndHolidayActivity :{id:''}},
     }),
 
     created() {
@@ -1141,6 +1141,9 @@ export default {
                 .then((resp) => resp.json())
                 .then((resp) => {
                   this.otherSettings = resp;
+                  if(!this.otherSettings.weekEndHolidayActivity || !this.otherSettings.weekEndHolidayActivity.id){
+                this.otherSettings.weekEndHolidayActivity ={id:''}
+            }
                 });
 
         },

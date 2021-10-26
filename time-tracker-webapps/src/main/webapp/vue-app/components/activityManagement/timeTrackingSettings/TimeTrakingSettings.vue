@@ -368,7 +368,6 @@ export default {
             if(this.otherSettings.weekEndHolidayActivity && this.otherSettings.weekEndHolidayActivity.id){
                 this.otherSettings.weekEndHolidayActivity =this.activities.find(act => act.id === this.otherSettings.weekEndHolidayActivity.id)
             }
-            
             this.$emit('saveOtherSettings', this.otherSettings)
         },
         
