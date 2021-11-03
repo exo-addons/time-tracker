@@ -65,6 +65,8 @@ public class ActivityRecord implements Serializable {
 
   private Project    project;
 
+  private String    tsCode;
+
 
 
   /**

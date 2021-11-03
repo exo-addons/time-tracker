@@ -16,6 +16,7 @@
  */
 package org.exoplatform.timetracker.service;
 
+import java.time.ZoneId;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
@@ -27,6 +28,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.ActivityRecord;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
+import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.storage.ActivityRecordStorage;
 
 /**
@@ -231,5 +233,72 @@ public class ActivityRecordService {
   public List<ActivityRecord> getUserActivityRecordsList(String day,String userName) {
     return activityRecordstorage.getUserActivityRecords(day,userName);
   }
+
+
+
+  public String generateTSCode(List<Team> teams, ActivityRecord record) {
+    String team ="";
+    if(team!=null && team.length()>0){
+      team = teams.get(0).getName();
+    }
+    String tsCode= String.valueOf(record.getActivityTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear());
+    tsCode = tsCode +"_"+record.getOffice();
+    if( record.getActivity()!=null && record.getActivity().getType() !=null){
+      tsCode = tsCode +"_"+record.getActivity().getType().getCode();
+    }
+    if( record.getActivity()!=null && record.getActivity().getSubType() !=null) {
+      tsCode = tsCode + "_" + record.getActivity().getSubType().getCode();
+    }
+    if(team.equals("Analysts") || team.equals("ITOP") || team.equals("Dev Squad") ){
+      tsCode = tsCode + getClient(record);
+    }else if(team.equals("Architects") || team.equals("Designers")) {
+      tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
+    }else if(team.equals("Support")) {
+      tsCode = tsCode + getClient(record) + getActivity(record);
+    } else if(team.equals("QA")) {
+      tsCode = tsCode + getProject(record) + getProject(record);
+    } else{
+      tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
+    }
+    return tsCode;
+  }
+
+  String getProject(ActivityRecord record){
+    String project = "";
+    if (record.getActivity() != null && record.getActivity().getProject() != null) {
+      project= "_" + record.getActivity().getProject().getCode();
+    } else {
+      if (record.getProject() != null) {
+        project= "_" + record.getProject().getCode();
+      }
+    }
+    return project;
+  }
+  String getClient(ActivityRecord record){
+    String client = "";
+    if( record.getActivity()!=null && record.getActivity().getProject() !=null && record.getActivity().getProject().getClient() !=null) {
+      client ="_" + record.getActivity().getProject().getClient().getCode();
+    } else {
+      if (record.getClient() != null) {
+        client ="_" + record.getClient().getCode();
+      }
+    }
+    return client;
+  }
+  String getActivity(ActivityRecord record){
+    String activity = "";
+    if (record.getActivity() != null && record.getActivity().getActivityCode() != null) {
+      activity = "_" + record.getActivity().getActivityCode().getCode();
+    }
+    return activity;
+  }
+  String geSubActivity(ActivityRecord record){
+    String subActivity = "";
+    if (record.getActivity() != null && record.getActivity().getSubActivityCode() != null) {
+      subActivity =  "_" + record.getActivity().getSubActivityCode().getCode();
+    }
+    return subActivity;
+  }
+
 
 }

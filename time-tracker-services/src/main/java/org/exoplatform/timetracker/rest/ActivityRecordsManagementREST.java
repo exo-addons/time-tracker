@@ -16,6 +16,17 @@
  */
 package org.exoplatform.timetracker.rest;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -27,7 +38,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.commons.api.settings.SettingService;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -37,24 +47,15 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.service.rest.Util;
-import org.exoplatform.timetracker.dto.*;
+import org.exoplatform.timetracker.dto.Activity;
+import org.exoplatform.timetracker.dto.ActivityRecord;
+import org.exoplatform.timetracker.dto.RecordsAccessList;
+import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.service.ActivityRecordService;
-
-import io.swagger.annotations.*;
+import org.exoplatform.timetracker.service.TeamService;
 import org.exoplatform.timetracker.service.TimeTrackerSettingsService;
 
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import io.swagger.annotations.*;
 
 /**
  * <p>ActivityRecordsManagementREST class.</p>
@@ -75,6 +76,8 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
 
   private final TimeTrackerSettingsService timeTrackerSettingsService;
 
+  private final TeamService teamService;
+
   private final String DATE_FORMAT = "yyyy-MM-dd";
 
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
@@ -86,9 +89,20 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    * @param activityRecordService a {@link org.exoplatform.timetracker.service.ActivityRecordService} object.
    * @param container a {@link org.exoplatform.container.PortalContainer} object.
    */
-  public ActivityRecordsManagementREST(ActivityRecordService activityRecordService, TimeTrackerSettingsService timeTrackerSettingsService, PortalContainer container) {
+  public ActivityRecordsManagementREST(ActivityRecordService activityRecordService, TimeTrackerSettingsService timeTrackerSettingsService,TeamService teamService, PortalContainer container) {
     this.activityRecordService = activityRecordService;
     this.timeTrackerSettingsService = timeTrackerSettingsService;
+    this.teamService = teamService;
+  }
+
+  public static List<LocalDate> getDatesBetween(
+          LocalDate startDate, LocalDate endDate) {
+
+    long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+    return IntStream.iterate(0, i -> i + 1)
+            .limit(numOfDaysBetween+1)
+            .mapToObj(i -> startDate.plusDays(i))
+            .collect(Collectors.toList());
   }
 
   /**
@@ -115,6 +129,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+
   /**
    * <p>getActivityRecordsList.</p>
    *
@@ -171,6 +186,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
+      List<Team> teams = teamService.getTeamsList(getCurrentUserName());
       RecordsAccessList recordsAccessList =  activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
       IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
 
@@ -181,19 +197,18 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       Activity weekEndActivity = timeTrackerSettingsService.getSettings().getWeekEndHolidayActivity();
           try {
             if (StringUtils.isNotEmpty(fromDate)) {
-              from_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(fromDate));
+              from_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(fromDate));
             }else{
               String from = recordsAccessList.getActivityRecords().get(recordsAccessList.getSize().intValue()-1).getActivityDate();
-              from_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(from));
+              from_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(from));
             }
             if (StringUtils.isNotEmpty(toDate)) {
-              to_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(toDate));
+              to_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(toDate));
             }else{
               String to = recordsAccessList.getActivityRecords().get(0).getActivityDate();
-              to_ =LocalDate.from(formatter.ISO_LOCAL_DATE.parse(to));
+              to_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
             }
-
-
+            String office_ ="";
             for (LocalDate d : getDatesBetween(from_,to_)){
               String day = d.format(formatter);
               act=recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
@@ -207,16 +222,25 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                       activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
                     }
                   }
+                  if(export){
+                    activityRecord.setTsCode(activityRecordService.generateTSCode(teams,activityRecord));
+                  }
+                  if(StringUtils.isNotEmpty(activityRecord.getOffice())){
+                    office_=activityRecord.getOffice();
+                  }
                   activityRecordList.add(activityRecord);
                 }
-
               }else{
                 Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 DayOfWeek dayOfWeek = d.getDayOfWeek();
                 if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
-                  activityRecordList.add(new ActivityRecord(null, userName,day,actDate,"Week End","","",new Float(0),"",null,weekEndActivity,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
+                  ActivityRecord weekEndRecord = new ActivityRecord(null, userName,day,actDate,"Week End","",office_,null,"",null,weekEndActivity,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null);
+                  if(export){
+                    weekEndRecord.setTsCode(activityRecordService.generateTSCode(teams,weekEndRecord));
+                  }
+                  activityRecordList.add(weekEndRecord);
                 }else {
-                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", new Float(0), "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
+                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", null, "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
                 }
               }
             }
@@ -229,6 +253,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.serverError().build();
     }
   }
+
   /**
    * <p>get Last ActivityRecord.</p>
    *
@@ -258,16 +283,6 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);
       return Response.serverError().build();
     }
-  }
-
-  public static List<LocalDate> getDatesBetween(
-          LocalDate startDate, LocalDate endDate) {
-
-    long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-    return IntStream.iterate(0, i -> i + 1)
-            .limit(numOfDaysBetween+1)
-            .mapToObj(i -> startDate.plusDays(i))
-            .collect(Collectors.toList());
   }
 
   /**
@@ -407,5 +422,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     ConversationState state = ConversationState.getCurrent();
     return state == null || state.getIdentity() == null ? null : state.getIdentity().getUserId();
   }
+
+
 
 }

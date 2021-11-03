@@ -813,7 +813,7 @@ export default {
         exportToExcel(fileds) { // On Click Excel download button
 
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            this.getActivityRecords()
+            this.getActivityRecords(true)
             .then(data => {
                 const items = data.items
 
@@ -836,10 +836,7 @@ export default {
                         mm = '0' + mm;
                     }
                     item.frDate = `${dd}/${mm}/${date_.getFullYear()}`
-                    if (item.office && item.activity) {
-                        item.tsCode = `${date_.getFullYear()}_${item.office}_${item.activity.type.code}_${item.activity.subType.code}_${item.activity.project.client.code}`
-                    }  
-            
+
                     if (item.activity) {
                         item.activityName = item.activity.label
                         if (item.activity.type) {
