@@ -186,8 +186,20 @@ public class TeamStorage {
    * @throws java.lang.Exception if any.
    */
   public List<Team> getTeamsByUser(String userName) throws Exception {
-
-    return groupHandler.findGroupsOfUser(userName).stream().map(this::toDTO).collect(Collectors.toList());
+    Group teamsGroupParent=groupHandler.findGroupById(PARENT_GROUP);
+    List<Group> teamsGroups = new ArrayList<>();
+    List<Group> userTeamsGroups = new ArrayList<>();
+    if(teamsGroupParent!=null){
+      teamsGroups = (List<Group>) groupHandler.findGroups(teamsGroupParent);
+    }
+    List<String> groups = teamsGroups.stream().map(Group -> Group.getId()).collect(Collectors.toList());
+    List<Group> userGroups = (List<Group>) groupHandler.findGroupsOfUser(userName);
+    for(Group group : userGroups){
+      if (groups.contains(group.getId())){
+        userTeamsGroups.add(group);
+      }
+    }
+    return userTeamsGroups.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
 

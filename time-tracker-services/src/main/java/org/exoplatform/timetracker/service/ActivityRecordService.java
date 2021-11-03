@@ -238,7 +238,7 @@ public class ActivityRecordService {
 
   public String generateTSCode(List<Team> teams, ActivityRecord record) {
     String team ="";
-    if(team!=null && team.length()>0){
+    if(teams!=null && teams.size()>0){
       team = teams.get(0).getName();
     }
     String tsCode= String.valueOf(record.getActivityTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear());
