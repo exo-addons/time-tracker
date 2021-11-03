@@ -257,8 +257,6 @@ public class ActivityRecordService {
       tsCode = tsCode + getClient(record) + getActivity(record);
     } else if(team.equals("QA")) {
       tsCode = tsCode + getProject(record) + getProject(record);
-    } else{
-      tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
     }
     return tsCode;
   }
