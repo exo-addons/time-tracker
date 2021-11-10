@@ -17,10 +17,10 @@
                                 <button class="btn btn-primary pull-left" type="button" @click="openAddTTEntryDrawer">
                                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Activity
                                 </button>
-                                <button class="btn btn-export" type="button" @click="exportToExcel(json_fields)">
+                                <button class="btn btn-export" type="button" @click="exportToExcel(json_fields,'all')">
                                         <i class="uiIconExport"></i> Export All
                                     </button>
-                                    <button class="btn btn-export" type="button" @click="exportToExcel(json_fields_fr)">
+                                    <button class="btn btn-export" type="button" @click="exportToExcel(json_fields_fr,'fr')">
                                         <i class="uiIconExport"></i> Export FR
                                     </button>
 
@@ -175,6 +175,7 @@ export default {
         employees: [],
         locations: [],
         offices: [],
+        existingActicitiesUser: '',
 
     }),
 
@@ -352,6 +353,10 @@ export default {
             this.$refs.filterDrawer.open()
         },
         openAddTTEntryDrawer(item) {
+            if(this.existingActicitiesUser!==item.userName){
+                this.getActivities(item.userName) 
+            }
+          
             this.$refs.addTTEntryDrawer.open(item,true)
         },
 
@@ -413,7 +418,7 @@ export default {
             this.alert = true;
             setTimeout(() => (this.alert = false), 5000);
         },
-        getActivityRecords(toExport) {
+        getActivityRecords(toExport,dest) {
             this.loading = true
             return new Promise((resolve, reject) => {
               const sort = ""
@@ -421,7 +426,7 @@ export default {
               const offset = 0
               const limit_ = 0
 
-                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}`, {
+                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}&exportType=${dest}`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
@@ -436,13 +441,15 @@ export default {
             });
 
         },
-        getActivities() {
-            fetch(`/portal/rest/timetracker/activitymgn/activity`, {
+        getActivities(userName) {
+            
+            fetch(`/portal/rest/timetracker/activitymgn/activity?userName=${userName}`, {
                     credentials: 'include',
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
                     this.activities = resp;
+                    this.existingActicitiesUser=userName
                 });
         },
         roundVlaue(item) {
@@ -780,7 +787,9 @@ export default {
         },
 
         editActivityRecord(item) {
-
+            if(this.existingActicitiesUser!==item.userName){
+                this.getActivities(item.userName) 
+            }
             this.activityRecord = item
             this.$refs.editTTEntryDrawer.open(item)
         },
@@ -810,10 +819,10 @@ export default {
                 });
 
         },
-        exportToExcel(fileds) { // On Click Excel download button
+        exportToExcel(fileds,office) { // On Click Excel download button
 
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            this.getActivityRecords(true)
+            this.getActivityRecords(true,office)
             .then(data => {
                 const items = data.items
 

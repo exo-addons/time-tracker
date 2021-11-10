@@ -19,7 +19,6 @@ package org.exoplatform.timetracker.service;
 import java.time.ZoneId;
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,14 +38,18 @@ import org.exoplatform.timetracker.storage.ActivityRecordStorage;
  */
 public class ActivityRecordService {
 
-  private static final Log      LOG = ExoLogger.getLogger(ActivityRecordService.class);
+  private static final Log            LOG = ExoLogger.getLogger(ActivityRecordService.class);
 
   private final ActivityRecordStorage activityRecordstorage;
 
   /**
-   * <p>Constructor for ActivityRecordService.</p>
+   * <p>
+   * Constructor for ActivityRecordService.
+   * </p>
    *
-   * @param activityRecordstorage a {@link org.exoplatform.timetracker.storage.ActivityRecordStorage} object.
+   * @param activityRecordstorage a
+   *          {@link org.exoplatform.timetracker.storage.ActivityRecordStorage}
+   *          object.
    */
   public ActivityRecordService(ActivityRecordStorage activityRecordstorage) {
     this.activityRecordstorage = activityRecordstorage;
@@ -57,9 +60,10 @@ public class ActivityRecordService {
    * Create new ActivityRecord
    *
    * @param activityRecord ActivityRecord to create
-   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in datasource
-   * @throws java.lang.Exception when ActivityRecord already exists or an error occurs while
-   *           creating ActivityRecord or its attached image
+   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in
+   *         datasource
+   * @throws java.lang.Exception when ActivityRecord already exists or an error
+   *           occurs while creating ActivityRecord or its attached image
    */
   public ActivityRecord createActivityRecord(ActivityRecord activityRecord) throws Exception {
     if (activityRecord == null) {
@@ -69,14 +73,16 @@ public class ActivityRecordService {
   }
 
   /**
-   * Update an existing ActivityRecord on datasource. If the ActivityRecord doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * Update an existing ActivityRecord on datasource. If the ActivityRecord
+   * doesn't exit an {@link javax.persistence.EntityNotFoundException} will be
+   * thrown.
    *
    * @param activityRecord dto to update on store
    * @param username username storing ActivityRecord
-   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in datasource
-   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an error
-   *           occurs while saving ActivityRecord
+   * @return stored {@link org.exoplatform.timetracker.dto.ActivityRecord} in
+   *         datasource
+   * @throws java.lang.Exception when {@link java.lang.Exception} is thrown or an
+   *           error occurs while saving ActivityRecord
    */
   public ActivityRecord updateActivityRecord(ActivityRecord activityRecord, String username) throws Exception {
     if (activityRecord == null) {
@@ -97,15 +103,18 @@ public class ActivityRecordService {
   }
 
   /**
-   * Delete ActivityRecord identified by its id and check if username has permission to
-   * delete it.
+   * Delete ActivityRecord identified by its id and check if username has
+   * permission to delete it.
    *
    * @param activityRecordId technical identifier of ActivityRecord
    * @param username user currently deleting ActivityRecord
-   * @throws javax.persistence.EntityNotFoundException if ActivityRecord wasn't found
-   * @throws java.lang.IllegalAccessException if user is not allowed to delete ActivityRecord
+   * @throws javax.persistence.EntityNotFoundException if ActivityRecord wasn't
+   *           found
+   * @throws java.lang.IllegalAccessException if user is not allowed to delete
+   *           ActivityRecord
    */
-  public void deleteActivityRecord(Long activityRecordId, String username) throws EntityNotFoundException, IllegalAccessException {
+  public void deleteActivityRecord(Long activityRecordId, String username) throws EntityNotFoundException,
+                                                                           IllegalAccessException {
     if (activityRecordId == null || activityRecordId <= 0) {
       throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
     }
@@ -121,20 +130,22 @@ public class ActivityRecordService {
   }
 
   /**
-   * Retrieves the list of ActivityRecords with offset, limit and a keyword that can be
-   * empty
+   * Retrieves the list of ActivityRecords with offset, limit and a keyword that
+   * can be empty
    *
-   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
+   *         contains the list of ActivityRecords
    */
   public List<ActivityRecord> getActivityRecords() {
     return activityRecordstorage.getActivityRecords();
   }
 
   /**
-   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
-   * empty
+   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a
+   * keyword that can be empty
    *
-   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
+   *         contains the list of ActivityRecords
    * @param search a {@link java.lang.String} object.
    * @param activity a {@link java.lang.Long} object.
    * @param type a {@link java.lang.Long} object.
@@ -172,25 +183,44 @@ public class ActivityRecordService {
                                                   int limit,
                                                   String sortBy,
                                                   boolean sortDesc) {
-    return activityRecordstorage.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, offset, limit, sortBy, sortDesc);
+    return activityRecordstorage.getActivityRecordsList(search,
+                                                        activity,
+                                                        type,
+                                                        subType,
+                                                        activityCode,
+                                                        subActivityCode,
+                                                        client,
+                                                        project,
+                                                        feature,
+                                                        fromDate,
+                                                        toDate,
+                                                        userName,
+                                                        location,
+                                                        office,
+                                                        offset,
+                                                        limit,
+                                                        sortBy,
+                                                        sortDesc);
   }
 
   /**
-   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
-   * empty
+   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a
+   * keyword that can be empty
    *
-   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
+   *         contains the list of ActivityRecords
    * @param userName a {@link java.lang.String} object.
    */
-  public ActivityRecord getLastActivityRecord( String userName) {
+  public ActivityRecord getLastActivityRecord(String userName) {
     return activityRecordstorage.getLastActivityRecord(userName);
   }
 
   /**
-   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a keyword that can be
-   * empty
+   * Retrieves the list of ActivityRecordsListAccess with offset, limit and a
+   * keyword that can be empty
    *
-   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
+   *         contains the list of ActivityRecords
    * @param search a {@link java.lang.String} object.
    * @param activity a {@link java.lang.Long} object.
    * @param type a {@link java.lang.Long} object.
@@ -220,83 +250,125 @@ public class ActivityRecordService {
                                    String userName,
                                    String location,
                                    String office) {
-    return activityRecordstorage.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location,office);
+    return activityRecordstorage.countActivityRecords(search,
+                                                      activity,
+                                                      type,
+                                                      subType,
+                                                      activityCode,
+                                                      subActivityCode,
+                                                      client,
+                                                      project,
+                                                      feature,
+                                                      fromDate,
+                                                      toDate,
+                                                      userName,
+                                                      location,
+                                                      office);
   }
 
   /**
    * Retrieves the list of ActivityRecords wby day
    *
    * @param day day of activity
-   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that contains the list of ActivityRecords
+   * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
+   *         contains the list of ActivityRecords
    * @param userName a {@link java.lang.String} object.
    */
-  public List<ActivityRecord> getUserActivityRecordsList(String day,String userName) {
-    return activityRecordstorage.getUserActivityRecords(day,userName);
+  public List<ActivityRecord> getUserActivityRecordsList(String day, String userName) {
+    return activityRecordstorage.getUserActivityRecords(day, userName);
   }
 
-
-
-  public String generateTSCode(List<Team> teams, ActivityRecord record) {
-    String team ="";
-    if(teams!=null && teams.size()>0){
+  public String generateTSCode(List<Team> teams, ActivityRecord record, String exportType) {
+    String team = "";
+    String tsCode = "";
+    if (teams != null && teams.size() > 0) {
       team = teams.get(0).getName();
     }
-    String tsCode= String.valueOf(record.getActivityTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear());
-    tsCode = tsCode +"_"+record.getOffice();
-    if( record.getActivity()!=null && record.getActivity().getType() !=null){
-      tsCode = tsCode +"_"+record.getActivity().getType().getCode();
+    tsCode = String.valueOf(record.getActivityTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear());
+    tsCode = tsCode + "_" + record.getOffice();
+    String type="";
+    String subType="";
+    if (record.getActivity() != null && record.getActivity().getType() != null) {
+      type= record.getActivity().getType().getCode();
+      tsCode = tsCode + "_" + type;
     }
-    if( record.getActivity()!=null && record.getActivity().getSubType() !=null) {
-      tsCode = tsCode + "_" + record.getActivity().getSubType().getCode();
-    }
-    if(team.equals("Analysts") || team.equals("ITOP") || team.equals("Dev Squad") ){
-      tsCode = tsCode + getClient(record);
-    }else if(team.equals("Architects") || team.equals("Designers")) {
-      tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
-    }else if(team.equals("Support")) {
-      tsCode = tsCode + getClient(record) + getActivity(record);
-    } else if(team.equals("QA")) {
-      tsCode = tsCode + getProject(record) + getProject(record);
+    if(exportType.equals("fr")){
+      if (record.getActivity() != null && record.getActivity().getSubType() != null) {
+        subType = record.getActivity().getSubType().getCode();
+        if (subType.equals("FIXP")) {
+          subType = "CONS";
+        }
+      }
+      if (team.equals("Architects") || team.equals("Designers") || team.equals("Management") || team.equals("Analysts") || team.equals("ITOP")) {
+        if(type.equals("SERV")  || ( subType.equals("FIXP") || subType.equals("CONS") || subType.equals("HOST"))){
+          tsCode = tsCode + getClient(record);
+        }
+      } else  {
+        if(type.equals("SERV")  || ( subType.equals("FIXP") || subType.equals("CONS"))){
+          tsCode = tsCode + getClient(record);
+        }
+      }
+
+    }else {
+      if (record.getActivity() != null && record.getActivity().getSubType() != null) {
+        tsCode = tsCode + "_" + record.getActivity().getSubType().getCode();
+      }
+      if (team.equals("Analysts") || team.equals("ITOP") || team.equals("Dev Squad")) {
+        tsCode = tsCode + getClient(record);
+      } else if (team.equals("Architects") || team.equals("Designers")) {
+        tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
+      } else if (team.equals("Support")) {
+        tsCode = tsCode + getClient(record) + getActivity(record);
+      } else if (team.equals("QA")) {
+        tsCode = tsCode + getClient(record) + getProject(record);
+      }
     }
     return tsCode;
   }
 
-  String getProject(ActivityRecord record){
+  String getProject(ActivityRecord record) {
     String project = "";
     if (record.getActivity() != null && record.getActivity().getProject() != null) {
-      project= "_" + record.getActivity().getProject().getCode();
-    } else {
-      if (record.getProject() != null) {
-        project= "_" + record.getProject().getCode();
+      if (record.getActivity().getProject().getCode().equals("<PRJ>")) {
+        if (record.getProject() != null) {
+          project = "_" + record.getProject().getCode();
+        }
+      } else {
+        project = "_" + record.getActivity().getProject().getCode();
       }
     }
     return project;
   }
-  String getClient(ActivityRecord record){
+
+  String getClient(ActivityRecord record) {
     String client = "";
-    if( record.getActivity()!=null && record.getActivity().getProject() !=null && record.getActivity().getProject().getClient() !=null) {
-      client ="_" + record.getActivity().getProject().getClient().getCode();
-    } else {
-      if (record.getClient() != null) {
-        client ="_" + record.getClient().getCode();
+    if (record.getActivity() != null && record.getActivity().getProject() != null
+        && record.getActivity().getProject().getClient() != null) {
+      if (record.getActivity().getProject().getClient().getCode().equals("<CLNT>")) {
+        if (record.getClient() != null) {
+          client = "_" + record.getClient().getCode();
+        }
+      } else {
+        client = "_" + record.getActivity().getProject().getClient().getCode();
       }
     }
     return client;
   }
-  String getActivity(ActivityRecord record){
+
+  String getActivity(ActivityRecord record) {
     String activity = "";
     if (record.getActivity() != null && record.getActivity().getActivityCode() != null) {
       activity = "_" + record.getActivity().getActivityCode().getCode();
     }
     return activity;
   }
-  String geSubActivity(ActivityRecord record){
+
+  String geSubActivity(ActivityRecord record) {
     String subActivity = "";
     if (record.getActivity() != null && record.getActivity().getSubActivityCode() != null) {
-      subActivity =  "_" + record.getActivity().getSubActivityCode().getCode();
+      subActivity = "_" + record.getActivity().getSubActivityCode().getCode();
     }
     return subActivity;
   }
-
 
 }

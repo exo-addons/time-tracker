@@ -177,7 +177,8 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                                          @QueryParam("office") String office,
                                          @QueryParam("sortby") String sortBy,
                                          @QueryParam("sortdesc") Boolean sortDesc,
-                                         @QueryParam("export") Boolean export) {
+                                         @QueryParam("export") Boolean export,
+                                         @QueryParam("exportType") String exportType) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
@@ -223,7 +224,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                     }
                   }
                   if(export){
-                    activityRecord.setTsCode(activityRecordService.generateTSCode(teams,activityRecord));
+                    activityRecord.setTsCode(activityRecordService.generateTSCode(teams,activityRecord,exportType));
                   }
                   if(StringUtils.isNotEmpty(activityRecord.getOffice())){
                     office_=activityRecord.getOffice();
@@ -236,7 +237,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                 if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
                   ActivityRecord weekEndRecord = new ActivityRecord(null, userName,day,actDate,"Week End","",office_,null,"",null,weekEndActivity,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null);
                   if(export){
-                    weekEndRecord.setTsCode(activityRecordService.generateTSCode(teams,weekEndRecord));
+                    weekEndRecord.setTsCode(activityRecordService.generateTSCode(teams,weekEndRecord,exportType));
                   }
                   activityRecordList.add(weekEndRecord);
                 }else {

@@ -17,6 +17,7 @@
 package org.exoplatform.timetracker.rest;
 
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -107,14 +108,16 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
     @ApiResponses(value = {@ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
             @ApiResponse(code = 500, message = "Internal server error")})
-    public Response getActivities() {
+    public Response getActivities(@QueryParam("userName") String userName) {
         try {
             Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
             if (sourceIdentity == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
-            List<Team> teams = teamService.getTeamsList(getCurrentUserName());
-            //List<Team> teams = teamsMmebers.stream().map(TeamMember::getTeam).collect(Collectors.toList());
+            if (StringUtils.isEmpty(userName)){
+                userName=getCurrentUserName();
+            }
+            List<Team> teams = teamService.getTeamsList(userName);
             List<Activity> activities = activityService.getActivitiesforUser(teams.stream().map(Team::getId).collect(Collectors.toList()));
             return Response.ok(activities).build();
         } catch (Exception e) {
