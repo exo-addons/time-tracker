@@ -372,7 +372,6 @@ export default {
             this.fromDate = this.date[0]
             this.toDate = this.date[1]
             this.getEmployees()
-            this.getTeams();
             this.getClients()
             this.getProjects();
             this.getActivityCodes();
@@ -488,6 +487,9 @@ export default {
                 .then((resp) => resp.json())
                 .then((resp) => {
                     this.employees = resp.sort(this.compare);
+                    if(this.employees.length>0){
+                        this.getTeams();
+                    }
                 });
 
         },

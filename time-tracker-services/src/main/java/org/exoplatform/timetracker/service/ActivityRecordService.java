@@ -320,6 +320,7 @@ public class ActivityRecordService {
         if (subType.equals("FIXP")) {
           subType = "CONS";
         }
+        tsCode = tsCode + "_" + subType;
       }
       if (team.equals("Architects") || team.equals("Designers") || team.equals("Management") || team.equals("Analysts") || team.equals("ITOP")) {
         if(type.equals("SERV")  || ( subType.equals("FIXP") || subType.equals("CONS") || subType.equals("HOST"))){
