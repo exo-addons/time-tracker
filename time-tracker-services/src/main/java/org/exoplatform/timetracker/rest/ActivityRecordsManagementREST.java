@@ -47,10 +47,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.service.rest.Util;
-import org.exoplatform.timetracker.dto.Activity;
-import org.exoplatform.timetracker.dto.ActivityRecord;
-import org.exoplatform.timetracker.dto.RecordsAccessList;
-import org.exoplatform.timetracker.dto.Team;
+import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.service.ActivityRecordService;
 import org.exoplatform.timetracker.service.TeamService;
 import org.exoplatform.timetracker.service.TimeTrackerSettingsService;
@@ -78,10 +75,6 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
 
   private final TeamService teamService;
 
-  private final String DATE_FORMAT = "yyyy-MM-dd";
-
-  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-
 
   /**
    * <p>Constructor for ActivityRecordsManagementREST.</p>
@@ -95,15 +88,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     this.teamService = teamService;
   }
 
-  public static List<LocalDate> getDatesBetween(
-          LocalDate startDate, LocalDate endDate) {
 
-    long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-    return IntStream.iterate(0, i -> i + 1)
-            .limit(numOfDaysBetween+1)
-            .mapToObj(i -> startDate.plusDays(i))
-            .collect(Collectors.toList());
-  }
 
   /**
    * <p>getActivityRecords.</p>
@@ -173,6 +158,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                                          @QueryParam("fromDate") String fromDate,
                                          @QueryParam("toDate") String toDate,
                                          @QueryParam("userName") String userName,
+                                         @QueryParam("team") String team,
                                          @QueryParam("location") String location,
                                          @QueryParam("office") String office,
                                          @QueryParam("sortby") String sortBy,
@@ -187,67 +173,16 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
-      List<Team> teams = teamService.getTeamsList(getCurrentUserName());
-      RecordsAccessList recordsAccessList =  activityRecordService.getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
-      IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
-
-      List<ActivityRecord> act = new ArrayList<>();
       List<ActivityRecord> activityRecordList = new ArrayList<>();
-      LocalDate from_ = LocalDate.now();
-      LocalDate to_  = LocalDate.now();
-      Activity weekEndActivity = timeTrackerSettingsService.getSettings().getWeekEndHolidayActivity();
-          try {
-            if (StringUtils.isNotEmpty(fromDate)) {
-              from_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(fromDate));
-            }else{
-              String from = recordsAccessList.getActivityRecords().get(recordsAccessList.getSize().intValue()-1).getActivityDate();
-              from_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(from));
-            }
-            if (StringUtils.isNotEmpty(toDate)) {
-              to_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(toDate));
-            }else{
-              String to = recordsAccessList.getActivityRecords().get(0).getActivityDate();
-              to_ =LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
-            }
-            String office_ ="";
-            for (LocalDate d : getDatesBetween(from_,to_)){
-              String day = d.format(formatter);
-              act=recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
-              if(act.size()>0){
-                float TimeSum  = act.stream().map(x -> x.getTime()).reduce(0.0f, (a, b) -> a + b);
-                for(ActivityRecord activityRecord : act){
-                  activityRecord.setDailyTimeSum(TimeSum);
-                  if(activityRecord.getActivity()!=null && activityRecord.getProject()!=null){
-                    activityRecord.getActivity().setProject(activityRecord.getProject());
-                    if(activityRecord.getClient()!=null){
-                      activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
-                    }
-                  }
-                  if(export){
-                    activityRecord.setTsCode(activityRecordService.generateTSCode(teams,activityRecord,exportType));
-                  }
-                  if(StringUtils.isNotEmpty(activityRecord.getOffice())){
-                    office_=activityRecord.getOffice();
-                  }
-                  activityRecordList.add(activityRecord);
-                }
-              }else{
-                Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                DayOfWeek dayOfWeek = d.getDayOfWeek();
-                if(dayOfWeek.getValue()==6||dayOfWeek.getValue()==7){
-                  ActivityRecord weekEndRecord = new ActivityRecord(null, userName,day,actDate,"Week End","",office_,null,"",null,weekEndActivity,null,null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null);
-                  if(export){
-                    weekEndRecord.setTsCode(activityRecordService.generateTSCode(teams,weekEndRecord,exportType));
-                  }
-                  activityRecordList.add(weekEndRecord);
-                }else {
-                  activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", null, "", null, null, null, null,identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(),null));
-                }
-              }
-            }
-          } catch (Exception e) {
-            LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
-          }
+      if(StringUtils.isNotEmpty(team)){
+        List<TeamMember> members = teamService.getMembersList(team);
+        for(TeamMember teamMember : members){
+          activityRecordList.addAll(activityRecordService.getUserActivityRecords(search,activity,type,subType,activityCode,subActivityCode,client,project,feature,fromDate,toDate,teamMember.getUserName(),location, office,sortBy, sortDesc, export, exportType));
+        }
+
+        }else{
+        activityRecordList = activityRecordService.getUserActivityRecords(search,activity,type,subType,activityCode,subActivityCode,client,project,feature,fromDate,toDate,userName,location, office,sortBy, sortDesc, export, exportType);
+      }
       return Response.ok(activityRecordList).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);

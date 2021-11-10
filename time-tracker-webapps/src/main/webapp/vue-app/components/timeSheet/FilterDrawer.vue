@@ -72,6 +72,18 @@
                   </select>
                 </div>
 
+                <div v-if="teams.length>0">
+                    <v-label for="team">
+                        Team
+                    </v-label>
+                    <select v-model="team" name="team" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in teams" :key="item.id" :value="item.id">
+                            {{ item.name}}
+                        </option>
+                    </select>
+                </div>
+
+
                 <div>
                     <v-label for="activity">
                         Activity
@@ -208,7 +220,7 @@
 <script>
 export default {
 
-    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'employees', 'filters', 'locations', 'offices'],
+    props: ['activities', 'types', 'subTypes', 'activityCodes', 'subActivityCodes', 'clients', 'projects', 'features', 'employees', 'filters', 'locations', 'offices', 'teams'],
 
     data: () => ({
         showName: false,
@@ -223,6 +235,7 @@ export default {
         feature: 0,
         location: "",
         office: "",
+        team: "", 
         filter: {},
         filterName: ""
     }),
@@ -240,6 +253,7 @@ export default {
             this.location = ""
             this.office = ""
             this.employee = ""
+            this.team = ""
         },
         aplyFilter() {
             const filter_ = {
@@ -253,6 +267,7 @@ export default {
                 feature: this.feature,
                 location: this.location,
                 office: this.office,
+                team: this.team,
                 employee: this.employee
             }
             this.$emit('addFilter', filter_);
@@ -270,6 +285,7 @@ export default {
             this.location = filter.fields.location
             this.office = filter.fields.office
             this.employee = filter.fields.employee
+            this.team = filter.fields.team
         },
         cancel() {
             this.$refs.filterDrawer.close();
@@ -294,7 +310,8 @@ export default {
                 feature: this.feature,
                 location: this.location,
                 office: this.office,
-              employee: this.employee
+              employee: this.employee,
+              team: this.team
             }
             this.$emit('saveFilter', filter_);
         },

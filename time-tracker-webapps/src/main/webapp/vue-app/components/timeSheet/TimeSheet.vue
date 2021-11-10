@@ -70,7 +70,7 @@
     </v-card>
     <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" v-on:save="save"></add-tracking-entry-drawer>
     <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
-    <filter-drawer ref="filterDrawer" :activities="activities" :offices="offices" :locations="locations" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
+    <filter-drawer ref="filterDrawer" :activities="activities" :offices="offices" :locations="locations" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :teams="teams" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
 
@@ -151,6 +151,7 @@ export default {
         valid: true,
         search: '',
         employee: '',
+        team: '',
         awaitingSearch: false,
         dialog: false,
         itemToDelete: 0,
@@ -175,6 +176,7 @@ export default {
         employees: [],
         locations: [],
         offices: [],
+        teams: [],
         existingActicitiesUser: '',
 
     }),
@@ -322,6 +324,7 @@ export default {
             this.location = val.location
             this.office = val.office
             this.employee = val.employee
+            this.team = val.team
             this.getActivityRecords(true).then(data => {
                 this.activityRecordsList = data.items
                 this.totalRecords = data.total
@@ -369,6 +372,7 @@ export default {
             this.fromDate = this.date[0]
             this.toDate = this.date[1]
             this.getEmployees()
+            this.getTeams();
             this.getClients()
             this.getProjects();
             this.getActivityCodes();
@@ -426,7 +430,7 @@ export default {
               const offset = 0
               const limit_ = 0
 
-                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}&exportType=${dest}`, {
+                fetch(`/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/list?search=${this.search}&userName=${this.employee}&activity=${this.activity}&type=${this.type}&subType=${this.subType}&activityCode=${this.activityCode}&subActivityCode=${this.subActivityCode}&client=${this.client}&project=${this.project}&feature=${this.feature}&fromDate=${this.fromDate}&toDate=${this.toDate}&location=${this.location}&office=${this.office}&team=${this.team}&sortby=${sort}&sortdesc=${desc}&page=${offset}&limit=${limit_}&export=${toExport}&exportType=${dest}`, {
                         credentials: 'include',
                     })
                     .then((resp) => resp.json())
@@ -439,6 +443,16 @@ export default {
 
                     })
             });
+
+        },
+        getTeams() {
+            fetch(`/portal/rest/timetracker/teamsmgn/team/all`, {
+                    credentials: 'include',
+                })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    this.teams = resp;
+                });
 
         },
         getActivities(userName) {
@@ -607,6 +621,10 @@ export default {
             fields.push({
                 name: "office",
                 value: val.office
+            })
+            fields.push({
+                name: "team",
+                value: val.team
             })
 
             const filter = {

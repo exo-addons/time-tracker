@@ -16,15 +16,27 @@
  */
 package org.exoplatform.timetracker.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.QueryParam;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.ActivityRecord;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
 import org.exoplatform.timetracker.dto.Team;
@@ -42,6 +54,14 @@ public class ActivityRecordService {
 
   private final ActivityRecordStorage activityRecordstorage;
 
+  private final TimeTrackerSettingsService timeTrackerSettingsService;
+
+  private final TeamService teamService;
+
+  private final String DATE_FORMAT = "yyyy-MM-dd";
+
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
   /**
    * <p>
    * Constructor for ActivityRecordService.
@@ -51,8 +71,10 @@ public class ActivityRecordService {
    *          {@link org.exoplatform.timetracker.storage.ActivityRecordStorage}
    *          object.
    */
-  public ActivityRecordService(ActivityRecordStorage activityRecordstorage) {
+  public ActivityRecordService(ActivityRecordStorage activityRecordstorage, TimeTrackerSettingsService timeTrackerSettingsService, TeamService teamService) {
     this.activityRecordstorage = activityRecordstorage;
+    this.timeTrackerSettingsService = timeTrackerSettingsService;
+    this.teamService = teamService;
 
   }
 
@@ -371,4 +393,79 @@ public class ActivityRecordService {
     return subActivity;
   }
 
+
+  public List<ActivityRecord> getUserActivityRecords(String search, long activity, long type, long subType, long activityCode, long subActivityCode, long client, long project, long feature, String fromDate, String toDate, String userName, String location, String office, String sortBy, Boolean sortDesc, Boolean export, String exportType) {
+
+    RecordsAccessList recordsAccessList = getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
+    IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
+
+    List<ActivityRecord> act = new ArrayList<>();
+    List<ActivityRecord> activityRecordList = new ArrayList<>();
+    LocalDate from_ = LocalDate.now();
+    LocalDate to_ = LocalDate.now();
+    Activity weekEndActivity = timeTrackerSettingsService.getSettings().getWeekEndHolidayActivity();
+    try {
+      if (StringUtils.isNotEmpty(fromDate)) {
+        from_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(fromDate));
+      } else {
+        String from = recordsAccessList.getActivityRecords().get(recordsAccessList.getSize().intValue() - 1).getActivityDate();
+        from_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(from));
+      }
+      if (StringUtils.isNotEmpty(toDate)) {
+        to_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(toDate));
+      } else {
+        String to = recordsAccessList.getActivityRecords().get(0).getActivityDate();
+        to_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
+      }
+      String office_ = "";
+      for (LocalDate d : getDatesBetween(from_, to_)) {
+        String day = d.format(formatter);
+        act = recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
+        if (act.size() > 0) {
+          float TimeSum = act.stream().map(x -> x.getTime()).reduce(0.0f, (a, b) -> a + b);
+          for (ActivityRecord activityRecord : act) {
+            activityRecord.setDailyTimeSum(TimeSum);
+            if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
+              activityRecord.getActivity().setProject(activityRecord.getProject());
+              if (activityRecord.getClient() != null) {
+                activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+              }
+            }
+            if (export) {
+              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), activityRecord, exportType));
+            }
+            if (StringUtils.isNotEmpty(activityRecord.getOffice())) {
+              office_ = activityRecord.getOffice();
+            }
+            activityRecordList.add(activityRecord);
+          }
+        } else {
+          Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
+          DayOfWeek dayOfWeek = d.getDayOfWeek();
+          if (dayOfWeek.getValue() == 6 || dayOfWeek.getValue() == 7) {
+            ActivityRecord weekEndRecord = new ActivityRecord(null, userName, day, actDate, "Week End", "", office_, null, "", null, weekEndActivity, null, null, identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(), null);
+            if (export) {
+              weekEndRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), weekEndRecord, exportType));
+            }
+            activityRecordList.add(weekEndRecord);
+          } else {
+            activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", null, "", null, null, null, null, identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(), null));
+          }
+        }
+      }
+    } catch (Exception e) {
+      LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
+    }
+    return activityRecordList;
+  }
+
+  public static List<LocalDate> getDatesBetween(
+          LocalDate startDate, LocalDate endDate) {
+
+    long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+    return IntStream.iterate(0, i -> i + 1)
+            .limit(numOfDaysBetween+1)
+            .mapToObj(i -> startDate.plusDays(i))
+            .collect(Collectors.toList());
+  }
 }
