@@ -325,7 +325,7 @@ export default {
             this.office = val.office
             this.employee = val.employee
             this.team = val.team
-            this.getActivityRecords(true).then(data => {
+            this.getActivityRecords().then(data => {
                 this.activityRecordsList = data.items
                 this.totalRecords = data.total
             })
@@ -382,7 +382,7 @@ export default {
             this.getFilters();
             this.getOffices();
             this.getLocations();
-            this.getActivityRecords(true).then(data => {
+            this.getActivityRecords().then(data => {
               this.activityRecordsList = data.items
               this.totalRecords = data.total
           })
@@ -398,7 +398,7 @@ export default {
         },
 
         setDates() {
-            this.getActivityRecords(true)
+            this.getActivityRecords()
                 .then(data => {
                     this.activityRecordsList = data.items
                     this.totalRecords = data.total
@@ -895,8 +895,7 @@ export default {
                     }
 
                 });
-
-
+                
                 const newItems = []
                 items.forEach(function(item) {
                     const obj = {}
@@ -920,6 +919,8 @@ export default {
             })
 
     },
+
+ 
 
 
 }

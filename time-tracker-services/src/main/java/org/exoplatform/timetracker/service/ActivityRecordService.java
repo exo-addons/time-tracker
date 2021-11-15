@@ -469,4 +469,5 @@ public class ActivityRecordService {
             .mapToObj(i -> startDate.plusDays(i))
             .collect(Collectors.toList());
   }
+
 }
