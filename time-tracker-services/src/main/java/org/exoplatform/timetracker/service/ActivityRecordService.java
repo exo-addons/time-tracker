@@ -21,9 +21,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -419,10 +417,12 @@ public class ActivityRecordService {
         to_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
       }
       String office_ = "";
+      ActivityRecord lastAct = null;
       for (LocalDate d : getDatesBetween(from_, to_)) {
         String day = d.format(formatter);
         act = recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
         if (act.size() > 0) {
+          List<ActivityRecord> dailyActivities = new ArrayList<>();
           float TimeSum = act.stream().map(x -> x.getTime()).reduce(0.0f, (a, b) -> a + b);
           for (ActivityRecord activityRecord : act) {
             activityRecord.setDailyTimeSum(TimeSum);
@@ -438,8 +438,13 @@ public class ActivityRecordService {
             if (StringUtils.isNotEmpty(activityRecord.getOffice())) {
               office_ = activityRecord.getOffice();
             }
-            activityRecordList.add(activityRecord);
+            dailyActivities.add(activityRecord);
+            if(export){
+              dailyActivities = groupRedendantActivities(dailyActivities);
+            }
           }
+          activityRecordList.addAll(dailyActivities);
+          dailyActivities= new ArrayList<>();
         } else {
           Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
           DayOfWeek dayOfWeek = d.getDayOfWeek();
@@ -468,6 +473,24 @@ public class ActivityRecordService {
             .limit(numOfDaysBetween+1)
             .mapToObj(i -> startDate.plusDays(i))
             .collect(Collectors.toList());
+  }
+
+  private List<ActivityRecord> groupRedendantActivities(List<ActivityRecord> activities){
+
+    Map<String, ActivityRecord> activityRecordMap = new HashMap<>();
+    for(ActivityRecord activityRecord : activities){
+      String actCode= activityRecord.getActivityDate()+"_"+activityRecord.getDescription()+"_"+activityRecord.getActivity().getCode()+"_"+activityRecord.getActivity().getProject().getCode()+"_"+activityRecord.getActivity().getProject().getClient().getCode();
+      ActivityRecord activity = activityRecordMap.get(actCode);
+      if(activity!=null){
+        activity.setTime(activity.getTime()+activityRecord.getTime());
+        activityRecordMap.put(actCode,activity);
+      }else{
+        activityRecordMap.put(actCode,activityRecord);
+      }
+    }
+
+    return new ArrayList<ActivityRecord>(activityRecordMap.values());
+
   }
 
 }
