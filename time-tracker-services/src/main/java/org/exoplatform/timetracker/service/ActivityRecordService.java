@@ -334,14 +334,11 @@ public class ActivityRecordService {
       if (record.getActivity() != null && record.getActivity().getSubType() != null) {
         tsCode = tsCode + "_" + record.getActivity().getSubType().getCode();
       }
-      if (team.equals("Analysts") || team.equals("ITOP") || team.equals("Dev Squad")) {
-        tsCode = tsCode + getClient(record);
-      } else if (team.equals("Architects") || team.equals("Designers")) {
-        tsCode = tsCode + getClient(record) + getProject(record) + getActivity(record) + geSubActivity(record);
-      } else if (team.equals("Support")) {
-        tsCode = tsCode + getClient(record) + getActivity(record);
+      tsCode = tsCode + getClient(record);
+      if (team.equals("Support")) {
+        tsCode = tsCode  + getActivity(record);
       } else if (team.equals("QA")) {
-        tsCode = tsCode + getClient(record) + getProject(record);
+        tsCode = tsCode  + getProject(record);
       }
     }
     return tsCode;
@@ -349,7 +346,7 @@ public class ActivityRecordService {
 
   String getProject(ActivityRecord record) {
     String project = "";
-    if (record.getActivity() != null && record.getActivity().getProject() != null) {
+    if (record.getActivity() != null && record.getActivity().getProject() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getCode())&& !record.getActivity().getProject().getCode().equals("<EXO>")) {
       if (record.getActivity().getProject().getCode().equals("<PRJ>")) {
         if (record.getProject() != null) {
           project = "_" + record.getProject().getCode();
@@ -364,7 +361,7 @@ public class ActivityRecordService {
   String getClient(ActivityRecord record) {
     String client = "";
     if (record.getActivity() != null && record.getActivity().getProject() != null
-        && record.getActivity().getProject().getClient() != null) {
+        && record.getActivity().getProject().getClient() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getClient().getCode())) {
       if (record.getActivity().getProject().getClient().getCode().equals("<CLNT>")) {
         if (record.getClient() != null) {
           client = "_" + record.getClient().getCode();
@@ -378,7 +375,7 @@ public class ActivityRecordService {
 
   String getActivity(ActivityRecord record) {
     String activity = "";
-    if (record.getActivity() != null && record.getActivity().getActivityCode() != null) {
+    if (record.getActivity() != null && record.getActivity().getActivityCode() != null && StringUtils.isNotEmpty(record.getActivity().getActivityCode().getCode())) {
       activity = "_" + record.getActivity().getActivityCode().getCode();
     }
     return activity;
@@ -386,7 +383,7 @@ public class ActivityRecordService {
 
   String geSubActivity(ActivityRecord record) {
     String subActivity = "";
-    if (record.getActivity() != null && record.getActivity().getSubActivityCode() != null) {
+    if (record.getActivity() != null && record.getActivity().getSubActivityCode() != null && StringUtils.isNotEmpty(record.getActivity().getSubActivityCode().getCode()) && !record.getActivity().getSubActivityCode().getCode().equals("<FEAT>")  ) {
       subActivity = "_" + record.getActivity().getSubActivityCode().getCode();
     }
     return subActivity;
