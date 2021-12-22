@@ -26,6 +26,8 @@
       <template slot="content">
         <div align="center" justify="center">
           <v-menu
+            v-model="menu2"
+            :close-on-content-click="false"
             :nudge-right="40"
             transition="scale-transition"
             offset-y
@@ -39,7 +41,7 @@
                 v-bind="attrs"
                 v-on="on" />
             </template>
-            <v-date-picker v-model="date" />
+            <v-date-picker v-model="date" @input="menu2 = false" />
           </v-menu>
         </div>
 
@@ -123,22 +125,11 @@ export default {
 
   watch: {
     date: function() {
+      console.log(this.date);
       this.getActivityRecords();
     }
-    // menu2: function() {
-    //   this.outsideMenu2();
-    // }
   },
-  created() {
-    console.log(this.date);
-    $(document).ready(function() {
-      $(document).mousedown(function() {
-        console.log("menue:", this.menu2);
-        this.menu2 = false;
-        console.log("menue:", this.menu2);
-      });
-    });
-  },
+
   methods: {
     getActivityRecords() {
       fetch(
@@ -270,7 +261,6 @@ export default {
     },
     cancel() {
       this.$refs.timeTrackerDrawer.close();
-      this.menu2 = false;
     },
     open() {
       this.getOffices();
@@ -285,11 +275,12 @@ export default {
     addActivityRecord() {
       this.$refs.addTTEntryDrawer.open();
     },
+
     editActivityRecord(item) {
       this.activityRecord = item;
       this.$refs.editTTEntryDrawer.open(item);
     },
-    deleteActivityRecord(item){
+    deleteActivityRecord(item) {
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
           item.id
@@ -309,7 +300,10 @@ export default {
         })
         .catch(result => {
           this.getActivityRecords().then(data => {
-            this.activityRecords = data.items;
+            this.activityRecordsList = data.items;
+          });
+          result.text().then(body => {
+            this.displayErrorMessage(body);
           });
         });
     },
@@ -329,17 +323,6 @@ export default {
       this.alertIcon = "uiIconError";
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
-    },
-    outsideMenu2() {
-      if (this.menu2) {
-        console.log(this.date);
-        $(document).ready(function() {
-          $(document).mousedown(function() {
-            this.menu2 = false;
-            console.log("menu2:", this.menu2);
-          });
-        });
-      }
     }
   }
 };
