@@ -44,7 +44,6 @@
             <v-date-picker v-model="date" @input="menu2 = false" />
           </v-menu>
         </div>
-
         <div align="center" justify="center">
           <h4>Total number of hours: {{ total }}</h4>
         </div>
@@ -71,7 +70,9 @@
                   </v-list-item-content>
                 </v-col>
               </v-row>
-              <v-icon small @click="deleteActivityRecord(item)"> delete </v-icon>
+              <v-icon small @click="deleteActivityRecord(item.id)">
+                delete
+              </v-icon>
             </v-list-item>
           </v-list>
         </div>
@@ -95,6 +96,15 @@
       :projects="projects"
       :activity-record="activityRecord"
       @save="update" />
+    <template>
+      <exo-confirm-dialog
+        ref="deleteTTEntryDrawer"
+        message="Are you sure you want to delete this line?"
+        title="Confirmation"
+        cancel-label="Cancel"
+        ok-label="Yes"
+        @ok="deleteActivity" />
+    </template>
   </div>
 </template>
 
@@ -120,16 +130,14 @@ export default {
     message: "",
     alert_type: "",
     alertIcon: "",
-    total: 0
+    total: 0,
+    deleteId: 0
   }),
-
   watch: {
     date: function() {
-      console.log(this.date);
       this.getActivityRecords();
     }
   },
-
   methods: {
     getActivityRecords() {
       fetch(
@@ -149,7 +157,6 @@ export default {
           );
         });
     },
-
     getActivities() {
       fetch(`/portal/rest/timetracker/activitymgn/activity`, {
         credentials: "include"
@@ -159,7 +166,6 @@ export default {
           this.activities = resp;
         });
     },
-
     getOffices() {
       fetch(`/portal/rest/timetracker/settings/office`, {
         credentials: "include"
@@ -169,7 +175,6 @@ export default {
           this.offices = resp;
         });
     },
-
     getLocations() {
       fetch(`/portal/rest/timetracker/settings/location`, {
         credentials: "include"
@@ -179,7 +184,6 @@ export default {
           this.locations = resp;
         });
     },
-
     getProjects() {
       fetch(`/portal/rest/timetracker/projectsmgn/project`, {
         credentials: "include"
@@ -189,7 +193,6 @@ export default {
           this.projects = resp.sort(this.compare);
         });
     },
-
     getClients() {
       fetch(`/portal/rest/timetracker/clientsmgn/client`, {
         credentials: "include"
@@ -199,9 +202,7 @@ export default {
           this.clients = resp.sort(this.compare);
         });
     },
-
     save(activityRecord) {
-      //  this.activityRecords.push(activity)
       activityRecord.activityDate = this.date;
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`,
@@ -230,7 +231,6 @@ export default {
           });
         });
     },
-
     update(activityRecord) {
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`,
@@ -259,31 +259,10 @@ export default {
           });
         });
     },
-    cancel() {
-      this.$refs.timeTrackerDrawer.close();
-    },
-    open() {
-      this.getOffices();
-      this.getLocations();
-      this.getActivityRecords();
-
-      this.getActivities();
-      this.getProjects();
-      this.getClients();
-      this.$refs.timeTrackerDrawer.open();
-    },
-    addActivityRecord() {
-      this.$refs.addTTEntryDrawer.open();
-    },
-
-    editActivityRecord(item) {
-      this.activityRecord = item;
-      this.$refs.editTTEntryDrawer.open(item);
-    },
-    deleteActivityRecord(item) {
+    deleteActivity() {
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-          item.id
+          this.deleteId
         }`,
         {
           method: "delete",
@@ -298,15 +277,41 @@ export default {
             throw result;
           }
         })
+        .then(() => {
+          this.getActivityRecords();
+          this.displaySusccessMessage("activity deleted");
+        })
         .catch(result => {
-          this.getActivityRecords().then(data => {
-            this.activityRecordsList = data.items;
-          });
+          this.getActivityRecords();
           result.text().then(body => {
             this.displayErrorMessage(body);
           });
         });
     },
+    cancel() {
+      this.$refs.timeTrackerDrawer.close();
+    },
+    open() {
+      this.getOffices();
+      this.getLocations();
+      this.getActivityRecords();
+      this.getActivities();
+      this.getProjects();
+      this.getClients();
+      this.$refs.timeTrackerDrawer.open();
+    },
+    addActivityRecord() {
+      this.$refs.addTTEntryDrawer.open();
+    },
+    editActivityRecord(item) {
+      this.activityRecord = item;
+      this.$refs.editTTEntryDrawer.open(item);
+    },
+    deleteActivityRecord(id) {
+      this.deleteId = id;
+      this.$refs.deleteTTEntryDrawer.open();
+    },
+
     displaySusccessMessage(message) {
       this.message = message;
       this.alert_type = "alert-success";
@@ -317,7 +322,6 @@ export default {
     },
     displayErrorMessage(message) {
       this.isUpdating = false;
-
       this.message = message;
       this.alert_type = "alert-error";
       this.alertIcon = "uiIconError";
@@ -335,12 +339,10 @@ div#middle-topNavigation-container .UIIntermediateContainer > .UIRowContainer {
 .actList {
   width: 100%;
 }
-
 .actItem {
   background-color: #c3e4f6;
   margin-bottom: 5px;
 }
-
 .numberHr {
   font-size: 30px !important;
   font-weight: 900;
@@ -350,7 +352,6 @@ div#middle-topNavigation-container .UIIntermediateContainer > .UIRowContainer {
   text-align: center;
   background: #fff;
 }
-
 h4 {
   text-align: center;
 }
