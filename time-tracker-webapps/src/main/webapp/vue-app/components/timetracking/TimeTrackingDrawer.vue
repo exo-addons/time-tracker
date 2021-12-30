@@ -26,7 +26,7 @@
       <template slot="content">
         <div align="center" justify="center">
           <v-menu
-            v-model="menu2"
+            v-model="activityRecordMenuDatePicker"
             :close-on-content-click="false"
             :nudge-right="40"
             transition="scale-transition"
@@ -34,42 +34,39 @@
             min-width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="date"
+                :value="date"
                 centered
                 prepend-icon="event"
                 readonly
                 v-bind="attrs"
                 v-on="on" />
             </template>
-            <v-date-picker v-model="date" @input="menu2 = false" />
+            <v-date-picker
+              v-model="date"
+              @input="activityRecordMenuDatePicker = false" />
           </v-menu>
         </div>
         <div align="center" justify="center">
           <h4>Total number of hours: {{ total }}</h4>
         </div>
-        <div>
+        <div align="center" justify="center">
           <v-list v-if="activityRecords.length > 0" class="actList">
             <v-list-item
               v-for="item in activityRecords"
               :key="item.id"
               class="actItem">
-              <v-row @click="editActivityRecord(item)">
-                <v-col cols="2">
-                  <v-list-item-action>
-                    <v-list-item-action-text
-                      class="numberHr"
-                      v-text="item.time" />
-                  </v-list-item-action>
-                </v-col>
-                <v-col cols="10" class="d-flex align-end">
-                  <v-list-item-content>
-                    <v-list-item-title
-                      v-if="item.activity"
-                      v-text="item.activity.label" />
-                    <v-list-item-subtitle v-text="item.description" />
-                  </v-list-item-content>
-                </v-col>
-              </v-row>
+              <v-list-item-action @click="editActivityRecord(item)">
+                <v-list-item-action-text class="numberHr" v-text="item.time" />
+              </v-list-item-action>
+              <v-list-item-content @click="editActivityRecord(item)">
+                <v-list-item-title
+                  v-if="item.activity"
+                  class="text-truncate text-left"
+                  v-text="item.activity.label" />
+                <span class="d-inline-block text-truncate">
+                  <v-list-item-subtitle v-text="item.description" />
+                </span>
+              </v-list-item-content>
               <v-icon small @click="deleteActivityRecord(item.id)">
                 delete
               </v-icon>
@@ -118,7 +115,7 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
-    menu2: false,
+    activityRecordMenuDatePicker: false,
     activities: [],
     offices: [],
     locations: [],
@@ -137,6 +134,16 @@ export default {
     date: function() {
       this.getActivityRecords();
     }
+  },
+  mounted: function() {
+    const self = this;
+    $(document).mouseup(() => {
+      if (self.activityRecordMenuDatePicker) {
+        setTimeout(() => {
+          self.activityRecordMenuDatePicker = false;
+        }, 100);
+      }
+    });
   },
   methods: {
     getActivityRecords() {
@@ -354,5 +361,8 @@ div#middle-topNavigation-container .UIIntermediateContainer > .UIRowContainer {
 }
 h4 {
   text-align: center;
+}
+span {
+  max-width: 300px;
 }
 </style>
