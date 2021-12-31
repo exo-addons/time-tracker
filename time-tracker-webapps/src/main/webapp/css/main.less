@@ -1,5 +1,8 @@
 @greyColorLighten1Default: #a8b3c5;
-@toolbarLightIconColor:           var(--allPagesToolbarLightIconColor, @greyColorLighten1Default);
+@toolbarLightIconColor: var(
+  --allPagesToolbarLightIconColor,
+  @greyColorLighten1Default
+);
 
 #activityManagementApp {
   padding: 10px;
@@ -9,7 +12,7 @@
 }
 
 @media (max-width: 1024px) {
-  .timeTrackingApp .uiApplicationIconButton{
+  .timeTrackingApp .uiApplicationIconButton {
     display: none !important;
   }
 }
@@ -18,12 +21,21 @@
     color: @toolbarLightIconColor;
   }
   .drawerContent {
-      padding: 16px!important;
-    }
+    padding: 16px !important;
+  }
 }
 
 #activityManagementApp {
   .drawerContent {
-      padding: 16px!important;
-    }
+    padding: 16px !important;
+  }
+}
+#accessPermissionAutoCompleteActivity .v-autocomplete.v-input--is-focused,
+#accessPermissionAutoCompleteActivityEdit .v-autocomplete.v-input--is-focused {
+  box-shadow: none !important;
+  border: none !important;
+}
+#accessPermissionAutoCompleteActivity .v-menu__content,
+#accessPermissionAutoCompleteActivityEdit .v-menu__content {
+  top: 79px !important;
 }
