@@ -167,14 +167,14 @@ public class ActivityRecordService {
    * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
    *         contains the list of ActivityRecords
    * @param search a {@link java.lang.String} object.
-   * @param activity a {@link java.lang.Long} object.
-   * @param type a {@link java.lang.Long} object.
-   * @param subType a {@link java.lang.Long} object.
-   * @param activityCode a {@link java.lang.Long} object.
-   * @param subActivityCode a {@link java.lang.Long} object.
-   * @param client a {@link java.lang.Long} object.
-   * @param project a {@link java.lang.Long} object.
-   * @param feature a {@link java.lang.Long} object.
+   * @param activity a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param subType a {@link java.lang.String} object.
+   * @param activityCode a {@link java.lang.String} object.
+   * @param subActivityCode a {@link java.lang.String} object.
+   * @param client a {@link java.lang.String} object.
+   * @param project a {@link java.lang.String} object.
+   * @param feature a {@link java.lang.String} object.
    * @param fromDate a {@link java.lang.String} object.
    * @param toDate a {@link java.lang.String} object.
    * @param userName a {@link java.lang.String} object.
@@ -186,14 +186,14 @@ public class ActivityRecordService {
    * @param sortDesc a boolean.
    */
   public RecordsAccessList getActivityRecordsList(String search,
-                                                  Long activity,
-                                                  Long type,
-                                                  Long subType,
-                                                  Long activityCode,
-                                                  Long subActivityCode,
-                                                  Long client,
-                                                  Long project,
-                                                  Long feature,
+                                                  String activity,
+                                                  String type,
+                                                  String subType,
+                                                  String activityCode,
+                                                  String subActivityCode,
+                                                  String client,
+                                                  String project,
+                                                  String feature,
                                                   String fromDate,
                                                   String toDate,
                                                   String userName,
@@ -242,14 +242,14 @@ public class ActivityRecordService {
    * @return List of {@link org.exoplatform.timetracker.dto.ActivityRecord} that
    *         contains the list of ActivityRecords
    * @param search a {@link java.lang.String} object.
-   * @param activity a {@link java.lang.Long} object.
-   * @param type a {@link java.lang.Long} object.
-   * @param subType a {@link java.lang.Long} object.
-   * @param activityCode a {@link java.lang.Long} object.
-   * @param subActivityCode a {@link java.lang.Long} object.
-   * @param client a {@link java.lang.Long} object.
-   * @param project a {@link java.lang.Long} object.
-   * @param feature a {@link java.lang.Long} object.
+   * @param activity a {@link java.lang.String} object.
+   * @param type a {@link java.lang.String} object.
+   * @param subType a {@link java.lang.String} object.
+   * @param activityCode a {@link java.lang.String} object.
+   * @param subActivityCode a {@link java.lang.String} object.
+   * @param client a {@link java.lang.String} object.
+   * @param project a {@link java.lang.String} object.
+   * @param feature a {@link java.lang.String} object.
    * @param fromDate a {@link java.lang.String} object.
    * @param toDate a {@link java.lang.String} object.
    * @param userName a {@link java.lang.String} object.
@@ -257,14 +257,14 @@ public class ActivityRecordService {
    * @param office a {@link java.lang.String} object.
    */
   public long countActivityRecords(String search,
-                                   Long activity,
-                                   Long type,
-                                   Long subType,
-                                   Long activityCode,
-                                   Long subActivityCode,
-                                   Long client,
-                                   Long project,
-                                   Long feature,
+                                   String activity,
+                                   String type,
+                                   String subType,
+                                   String activityCode,
+                                   String subActivityCode,
+                                   String client,
+                                   String project,
+                                   String feature,
                                    String fromDate,
                                    String toDate,
                                    String userName,
@@ -390,7 +390,7 @@ public class ActivityRecordService {
   }
 
 
-  public List<ActivityRecord> getUserActivityRecords(String search, long activity, long type, long subType, long activityCode, long subActivityCode, long client, long project, long feature, String fromDate, String toDate, String userName, String location, String office, String sortBy, Boolean sortDesc, Boolean export, String exportType) {
+  public List<ActivityRecord> getUserActivityRecords(String search, String activity, String type, String subType, String activityCode, String subActivityCode, String client, String project, String feature, String fromDate, String toDate, String userName, String location, String office, String sortBy, Boolean sortDesc, Boolean export, String exportType) {
 
     RecordsAccessList recordsAccessList = getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
     IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);

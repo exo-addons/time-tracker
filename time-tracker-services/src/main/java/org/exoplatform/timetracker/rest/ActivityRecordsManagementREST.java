@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -147,14 +148,14 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       @ApiResponse(code = 500, message = "Internal server error") })
   public Response getActivityRecordsList(@Context UriInfo uriInfo,
                                          @QueryParam("search") String search,
-                                         @QueryParam("activity") long activity,
-                                         @QueryParam("type") long type,
-                                         @QueryParam("subType") long subType,
-                                         @QueryParam("activityCode") long activityCode,
-                                         @QueryParam("subActivityCode") long subActivityCode,
-                                         @QueryParam("client") long client,
-                                         @QueryParam("project") long project,
-                                         @QueryParam("feature") long feature,
+                                         @QueryParam("activity") String activity,
+                                         @QueryParam("type") String type,
+                                         @QueryParam("subType") String subType,
+                                         @QueryParam("activityCode") String activityCode,
+                                         @QueryParam("subActivityCode") String subActivityCode,
+                                         @QueryParam("client") String client,
+                                         @QueryParam("project") String project,
+                                         @QueryParam("feature") String feature,
                                          @QueryParam("fromDate") String fromDate,
                                          @QueryParam("toDate") String toDate,
                                          @QueryParam("userName") String userName,
@@ -173,7 +174,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
+
       List<ActivityRecord> activityRecordList = new ArrayList<>();
+
       if(StringUtils.isNotEmpty(team)){
         List<TeamMember> members = teamService.getMembersList(team);
         for(TeamMember teamMember : members){

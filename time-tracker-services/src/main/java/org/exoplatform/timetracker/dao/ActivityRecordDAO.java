@@ -114,14 +114,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
      * @return a {@link java.util.List} object.
      */
     public List<ActivityRecordEntity> getActivityRecords(String search,
-                                                         Long activity,
-                                                         Long type,
-                                                         Long subType,
-                                                         Long activityCode,
-                                                         Long subActivityCode,
-                                                         Long client,
-                                                         Long project,
-                                                         Long feature,
+                                                         String activity,
+                                                         String type,
+                                                         String subType,
+                                                         String activityCode,
+                                                         String subActivityCode,
+                                                         String client,
+                                                         String project,
+                                                         String feature,
                                                          String fromDate,
                                                          String toDate,
                                                          String userName,
@@ -134,9 +134,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
         try {
             String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord";
-            if (StringUtils.isNotEmpty(search) || isNotEmpty(activity)  || isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
-                    || isNotEmpty(subType)  || isNotEmpty(activityCode)  || isNotEmpty(subActivityCode)
-                    || isNotEmpty(client)  || isNotEmpty(project)  || isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
+            if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
+                    || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
+                    || StringUtils.isNotEmpty(client)  || StringUtils.isNotEmpty(project)  || StringUtils.isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
                     || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                 queryString = queryString + " where ";
                 if (StringUtils.isNotEmpty(search)) {
@@ -146,60 +146,60 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                     queryString = queryString + " and ";
                 }
-                if (isNotEmpty(activity )) {
-                    queryString = queryString + " activityRecord.activityEntity.id = '" + activity + "'";
+                if (StringUtils.isNotEmpty(activity )) {
+                    queryString = queryString + " activityRecord.activityEntity.id in (" + convert(activity) + ")";
                     queryString = queryString + " and ";
                 }
-                if (isNotEmpty(type )) {
-                    queryString = queryString + " activityRecord.activityEntity.typeEntity.id = '" + type + "'";
-                    queryString = queryString + " and ";
-                }
-
-                if (isNotEmpty(subType) ) {
-                    queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id = '" + subType + "'";
+                if (StringUtils.isNotEmpty(type )) {
+                    queryString = queryString + " activityRecord.activityEntity.typeEntity.id in (" + convert(type) + ")";
                     queryString = queryString + " and ";
                 }
 
-
-                if (isNotEmpty(activityCode) ) {
-                    queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id = '" + activityCode + "'";
+                if (StringUtils.isNotEmpty(subType) ) {
+                    queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in (" + convert(subType) + ")";
                     queryString = queryString + " and ";
                 }
 
 
-                if (isNotEmpty(subActivityCode )) {
-                    queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id = '" + subActivityCode + "'";
+                if (StringUtils.isNotEmpty(activityCode) ) {
+                    queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in (" + convert(activityCode) + ")";
                     queryString = queryString + " and ";
                 }
 
-                if (isNotEmpty(client) ) {
-                    queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id = '" + client + "'";
+
+                if (StringUtils.isNotEmpty(subActivityCode )) {
+                    queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in (" + convert(subActivityCode) + ")";
                     queryString = queryString + " and ";
                 }
 
-                if (isNotEmpty(project) ) {
-                    queryString = queryString + " activityRecord.activityEntity.projectEntity.id = '" + project + "'";
+                if (StringUtils.isNotEmpty(client) ) {
+                    queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in (" + convert(client) + ")";
                     queryString = queryString + " and ";
                 }
 
-                if (isNotEmpty(feature) ) {
-                    queryString = queryString + " activityRecord.activityEntity.featureEntity.id = '" + feature + "'";
+                if (StringUtils.isNotEmpty(project) ) {
+                    queryString = queryString + " activityRecord.activityEntity.projectEntity.id in (" + convert(project) + ")";
                     queryString = queryString + " and ";
                 }
 
-                if (StringUtils.isNotEmpty(userName)) {
+                if (StringUtils.isNotEmpty(feature) ) {
+                    queryString = queryString + " activityRecord.activityEntity.featureEntity.id in (" + convert(feature) + ")";
+                    queryString = queryString + " and ";
+                }
+
+                if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
                     queryString = queryString + " activityRecord.userName = '" + userName + "'";
                     queryString = queryString + " and ";
                 }
 
 
                 if (StringUtils.isNotEmpty(location)) {
-                    queryString = queryString + " activityRecord.location = '" + location + "'";
+                    queryString = queryString + " activityRecord.location in (" + convert(location)+ ")";
                     queryString = queryString + " and ";
                 }
 
                 if (StringUtils.isNotEmpty(office)) {
-                    queryString = queryString + " activityRecord.office= '" + office + "'";
+                    queryString = queryString + " activityRecord.office in (" + convert(office) + ")";
                     queryString = queryString + " and ";
                 }
 
@@ -273,14 +273,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
      * @return a long.
      */
     public long countActivityRecords(String search,
-                                     Long activity,
-                                     Long type,
-                                     Long subType,
-                                     Long activityCode,
-                                     Long subActivityCode,
-                                     Long client,
-                                     Long project,
-                                     Long feature,
+                                     String activity,
+                                     String type,
+                                     String subType,
+                                     String activityCode,
+                                     String subActivityCode,
+                                     String client,
+                                     String project,
+                                     String feature,
                                      String fromDate,
                                      String toDate,
                                      String userName,
@@ -290,9 +290,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
             try {
                 String queryString = "SELECT count(activityRecord.id) FROM  ActivityRecordEntity activityRecord";
-                if (StringUtils.isNotEmpty(search) || isNotEmpty(activity)  || isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
-                        || isNotEmpty(subType)  || isNotEmpty(activityCode)  || isNotEmpty(subActivityCode)
-                        || isNotEmpty(client)  || isNotEmpty(project)  || isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
+                if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
+                        || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
+                        || StringUtils.isNotEmpty(client)  || StringUtils.isNotEmpty(project)  || StringUtils.isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)
                         || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                     queryString = queryString + " where ";
                     if (StringUtils.isNotEmpty(search)) {
@@ -302,93 +302,93 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                         queryString = queryString + " and ";
                     }
-                    if (isNotEmpty(activity )) {
-                        queryString = queryString + " activityRecord.activityEntity.id = '" + activity + "'";
+                    if (StringUtils.isNotEmpty(activity )) {
+                        queryString = queryString + " activityRecord.activityEntity.id in (" + convert(activity) + ")";
                         queryString = queryString + " and ";
                     }
-                    if (isNotEmpty(type )) {
-                        queryString = queryString + " activityRecord.activityEntity.typeEntity.id = '" + type + "'";
-                        queryString = queryString + " and ";
-                    }
-
-                    if (isNotEmpty(subType) ) {
-                        queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id = '" + subType + "'";
+                    if (StringUtils.isNotEmpty(type )) {
+                        queryString = queryString + " activityRecord.activityEntity.typeEntity.id in (" + convert(type) + ")";
                         queryString = queryString + " and ";
                     }
 
-
-                    if (isNotEmpty(activityCode) ) {
-                        queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id = '" + activityCode + "'";
+                    if (StringUtils.isNotEmpty(subType) ) {
+                        queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in (" + convert(subType) + ")";
                         queryString = queryString + " and ";
                     }
 
 
-                    if (isNotEmpty(subActivityCode )) {
-                        queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id = '" + subActivityCode + "'";
+                    if (StringUtils.isNotEmpty(activityCode) ) {
+                        queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in (" + convert(activityCode) + ")";
                         queryString = queryString + " and ";
                     }
 
-                    if (isNotEmpty(client) ) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id = '" + client + "'";
+
+                    if (StringUtils.isNotEmpty(subActivityCode )) {
+                        queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in (" + convert(subActivityCode) + ")";
                         queryString = queryString + " and ";
                     }
 
-                    if (isNotEmpty(project) ) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id = '" + project + "'";
+                    if (StringUtils.isNotEmpty(client) ) {
+                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in (" + convert(client) + ")";
                         queryString = queryString + " and ";
                     }
 
-                    if (isNotEmpty(feature) ) {
-                        queryString = queryString + " activityRecord.activityEntity.featureEntity.id = '" + feature + "'";
+                    if (StringUtils.isNotEmpty(project) ) {
+                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id in (" + convert(project) + ")";
                         queryString = queryString + " and ";
                     }
 
-                    if (StringUtils.isNotEmpty(userName)) {
-                    queryString = queryString + " activityRecord.userName = '" + userName + "'";
-                    queryString = queryString + " and ";
-                }
-
-
-                if (StringUtils.isNotEmpty(location)) {
-                    queryString = queryString + " activityRecord.location = '" + location + "'";
-                    queryString = queryString + " and ";
-                }
-
-                if (StringUtils.isNotEmpty(office)) {
-                    queryString = queryString + " activityRecord.office= '" + office + "'";
-                    queryString = queryString + " and ";
-                }
-
-
-                if (StringUtils.isNotEmpty(fromDate)) {
-                    try {
-                        long from = formatter.parse(fromDate).getTime();
-                        String date = quryDateFormatter.format(from);
-                        queryString = queryString + " TIMESTAMP(activityRecord.activityTime) >= '" + date + "'";
+                    if (StringUtils.isNotEmpty(feature) ) {
+                        queryString = queryString + " activityRecord.activityEntity.featureEntity.id in (" + convert(feature) + ")";
                         queryString = queryString + " and ";
-                    } catch (Exception e) {
-                        LOG.error("Cannot parse from date, the from date filer will not applied to get th list of activityRecords");
                     }
-                }
-                if (StringUtils.isNotEmpty(toDate)) {
-                    try {
-                        Date to = formatter.parse(toDate);
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(to);
-                        cal.set(Calendar.MINUTE, 59);
-                        cal.set(Calendar.SECOND, 59);
-                        cal.set(Calendar.HOUR_OF_DAY, 23);
-                        String date = quryDateFormatter.format(cal.getTime());
-                        queryString = queryString + " TIMESTAMP(activityRecord.activityTime) <= '" + date + "'";
+
+                    if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
+                        queryString = queryString + " activityRecord.userName = '" + userName + "'";
                         queryString = queryString + " and ";
-                    } catch (Exception e) {
-                        LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
                     }
-                }
+
+
+                    if (StringUtils.isNotEmpty(location)) {
+                        queryString = queryString + " activityRecord.location in (" + convert(location)+ ")";
+                        queryString = queryString + " and ";
+                    }
+
+                    if (StringUtils.isNotEmpty(office)) {
+                        queryString = queryString + " activityRecord.office in (" + convert(office) + ")";
+                        queryString = queryString + " and ";
+                    }
+
+
+                    if (StringUtils.isNotEmpty(fromDate)) {
+                        try {
+                            long from = formatter.parse(fromDate).getTime();
+                            String date = quryDateFormatter.format(from);
+                            queryString = queryString + " TIMESTAMP(activityRecord.activityTime) >= '" + date + "'";
+                            queryString = queryString + " and ";
+                        } catch (Exception e) {
+                            LOG.error("Cannot parse from date, the from date filer will not applied to get th list of activityRecords");
+                        }
+                    }
+                    if (StringUtils.isNotEmpty(toDate)) {
+                        try {
+                            Date to = formatter.parse(toDate);
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(to);
+                            cal.set(Calendar.MINUTE, 59);
+                            cal.set(Calendar.SECOND, 59);
+                            cal.set(Calendar.HOUR_OF_DAY, 23);
+                            String date = quryDateFormatter.format(cal.getTime());
+                            queryString = queryString + " TIMESTAMP(activityRecord.activityTime) <= '" + date + "'";
+                            queryString = queryString + " and ";
+                        } catch (Exception e) {
+                            LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
+                        }
+                    }
                     if (queryString.endsWith(" and ")) {
                         queryString = queryString.substring(0, queryString.length() - 5);
                     }
-            }
+                }
             return getEntityManager().createQuery(queryString, Long.class).getSingleResult();
         } catch (Exception e) {
             LOG.warn("Exception while attempting to get activityRecords count.", e);
@@ -399,5 +399,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
     boolean isNotEmpty (Long value){
         if(value!=null  && value > 0) return true;
         return false;
+    }
+
+    String convert(String field){
+        return "'"+field.replaceAll(",","','")+"'";
     }
 }

@@ -136,14 +136,14 @@ export default {
         loading: true,
         options: {},
         activityRecord: {},
-        activity: 0,
-        type: 0,
-        subType: 0,
-        activityCode: 0,
-        subActivityCode: 0,
-        client: 0,
-        project: 0,
-        feature: 0,
+        activity: '',
+        type: '',
+        subType: '',
+        activityCode: '',
+        subActivityCode: '',
+        client: '',
+        project: '',
+        feature: '',
         fromDate: '',
         toDate: '',
         location: '',
@@ -325,6 +325,7 @@ export default {
             this.office = val.office
             this.employee = val.employee
             this.team = val.team
+            this.getActivities()
             this.getActivityRecords().then(data => {
                 this.activityRecordsList = data.items
                 this.totalRecords = data.total
@@ -454,15 +455,18 @@ export default {
                 });
 
         },
-        getActivities(userName) {
-            
-            fetch(`/portal/rest/timetracker/activitymgn/activity?userName=${userName}`, {
+        getActivities() {
+            var user = ''           
+            if(this.employees.length>0){
+                user='all'
+            }
+            fetch(`/portal/rest/timetracker/activitymgn/activity?userName=${user}`, {
                     credentials: 'include',
                 })
                 .then((resp) => resp.json())
                 .then((resp) => {
                     this.activities = resp;
-                    this.existingActicitiesUser=userName
+                    this.existingActicitiesUser=this.employee
                 });
         },
         roundVlaue(item) {
@@ -490,6 +494,7 @@ export default {
                     if(this.employees.length>0){
                         this.getTeams();
                     }
+                    this.employees.unshift({userName:'all',fullName:'All'});
                 });
 
         },

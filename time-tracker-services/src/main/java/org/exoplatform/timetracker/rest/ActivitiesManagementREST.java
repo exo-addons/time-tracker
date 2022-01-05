@@ -117,9 +117,15 @@ public class ActivitiesManagementREST implements ResourceContainer {
             if (StringUtils.isEmpty(userName)){
                 userName=getCurrentUserName();
             }
-            List<Team> teams = teamService.getTeamsList(userName);
-            List<Activity> activities = activityService.getActivitiesforUser(teams.stream().map(Team::getId).collect(Collectors.toList()));
-            return Response.ok(activities).build();
+            if(userName.equals("all")){
+                List<Activity> activities = activityService.getActivitiesList();
+                return Response.ok(activities).build();
+            }else{
+                List<Team> teams = teamService.getTeamsList(userName);
+                List<Activity> activities = activityService.getActivitiesforUser(teams.stream().map(Team::getId).collect(Collectors.toList()));
+                return Response.ok(activities).build();
+            }
+
         } catch (Exception e) {
             LOG.error("Unknown error occurred while getting Activities", e);
             return Response.serverError().build();
