@@ -456,7 +456,7 @@ export default {
 
         },
         getActivities() {
-            var user = ''           
+            let user = ''           
             if(this.employees.length>0){
                 user='all'
             }
