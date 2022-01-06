@@ -1,7 +1,7 @@
 <template>
   <exo-drawer ref="addTTEntryDrawer" right>
     <template slot="title">
-      Add Entry
+      {{ $t("exo.timeTracker.label") }}
     </template>
     <template slot="content">
       <div>
@@ -30,7 +30,9 @@
             </v-menu>
           </div>
           <div>
-            <v-label for="description"> Description </v-label>
+            <v-label for="description">
+              {{ $t("exo.timeTracker.text") }}
+            </v-label>
             <extended-textarea
               id="desc"
               ref="description"
@@ -185,14 +187,35 @@
 
 <script>
 export default {
-  props: ["activities", "locations", "offices", "clients", "projects"],
+  props: {
+    activities: {
+      type: Array,
+      default: () => null,
+    },
+    locations: {
+      type: Array,
+      default: () => null,
+    },
+    offices: {
+      type: Array,
+      default: () => null,
+    },
+    clients: {
+      type: Array,
+      default: () => null,
+    },
+    projects: {
+      type: Array,
+      default: () => null,
+    }
+  },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
     activityRecord: {},
     salesOrders: [],
     showDPicker: false,
     selectedActivity: {},
-    userName: "",
+    userName: '',
     hiddenauto: false
   }),
   computed: {
@@ -213,7 +236,7 @@ export default {
     }
   },
   watch: {
-    "activityRecord.activity"(newVal) {
+    'activityRecord.activity'(newVal) {
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
         this.selectedActivity = newVal;
@@ -242,11 +265,11 @@ export default {
   },
   methods: {
     getLastActivityRecord() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         fetch(
-          `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/last`,
+          '/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/last',
           {
-            credentials: "include"
+            credentials: 'include'
           }
         )
           .then(resp => resp.json())
@@ -260,7 +283,7 @@ export default {
       });
     },
     isNotEmpty(str) {
-      return str != null && str !== "";
+      return str != null && str !== '';
     },
     save() {
       this.activityRecord.activityDate = this.date;
@@ -268,7 +291,7 @@ export default {
       if (this.activityRecord.activity && !this.activityRecord.activity.id) {
         this.activityRecord.activity = { id: this.activityRecord.activity };
       }
-      this.$emit("save", this.activityRecord);
+      this.$emit('save', this.activityRecord);
       this.activityRecord = {};
       this.$refs.addTTEntryDrawer.close();
     },
@@ -284,7 +307,7 @@ export default {
           if (data.item) {
             this.activityRecord = data.item;
             this.activityRecord.time = null;
-            this.activityRecord.description = "";
+            this.activityRecord.description = '';
             this.activityRecord.salesOrder = null;
           }
         });

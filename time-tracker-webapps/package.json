@@ -11,7 +11,7 @@
     "watch": "webpack --config webpack.dev.js --progress --colors --watch -d",
     "build": "webpack --config webpack.prod.js --mode production",
     "format": "prettier --config ./.prettierrc --write ./src/main/webapp/vue-app/*.js ./src/main/webapp/vue-app/js/*.js",
-    "lint": "eslint --fix ./src/main/webapp/vue-apps/**/*.js ./src/main/webapp/vue-apps/**/*.vue ./src/main/webapp/vue-apps/**/**/*.js  ./src/main/webapp/vue-apps/**/**/*.vue ./src/main/webapp/vue-apps/**/**/**/*.js ./src/main/webapp/vue-apps/**/**/**/*.vue",
+    "lint": "eslint --fix ./src/main/webapp/vue-app/**",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "author": "eXo",
@@ -31,6 +31,7 @@
     "bootstrap-vue": "^2.0.0-rc.13",
     "css-loader": "^0.28.11",
     "eslint": "^5.10.0",
+    "eslint-config-meedsio": "^1.0.3",
     "eslint-config-prettier": "^3.3.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-jest": "^22.1.2",
