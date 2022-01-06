@@ -16,7 +16,7 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Activitiy list</v-toolbar-title>
+            <v-toolbar-title>{{ $t("exo.timeTracker.activities.activitiesList.toolbarTitle") }}</v-toolbar-title>
             <v-spacer />
             <v-divider
               class="mx-4"
@@ -32,7 +32,7 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddActivityDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>Add Activity
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>{{ $t("exo.timeTracker.activities.activitiesList.button.openAddActivityDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -47,7 +47,7 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No activities</template>
+        <template v-slot:no-data>{{ $t("exo.timeTracker.activities.activitiesList.TextIfNoActivities") }}</template>
       </v-data-table>
     </v-flex>
     <add-activity-drawer

@@ -4,14 +4,14 @@
     right
     class="">
     <template slot="title">
-      Edit activity
+      {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerTitle") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="type">
-              Type
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelType") }}
             </v-label>
             <select
               v-model="activity.type"
@@ -27,7 +27,7 @@
           </div>
           <div>
             <v-label for="subType">
-              Sub Type
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelSubtype") }}
             </v-label>
             <select
               v-model="activity.subType"
@@ -44,7 +44,7 @@
           </div>
           <div>
             <v-label for="activityCode">
-              Activity
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelActivity") }}
             </v-label>
             <select
               v-model="activity.activityCode"
@@ -60,7 +60,7 @@
           </div>
           <div>
             <v-label for="subActivityCode">
-              Sub Activity
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelSubactivity") }}
             </v-label>
             <select
               v-model="activity.subActivityCode"
@@ -76,7 +76,7 @@
           </div>
           <div>
             <v-label for="label">
-              Label
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelActivityLabel") }}
             </v-label>
             <input
               ref="label"
@@ -87,7 +87,7 @@
           </div>
           <div>
             <v-label for="project">
-              Project
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelProject") }}
             </v-label>
             <select
               v-model="activity.project"
@@ -103,7 +103,7 @@
           </div>
           <div>
             <v-label for="feature">
-              Feature
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelFeature") }}
             </v-label>
             <select
               v-model="activity.feature"
@@ -118,8 +118,8 @@
             </select>
           </div>
           <div>
-            <v-label for="teals">
-              Teams
+            <v-label for="teams">
+              {{ $t("exo.timeTracker.activities.editActivitiesDrawer.drawerLabelTeams") }}
             </v-label>
             <v-autocomplete
               ref="selectEdit"
@@ -143,12 +143,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.activities.activitiesDrawer.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.activities.activitiesDrawer.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>
