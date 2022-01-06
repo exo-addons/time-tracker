@@ -6,7 +6,6 @@
       class="logTimeDrawer">
       <div
         v-if="alert"
-        id
         :class="alert_type"
         class="alert">
         <i :class="alertIcon"></i> {{ message }}
@@ -20,7 +19,7 @@
           small
           @click="addActivityRecord()">
           <v-icon>mdi-plus</v-icon>
-          Add entry
+          {{ $t('exo.timeTracker.label') }}
         </v-btn>
       </template>
       <template slot="content">
@@ -106,8 +105,8 @@
 </template>
 
 <script>
-import AddTrackingEntryDrawer from "../commons/AddTTEntryDrawer.vue";
-import EditTrackingEntryDrawer from "../commons/EditTTEntryDrawer.vue";
+import AddTrackingEntryDrawer from '../commons/AddTTEntryDrawer.vue';
+import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
 export default {
   components: {
     AddTrackingEntryDrawer,
@@ -124,9 +123,9 @@ export default {
     activityRecords: [],
     activityRecord: {},
     alert: false,
-    message: "",
-    alert_type: "",
-    alertIcon: "",
+    message: '',
+    alert_type: '',
+    alertIcon: '',
     total: 0,
     deleteId: 0
   }),
@@ -152,7 +151,7 @@ export default {
           this.date
         }`,
         {
-          credentials: "include"
+          credentials: 'include'
         }
       )
         .then(resp => resp.json())
@@ -165,8 +164,8 @@ export default {
         });
     },
     getActivities() {
-      fetch(`/portal/rest/timetracker/activitymgn/activity`, {
-        credentials: "include"
+      fetch('/portal/rest/timetracker/activitymgn/activity', {
+        credentials: 'include'
       })
         .then(resp => resp.json())
         .then(resp => {
@@ -174,8 +173,8 @@ export default {
         });
     },
     getOffices() {
-      fetch(`/portal/rest/timetracker/settings/office`, {
-        credentials: "include"
+      fetch('/portal/rest/timetracker/settings/office', {
+        credentials: 'include'
       })
         .then(resp => resp.json())
         .then(resp => {
@@ -183,8 +182,8 @@ export default {
         });
     },
     getLocations() {
-      fetch(`/portal/rest/timetracker/settings/location`, {
-        credentials: "include"
+      fetch('/portal/rest/timetracker/settings/location', {
+        credentials: 'include'
       })
         .then(resp => resp.json())
         .then(resp => {
@@ -192,8 +191,8 @@ export default {
         });
     },
     getProjects() {
-      fetch(`/portal/rest/timetracker/projectsmgn/project`, {
-        credentials: "include"
+      fetch('/portal/rest/timetracker/projectsmgn/project', {
+        credentials: 'include'
       })
         .then(resp => resp.json())
         .then(resp => {
@@ -201,8 +200,8 @@ export default {
         });
     },
     getClients() {
-      fetch(`/portal/rest/timetracker/clientsmgn/client`, {
-        credentials: "include"
+      fetch('/portal/rest/timetracker/clientsmgn/client', {
+        credentials: 'include'
       })
         .then(resp => resp.json())
         .then(resp => {
@@ -212,12 +211,12 @@ export default {
     save(activityRecord) {
       activityRecord.activityDate = this.date;
       fetch(
-        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`,
+        '/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord',
         {
-          method: "post",
-          credentials: "include",
+          method: 'post',
+          credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(activityRecord)
         }
@@ -227,9 +226,9 @@ export default {
             throw result;
           }
         })
-        .then(response => {
+        .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage("activity added");
+          this.displaySusccessMessage('activity added');
         })
         .catch(result => {
           this.getActivityRecords();
@@ -240,12 +239,12 @@ export default {
     },
     update(activityRecord) {
       fetch(
-        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord`,
+        '/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord',
         {
-          method: "put",
-          credentials: "include",
+          method: 'put',
+          credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(activityRecord)
         }
@@ -255,9 +254,9 @@ export default {
             throw result;
           }
         })
-        .then(response => {
+        .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage("activity added");
+          this.displaySusccessMessage('activity added');
         })
         .catch(result => {
           this.getActivityRecords();
@@ -272,10 +271,10 @@ export default {
           this.deleteId
         }`,
         {
-          method: "delete",
-          credentials: "include",
+          method: 'delete',
+          credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
           }
         }
       )
@@ -286,7 +285,7 @@ export default {
         })
         .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage("activity deleted");
+          this.displaySusccessMessage('activity deleted');
         })
         .catch(result => {
           this.getActivityRecords();
@@ -318,11 +317,10 @@ export default {
       this.deleteId = id;
       this.$refs.deleteTTEntryDrawer.open();
     },
-
     displaySusccessMessage(message) {
       this.message = message;
-      this.alert_type = "alert-success";
-      this.alertIcon = "uiIconSuccess";
+      this.alert_type = 'alert-success';
+      this.alertIcon = 'uiIconSuccess';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
       this.editedItem = this.defaultItem;
@@ -330,8 +328,8 @@ export default {
     displayErrorMessage(message) {
       this.isUpdating = false;
       this.message = message;
-      this.alert_type = "alert-error";
-      this.alertIcon = "uiIconError";
+      this.alert_type = 'alert-error';
+      this.alertIcon = 'uiIconError';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
     }

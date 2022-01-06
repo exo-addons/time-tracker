@@ -9,7 +9,6 @@
           <div>
             <v-label for="description"> Description </v-label>
             <extended-textarea
-              id="desc"
               ref="description"
               v-model="activityRecord.description"
               :max-length="250"
@@ -164,11 +163,32 @@
 
 <script>
 export default {
-  props: ["activities", "locations", "offices", "clients", "projects"],
+  props: {
+    activities: {
+      type: Array,
+      default: () => null,
+    },
+    locations: {
+      type: Array,
+      default: () => null,
+    },
+    offices: {
+      type: Array,
+      default: () => null,
+    },
+    clients: {
+      type: Array,
+      default: () => null,
+    },
+    projects: {
+      type: Array,
+      default: () => null,
+    }
+  },
   data: () => ({
     salesOrders: [],
     activityRecord: {},
-    so: "",
+    so: '',
     selectedActivity: {}
   }),
   computed: {
@@ -189,7 +209,7 @@ export default {
     }
   },
   watch: {
-    "activityRecord.activity"(newVal) {
+    'activityRecord.activity'(newVal) {
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
         this.selectedActivity = newVal;
@@ -228,7 +248,7 @@ export default {
       if (this.so) {
         this.activityRecord.salesOrder = { id: this.so };
       }
-      this.$emit("save", this.activityRecord);
+      this.$emit('save', this.activityRecord);
       this.$refs.editDrawer.close();
     },
     cancel() {
@@ -247,12 +267,12 @@ export default {
       if (this.activityRecord.salesOrder) {
         this.so = this.activityRecord.salesOrder.id;
       } else {
-        this.so = "";
+        this.so = '';
       }
       this.$refs.editDrawer.open();
     },
     isNotEmpty(str) {
-      return str != null && str !== "";
+      return str != null && str !== '';
     }
   }
 };
