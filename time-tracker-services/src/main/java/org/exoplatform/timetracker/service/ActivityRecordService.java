@@ -345,7 +345,7 @@ public class ActivityRecordService {
     String project = "";
     if (record.getActivity() != null && record.getActivity().getProject() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getCode())&& !record.getActivity().getProject().getCode().equals("<EXO>")) {
       if (record.getActivity().getProject().getCode().equals("<PRJ>")) {
-        if (record.getProject() != null) {
+        if (record.getProject() != null && !record.getProject().equals("<PRJ>")) {
           project = "_" + record.getProject().getCode();
         }
       } else {
@@ -360,7 +360,7 @@ public class ActivityRecordService {
     if (record.getActivity() != null && record.getActivity().getProject() != null
         && record.getActivity().getProject().getClient() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getClient().getCode())) {
       if (record.getActivity().getProject().getClient().getCode().equals("<CLNT>")) {
-        if (record.getClient() != null) {
+        if (record.getClient() != null && !record.getClient().equals("<CLNT>")) {
           client = "_" + record.getClient().getCode();
         }
       } else {
@@ -397,13 +397,19 @@ public class ActivityRecordService {
       for (ActivityRecord activityRecord : activityRecordList) {
         if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
           activityRecord.getActivity().setProject(activityRecord.getProject());
-          if (activityRecord.getClient() != null) {
+        }
+        if (activityRecord.getActivity() != null && activityRecord.getClient() != null) {
+          if(activityRecord.getActivity().getProject()!=null){
             activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+          }else{
+            Project project1 = new Project();
+            project1.setClient(activityRecord.getClient());
+            activityRecord.getActivity().setProject(project1);
           }
         }
         if (export) {
           try {
-            activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), activityRecord, exportType));
+            activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
           } catch (Exception e) {
             LOG.error("Cannot generate TScode for activity {}",activityRecord.getActivity().getLabel());
           }
@@ -453,7 +459,7 @@ public class ActivityRecordService {
               }
             }
             if (export) {
-              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), activityRecord, exportType));
+              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
             }
             if (StringUtils.isNotEmpty(activityRecord.getOffice())) {
               office_ = activityRecord.getOffice();

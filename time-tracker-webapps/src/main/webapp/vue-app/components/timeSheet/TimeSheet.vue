@@ -68,8 +68,8 @@
 
         </v-card-text>
     </v-card>
-    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" v-on:save="save"></add-tracking-entry-drawer>
-    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
+    <add-tracking-entry-drawer ref="addTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :clients="clients" :projects="projects" v-on:save="save"></add-tracking-entry-drawer>
+    <edit-tracking-entry-drawer ref="editTTEntryDrawer" :activities="activities" :offices="offices" :locations="locations" :clients="clients" :projects="projects" :activityRecord="activityRecord" v-on:save="update"></edit-tracking-entry-drawer>
     <filter-drawer ref="filterDrawer" :activities="activities" :offices="offices" :locations="locations" :types="types" :subTypes="subTypes" :activityCodes="activityCodes" :subActivityCodes="subActivityCodes" :clients="clients" :features="features" :employees="employees" :teams="teams" :filters="filters" v-on:addFilter="addFilter" v-on:saveFilter="saveFilter" v-on:deleteFilter="deleteFilter" />
 </div>
 </template>
