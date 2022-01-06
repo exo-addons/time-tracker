@@ -34,10 +34,7 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.timetracker.dto.Activity;
-import org.exoplatform.timetracker.dto.ActivityRecord;
-import org.exoplatform.timetracker.dto.RecordsAccessList;
-import org.exoplatform.timetracker.dto.Team;
+import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.storage.ActivityRecordStorage;
 
 /**
@@ -445,8 +442,14 @@ public class ActivityRecordService {
             activityRecord.setDailyTimeSum(TimeSum);
             if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
               activityRecord.getActivity().setProject(activityRecord.getProject());
-              if (activityRecord.getClient() != null) {
+            }
+            if (activityRecord.getActivity() != null && activityRecord.getClient() != null) {
+              if(activityRecord.getActivity().getProject()!=null){
                 activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+              }else{
+                Project project1 = new Project();
+                project1.setClient(activityRecord.getClient());
+                activityRecord.getActivity().setProject(project1);
               }
             }
             if (export) {
