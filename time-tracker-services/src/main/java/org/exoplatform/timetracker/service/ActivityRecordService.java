@@ -345,7 +345,7 @@ public class ActivityRecordService {
     String project = "";
     if (record.getActivity() != null && record.getActivity().getProject() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getCode())&& !record.getActivity().getProject().getCode().equals("<EXO>")) {
       if (record.getActivity().getProject().getCode().equals("<PRJ>")) {
-        if (record.getProject() != null && !record.getProject().equals("<PRJ>")) {
+        if (record.getProject() != null && !record.getProject().getCode().equals("<PRJ>")) {
           project = "_" + record.getProject().getCode();
         }
       } else {
@@ -360,7 +360,7 @@ public class ActivityRecordService {
     if (record.getActivity() != null && record.getActivity().getProject() != null
         && record.getActivity().getProject().getClient() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getClient().getCode())) {
       if (record.getActivity().getProject().getClient().getCode().equals("<CLNT>")) {
-        if (record.getClient() != null && !record.getClient().equals("<CLNT>")) {
+        if (record.getClient() != null && !record.getClient().getCode().equals("<CLNT>")) {
           client = "_" + record.getClient().getCode();
         }
       } else {
