@@ -9,7 +9,7 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Client list</v-toolbar-title>
+            <v-toolbar-title>{{ $t("exo.timeTracker.clients.clientsList.toolbarTitle") }}</v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -29,7 +29,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddClientDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Client
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.clients.clientsList.button.openAddClientDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -48,7 +49,11 @@
               </span>
             </v-chip>
           </div>
-          <div v-else> <span class="pr-2">There no Sales orders for this client</span></div>
+          <div v-else>
+            <span class="pr-2">
+              {{ $t("exo.timeTracker.clients.clientsList.textIfNoSalesOrders") }}
+            </span>
+          </div>
         </template>
         <template v-slot:item.action="{ item }">
           <v-icon
@@ -61,7 +66,7 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No clients</template>
+        <template v-slot:no-data></template>
       </v-data-table>
     </v-flex>
     <add-client-drawer ref="addClientDrawer" @save="add" />
