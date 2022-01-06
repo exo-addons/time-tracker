@@ -395,6 +395,26 @@ public class ActivityRecordService {
     RecordsAccessList recordsAccessList = getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
     IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
 
+    if(StringUtils.isNotEmpty(search)||StringUtils.isNotEmpty(activity)||StringUtils.isNotEmpty(type)||StringUtils.isNotEmpty(subType)||StringUtils.isNotEmpty(activityCode)||StringUtils.isNotEmpty(subActivityCode)||StringUtils.isNotEmpty(client)||StringUtils.isNotEmpty(project)||StringUtils.isNotEmpty(feature)||(StringUtils.isNotEmpty(userName)&&userName.equals("all"))){
+      List<ActivityRecord> activityRecordList = recordsAccessList.getActivityRecords();
+      for (ActivityRecord activityRecord : activityRecordList) {
+        if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
+          activityRecord.getActivity().setProject(activityRecord.getProject());
+          if (activityRecord.getClient() != null) {
+            activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+          }
+        }
+        if (export) {
+          try {
+            activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), activityRecord, exportType));
+          } catch (Exception e) {
+            LOG.error("Cannot generate TScode for activity {}",activityRecord.getActivity().getLabel());
+          }
+        }
+      }
+      return activityRecordList;
+    }
+
     List<ActivityRecord> act = new ArrayList<>();
     List<ActivityRecord> activityRecordList = new ArrayList<>();
     LocalDate from_ = LocalDate.now();

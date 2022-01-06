@@ -65,19 +65,12 @@
                   <v-label for="employees">
                     Employee
                   </v-label>
-                    <v-autocomplete
-                      ref="employee"
-                      v-model="employee"
-                      :items="employees"
-                      menu-props="closeOnClick"
-                      outlined
-                      dense
-                      chips
-                      small-chips
-                      multiple
-                      item-text="fullName"
-                      item-value="userName"
-                      @click.stop/>
+                  
+                    <select v-model="employee" employee="team" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in employees" :key="item.id" :value="item.userName">
+                            {{ item.fullName}}
+                        </option>
+                    </select>
                 </div>
 
                 <div v-if="teams.length>0">
