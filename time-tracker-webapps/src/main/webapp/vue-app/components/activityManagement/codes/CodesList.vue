@@ -9,7 +9,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Activity Code list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.codes.codesList.activityCodes.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -29,7 +31,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddActivityCodeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add ActivityCode
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.codes.codesList.button.openAddActivityCodeDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -44,7 +47,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No activity codes</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.codes.codesList.textIfNoCode") }}
+        </template>
       </v-data-table>
     </v-flex>
     <v-flex>
@@ -56,7 +61,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Sub Activity Code list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.codes.codesList.subActivityCode.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -76,7 +83,8 @@
               class="btn btn-primary pull-left"
               subActivityCode="button"
               @click="openAddSubActivityCodeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Activity Code
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.codes.codesList.button.openAddSubActivityCodeDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -91,7 +99,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No Sub Activity Codes</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.codes.codesList.textIfNoSubActivityCode") }}
+        </template>
       </v-data-table>
     </v-flex>
     <add-activity-code-drawer ref="addActivityCodeDrawer" @save="addActivityCode" />

@@ -9,7 +9,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Type list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.codes.typesCodesList.type.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -29,7 +31,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddTypeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Type
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.codes.typesCodesList.button.openAddTypeDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -44,7 +47,7 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No types</template>
+        <template v-slot:no-data>{{ $t("exo.timeTracker.codes.typesCodesList.textIfNoType") }}</template>
       </v-data-table>
     </v-flex>
     <v-flex>
@@ -56,7 +59,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Sub Type list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.codes.typesCodesList.subType.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -76,7 +81,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddSubTypeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Sub Type Code
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.codes.typesCodesList.button.openAddSubTypeDrawer") }}
             </button>
           </v-toolbar>
         </template>
@@ -94,7 +100,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No Sub Types</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.codes.typesCodesList.textIfNoSubType") }}
+        </template>
       </v-data-table>
     </v-flex>
     <add-type-drawer
