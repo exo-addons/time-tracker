@@ -4,14 +4,14 @@
     right
     class="">
     <template slot="title">
-      Add SubActivityCode
+      {{ $t("exo.timeTracker.codes.addSubActivityCodeDrawer.toolbarTitle") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="code">
-              Code
+              {{ $t("exo.timeTracker.codes.addSubActivityCodeDrawer.drawerLabelCode") }}
             </v-label>
             <input
               ref="code"
@@ -22,7 +22,7 @@
           </div>
           <div>
             <v-label for="label">
-              Label
+              {{ $t("exo.timeTracker.codes.addSubActivityCodeDrawer.drawerLabelCodeLabel") }}
             </v-label>
             <input
               ref="label"
@@ -39,12 +39,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.codes.subActivityCodeDrawer.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.codes.subActivityCodeDrawer.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

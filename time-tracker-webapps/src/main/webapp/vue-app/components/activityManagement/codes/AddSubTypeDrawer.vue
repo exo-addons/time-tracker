@@ -4,14 +4,14 @@
     right
     class="">
     <template slot="title">
-      Add SubType
+      {{ $t("exo.timeTracker.codes.addSubTypeDrawer.toolbarTitle") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="code">
-              Code
+              {{ $t("exo.timeTracker.codes.addSubTypeDrawer.drawerLabelCode") }}
             </v-label>
             <input
               ref="code"
@@ -22,7 +22,7 @@
           </div>
           <div>
             <v-label for="label">
-              Label
+              {{ $t("exo.timeTracker.codes.addSubTypeDrawer.drawerLabelCodeLabel") }}
             </v-label>
             <input
               ref="label"
@@ -33,7 +33,7 @@
           </div>
           <div>
             <v-label for="type">
-              Type
+              {{ $t("exo.timeTracker.codes.addSubTypeDrawer.drawerLabelType") }}
             </v-label>
             <select
               v-model="subType.type"
@@ -55,12 +55,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.codes.subTypeDrawer.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.codes.subTypeDrawer.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>
