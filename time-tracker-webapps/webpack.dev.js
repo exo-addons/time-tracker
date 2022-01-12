@@ -4,7 +4,7 @@ const merge = require('webpack-merge');
 const webpackCommonConfig = require('./webpack.common.js');
 
 // add the server path to your server location path
-const exoServerPath = "D:\\EXO\\binaries\\platform-6.3.x-SNAPSHOT-24112021\\webapps";
+const exoServerPath = "/exo-server";
 
 module.exports = merge(webpackCommonConfig, {
     module: {

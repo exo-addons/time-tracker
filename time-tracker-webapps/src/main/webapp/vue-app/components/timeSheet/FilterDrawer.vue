@@ -122,9 +122,10 @@
               </option>
             </select>
           </div>
-
           <div>
-            <v-label for="activity"> Activity </v-label>
+            <v-label for="activity">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivity") }}
+            </v-label>
             <v-autocomplete
               ref="activity"
               v-model="activity"
@@ -140,7 +141,9 @@
               @click.stop />
           </div>
           <div>
-            <v-label for="location"> Location </v-label>
+            <v-label for="location">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelLocation") }}
+            </v-label>
             <v-autocomplete
               ref="location"
               v-model="location"
@@ -156,7 +159,9 @@
               @click.stop />
           </div>
           <div>
-            <v-label for="office"> Office </v-label>
+            <v-label for="office">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelOffice") }}
+            </v-label>
             <v-autocomplete
               ref="office"
               v-model="office"
@@ -172,7 +177,9 @@
               @click.stop />
           </div>
           <div>
-            <v-label for="type"> Type </v-label>
+            <v-label for="type">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelType") }}
+            </v-label>
             <v-autocomplete
               ref="type"
               v-model="type"
@@ -187,9 +194,10 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
-            <v-label for="subType"> Sub type </v-label>
+            <v-label for="subType">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubType") }}
+            </v-label>
             <v-autocomplete
               ref="subType"
               v-model="subType"
@@ -204,9 +212,10 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
-            <v-label for="activityCode"> Activity Code </v-label>
+            <v-label for="activityCode">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivityCode") }}
+            </v-label>
             <v-autocomplete
               ref="activityCode"
               v-model="activityCode"
@@ -221,7 +230,6 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
             <v-label for="subActivityCode">
               {{
@@ -243,7 +251,6 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
             <v-label for="client">
               {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelClient') }}
@@ -262,9 +269,10 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
-            <v-label for="project"> Project </v-label>
+            <v-label for="project">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode") }}
+            </v-label>
             <v-autocomplete
               ref="project"
               v-model="project"
@@ -279,9 +287,10 @@
               item-value="id"
               @click.stop />
           </div>
-
           <div>
-            <v-label for="feature"> Feature </v-label>
+            <v-label for="feature">
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelFeature") }}
+            </v-label>
             <v-autocomplete
               ref="feature"
               v-model="feature"
