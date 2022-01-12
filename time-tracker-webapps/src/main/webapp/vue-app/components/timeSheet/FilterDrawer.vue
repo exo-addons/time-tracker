@@ -381,14 +381,14 @@ export default {
   data: () => ({
     showName: false,
     menu: null,
-    activity: 0,
-    type: 0,
-    subType: 0,
-    activityCode: 0,
-    subActivityCode: 0,
-    client: 0,
-    project: 0,
-    feature: 0,
+    activity: '',
+    type: '',
+    subType: '',
+    activityCode: '',
+    subActivityCode: '',
+    client: '',
+    project: '',
+    feature: '',
     location: '',
     office: '',
     employee: '',
@@ -398,14 +398,14 @@ export default {
   }),
   methods: {
     reset() {
-      this.activity = 0;
-      this.type = 0;
-      this.subType = 0;
-      this.activityCode = 0;
-      this.subActivityCode = 0;
-      this.client = 0;
-      this.project = 0;
-      this.feature = 0;
+      this.activity = '';
+      this.type = '';
+      this.subType = '';
+      this.activityCode = '';
+      this.subActivityCode = '';
+      this.client = '';
+      this.project = '';
+      this.feature = '';
       this.location = '';
       this.office = '';
       this.employee = '';

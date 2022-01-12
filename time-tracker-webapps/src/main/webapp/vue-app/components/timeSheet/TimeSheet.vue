@@ -27,21 +27,33 @@
                     type="button"
                     @click="openAddTTEntryDrawer">
                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelAddActivity") }}
+                    {{
+                      $t(
+                        'exo.timeTracker.timeSheet.timeSheet.buttonLabelAddActivity'
+                      )
+                    }}
                   </button>
                   <button
                     class="btn btn-export"
                     type="button"
-                    @click="exportToExcel(json_fields,'all')">
+                    @click="exportToExcel(json_fields, 'all')">
                     <i class="uiIconExport"></i>
-                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelExportAll") }}
+                    {{
+                      $t(
+                        'exo.timeTracker.timeSheet.timeSheet.buttonLabelExportAll'
+                      )
+                    }}
                   </button>
                   <button
                     class="btn btn-export"
                     type="button"
-                    @click="exportToExcel(json_fields_fr,'fr')">
+                    @click="exportToExcel(json_fields_fr, 'fr')">
                     <i class="uiIconExport"></i>
-                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelExportFR") }}
+                    {{
+                      $t(
+                        'exo.timeTracker.timeSheet.timeSheet.buttonLabelExportFR'
+                      )
+                    }}
                   </button>
                   <v-spacer />
                   <v-menu
@@ -69,13 +81,13 @@
                         text
                         color="primary"
                         @click="menu = false">
-                        {{ $t("exo.timeTracker.drawerButtonCancel") }}
+                        {{ $t('exo.timeTracker.drawerButtonCancel') }}
                       </v-btn>
                       <v-btn
                         text
                         color="primary"
-                        @click="$refs.menu.save(date),setDates()">
-                        {{ $t("exo.timeTracker.popupButtonOk") }}
+                        @click="$refs.menu.save(date), setDates()">
+                        {{ $t('exo.timeTracker.popupButtonOk') }}
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
@@ -112,7 +124,7 @@
               </v-icon>
             </template>
             <template v-slot:no-data>
-              {{ $t("exo.timeTracker.timeSheet.timeSheet.textIfNoActivities") }}
+              {{ $t('exo.timeTracker.timeSheet.timeSheet.textIfNoActivities') }}
             </template>
           </v-data-table>
         </v-layout>
@@ -211,14 +223,14 @@ export default {
     loading: true,
     options: {},
     activityRecord: {},
-    activity: 0,
-    type: 0,
-    subType: 0,
-    activityCode: 0,
-    subActivityCode: 0,
-    client: 0,
-    project: 0,
-    feature: 0,
+    activity: '',
+    type: '',
+    subType: '',
+    activityCode: '',
+    subActivityCode: '',
+    client: '',
+    project: '',
+    feature: '',
     fromDate: '',
     toDate: '',
     location: '',
@@ -530,17 +542,18 @@ export default {
           this.teams = resp;
         });
     },
-    getActivities(userName) {
-      fetch(
-        `/portal/rest/timetracker/activitymgn/activity?userName=${userName}`,
-        {
-          credentials: 'include'
-        }
-      )
+    getActivities() {
+      let user = '';
+      if (this.employees.length > 0) {
+        user = 'all';
+      }
+      fetch(`/portal/rest/timetracker/activitymgn/activity?userName=${user}`, {
+        credentials: 'include'
+      })
         .then(resp => resp.json())
         .then(resp => {
           this.activities = resp;
-          this.existingActicitiesUser = userName;
+          this.existingActicitiesUser = this.employee;
         });
     },
     roundVlaue(item) {
@@ -565,6 +578,7 @@ export default {
           if (this.employees.length > 0) {
             this.getTeams();
           }
+          this.employees.unshift({ userName: 'all', fullName: 'All' });
         });
     },
     getClients() {
