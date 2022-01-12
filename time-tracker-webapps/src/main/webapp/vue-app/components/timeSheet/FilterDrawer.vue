@@ -77,202 +77,220 @@
       </v-menu>
     </template>
     <template slot="content">
-      <div>
-        <form ref="form1">
-          <div v-if="employees.length>0">
-            <v-label for="employees">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelEmployee") }}
-            </v-label>
-            <select
-              v-model="employee"
-              name="employee"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in employees"
-                :key="item.userName"
-                :value="item.userName">
-                {{ item.fullName }}
-              </option>
-            </select>
-          </div>
-          <div v-if="teams.length>0">
-            <v-label for="team">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelTeam") }}
-            </v-label>
-            <select
-              v-model="team"
-              name="team"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in teams"
-                :key="item.id"
-                :value="item.id">
-                {{ item.name }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="activity">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivity") }}
-            </v-label>
-            <select
-              v-model="activity"
-              name="activity"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in activities"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="location">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelLocation") }}
-            </v-label>
-            <select
-              v-model="location"
-              name="location"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in locations"
-                :key="item.code"
-                :value="item.code">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="office">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelOffice") }}
-            </v-label>
-            <select
-              v-model="office"
-              name="office"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in offices"
-                :key="item.code"
-                :value="item.code">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="type">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelType") }}
-            </v-label>
-            <select
-              v-model="type"
-              name="type"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in types"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="subType">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubType") }}
-            </v-label>
-            <select
-              v-model="subType"
-              name="subType"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in subTypes"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="activityCode">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivityCode") }}
-            </v-label>
-            <select
-              v-model="activityCode"
-              name="activityCode"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in activityCodes"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="subActivityCode">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode") }}
-            </v-label>
-            <select
-              v-model="subActivityCode"
-              name="subActivityCode"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in subActivityCodes"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="client">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelClient") }}
-            </v-label>
-            <select
-              v-model="client"
-              name="client"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in clients"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="project">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelProject") }}
-            </v-label>
-            <select
-              v-model="project"
-              name="project"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in projects"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <v-label for="feature">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelFeature") }}
-            </v-label>
-            <select
-              v-model="project"
-              name="feature"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in features"
-                :key="item.id"
-                :value="item.id">
-                {{ item.label }}
-              </option>
-            </select>
-          </div>
-        </form>
-      </div>
+        <div>
+            <form ref="form1">
+                <div v-if="employees.length>0">
+                  <v-label for="employees">
+                    Employee
+                  </v-label>
+                  
+                    <select v-model="employee" employee="team" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in employees" :key="item.id" :value="item.userName">
+                            {{ item.fullName}}
+                        </option>
+                    </select>
+                </div>
+
+                <div v-if="teams.length>0">
+                    <v-label for="team">
+                        Team
+                    </v-label>
+                    <select v-model="team" name="team" class="input-block-level ignore-vuetify-classes my-3">
+                        <option v-for="item in teams" :key="item.id" :value="item.id">
+                            {{ item.name}}
+                        </option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <v-label for="activity">
+                        Activity
+                    </v-label>
+                    <v-autocomplete
+                      ref="activity"
+                      v-model="activity"
+                      :items="activities"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+                <div>
+                    <v-label for="location">
+                        Location
+                    </v-label>
+                    <v-autocomplete
+                      ref="location"
+                      v-model="location"
+                      :items="locations"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+                <div>
+                    <v-label for="office">
+                        Office
+                    </v-label>                   
+                    <v-autocomplete
+                      ref="office"
+                      v-model="office"
+                      :items="offices"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+                <div>
+                    <v-label for="type">
+                        Type
+                    </v-label>                    
+                    <v-autocomplete
+                      ref="type"
+                      v-model="type"
+                      :items="types"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="subType">
+                        Sub type
+                    </v-label>
+                    <v-autocomplete
+                      ref="subType"
+                      v-model="subType"
+                      :items="subTypes"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="activityCode">
+                        Activity Code
+                    </v-label>
+                    <v-autocomplete
+                      ref="activityCode"
+                      v-model="activityCode"
+                      :items="activityCodes"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="subActivityCode">
+                        Sub Activity Code
+                    </v-label>
+                    <v-autocomplete
+                      ref="subActivityCode"
+                      v-model="subActivityCode"
+                      :items="subActivityCodes"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="client">
+                        Client
+                    </v-label>
+                    <v-autocomplete
+                      ref="client"
+                      v-model="client"
+                      :items="clients"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="project">
+                        Project
+                    </v-label>
+                    <v-autocomplete
+                      ref="project"
+                      v-model="project"
+                      :items="projects"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+
+                <div>
+                    <v-label for="feature">
+                        Feature
+                    </v-label>
+                    <v-autocomplete
+                      ref="feature"
+                      v-model="feature"
+                      :items="features"
+                      menu-props="closeOnClick"
+                      outlined
+                      dense
+                      chips
+                      small-chips
+                      multiple
+                      item-text="label"
+                      item-value="id"
+                      @click.stop/>
+                </div>
+            </form>
+        </div>
     </template>
     <template slot="footer">
       <div class="d-flex">

@@ -122,12 +122,16 @@
       :activities="activities"
       :offices="offices"
       :locations="locations"
+      :clients="clients" 
+      :projects="projects" 
       @save="save" />
     <edit-tracking-entry-drawer
       ref="editTTEntryDrawer"
       :activities="activities"
       :offices="offices"
       :locations="locations"
+      :clients="clients" 
+      :projects="projects" 
       :activity-record="activityRecord"
       @save="update" />
     <filter-drawer

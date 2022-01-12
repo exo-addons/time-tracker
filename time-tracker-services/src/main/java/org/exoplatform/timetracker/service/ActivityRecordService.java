@@ -34,10 +34,7 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.timetracker.dto.Activity;
-import org.exoplatform.timetracker.dto.ActivityRecord;
-import org.exoplatform.timetracker.dto.RecordsAccessList;
-import org.exoplatform.timetracker.dto.Team;
+import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.storage.ActivityRecordStorage;
 
 /**
@@ -348,7 +345,7 @@ public class ActivityRecordService {
     String project = "";
     if (record.getActivity() != null && record.getActivity().getProject() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getCode())&& !record.getActivity().getProject().getCode().equals("<EXO>")) {
       if (record.getActivity().getProject().getCode().equals("<PRJ>")) {
-        if (record.getProject() != null) {
+        if (record.getProject() != null && !record.getProject().getCode().equals("<PRJ>")) {
           project = "_" + record.getProject().getCode();
         }
       } else {
@@ -363,7 +360,7 @@ public class ActivityRecordService {
     if (record.getActivity() != null && record.getActivity().getProject() != null
         && record.getActivity().getProject().getClient() != null && StringUtils.isNotEmpty(record.getActivity().getProject().getClient().getCode())) {
       if (record.getActivity().getProject().getClient().getCode().equals("<CLNT>")) {
-        if (record.getClient() != null) {
+        if (record.getClient() != null && !record.getClient().getCode().equals("<CLNT>")) {
           client = "_" + record.getClient().getCode();
         }
       } else {
@@ -395,6 +392,32 @@ public class ActivityRecordService {
     RecordsAccessList recordsAccessList = getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
     IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
 
+    if(StringUtils.isNotEmpty(search)||StringUtils.isNotEmpty(activity)||StringUtils.isNotEmpty(type)||StringUtils.isNotEmpty(subType)||StringUtils.isNotEmpty(activityCode)||StringUtils.isNotEmpty(subActivityCode)||StringUtils.isNotEmpty(client)||StringUtils.isNotEmpty(project)||StringUtils.isNotEmpty(feature)||(StringUtils.isNotEmpty(userName)&&userName.equals("all"))){
+      List<ActivityRecord> activityRecordList = recordsAccessList.getActivityRecords();
+      for (ActivityRecord activityRecord : activityRecordList) {
+        if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
+          activityRecord.getActivity().setProject(activityRecord.getProject());
+        }
+        if (activityRecord.getActivity() != null && activityRecord.getClient() != null) {
+          if(activityRecord.getActivity().getProject()!=null){
+            activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+          }else{
+            Project project1 = new Project();
+            project1.setClient(activityRecord.getClient());
+            activityRecord.getActivity().setProject(project1);
+          }
+        }
+        if (export) {
+          try {
+            activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
+          } catch (Exception e) {
+            LOG.error("Cannot generate TScode for activity {}",activityRecord.getActivity().getLabel());
+          }
+        }
+      }
+      return activityRecordList;
+    }
+
     List<ActivityRecord> act = new ArrayList<>();
     List<ActivityRecord> activityRecordList = new ArrayList<>();
     LocalDate from_ = LocalDate.now();
@@ -425,12 +448,18 @@ public class ActivityRecordService {
             activityRecord.setDailyTimeSum(TimeSum);
             if (activityRecord.getActivity() != null && activityRecord.getProject() != null) {
               activityRecord.getActivity().setProject(activityRecord.getProject());
-              if (activityRecord.getClient() != null) {
+            }
+            if (activityRecord.getActivity() != null && activityRecord.getClient() != null) {
+              if(activityRecord.getActivity().getProject()!=null){
                 activityRecord.getActivity().getProject().setClient(activityRecord.getClient());
+              }else{
+                Project project1 = new Project();
+                project1.setClient(activityRecord.getClient());
+                activityRecord.getActivity().setProject(project1);
               }
             }
             if (export) {
-              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), activityRecord, exportType));
+              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
             }
             if (StringUtils.isNotEmpty(activityRecord.getOffice())) {
               office_ = activityRecord.getOffice();
