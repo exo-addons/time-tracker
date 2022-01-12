@@ -1,7 +1,7 @@
 <template>
   <exo-drawer ref="addTTEntryDrawer" right>
     <template slot="title">
-      {{ $t("exo.timeTracker.label") }}
+      {{ $t("exo.timeTracker.timeTracking.text.add.entry") }}
     </template>
     <template slot="content">
       <div>
@@ -31,7 +31,7 @@
           </div>
           <div>
             <v-label for="description">
-              {{ $t("exo.timeTracker.text") }}
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.description") }}
             </v-label>
             <extended-textarea
               id="desc"
@@ -42,7 +42,9 @@
               placeholder="What are you working on ?" />
           </div>
           <div>
-            <v-label for="time"> Time spent (hours) </v-label>
+            <v-label for="time">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.hours") }}
+            </v-label>
             <input
               ref="time"
               v-model="activityRecord.time"
@@ -53,7 +55,9 @@
           <div
             id="accessPermissionAutoCompleteActivity"
             class=" contactAutoComplete">
-            <v-label for="activity"> Activity </v-label>
+            <v-label for="activity">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.activity") }}
+            </v-label>
             <v-autocomplete
               ref="autocompleteActivityItemAdd"
               v-model="activityRecord.activity"
@@ -76,7 +80,9 @@
                 (selectedActivity.project &&
                 selectedActivity.project.code === '<PRJ>')))
             ">
-            <v-label for="project"> Project </v-label>
+            <v-label for="project">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.project") }}
+            </v-label>
             <select
               v-model="activityRecord.project"
               name="project"
@@ -111,7 +117,9 @@
             </select>
           </div>
           <div>
-            <v-label for="projectVersion"> Project Version </v-label>
+            <v-label for="projectVersion">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.projectVersion") }}
+            </v-label>
             <input
               ref="projectVersion"
               v-model="activityRecord.projectVersion"
@@ -120,7 +128,9 @@
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div v-if="salesOrders.length > 0">
-            <v-label for="salesOrder"> Sales Order </v-label>
+            <v-label for="salesOrder">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.salesOrder") }}
+            </v-label>
             <select
               v-model="activityRecord.salesOrder"
               name="salesOrder"
@@ -134,7 +144,9 @@
             </select>
           </div>
           <div>
-            <v-label for="location"> Location </v-label>
+            <v-label for="location">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.location") }}
+            </v-label>
             <select
               v-model="activityRecord.location"
               name="location"
@@ -148,7 +160,9 @@
             </select>
           </div>
           <div>
-            <v-label for="office"> Office </v-label>
+            <v-label for="office">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.office") }}
+            </v-label>
             <select
               v-model="activityRecord.office"
               name="office"
@@ -169,7 +183,7 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn
@@ -177,7 +191,7 @@
           class="btn btn-primary"
           @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

@@ -18,14 +18,30 @@
           class="tabContainer"
           grow>
           <v-tabs-slider color="primary" />
-          <v-tab key="activities" href="#activities">Activities</v-tab>
-          <v-tab key="clients" href="#clients">Clients</v-tab>
-          <v-tab key="projects" href="#projects">Projects</v-tab>
-          <v-tab key="features" href="#features">Features</v-tab>
-          <v-tab key="activitiesCodes" href="#activitiesCodes">Activities codes</v-tab>
-          <v-tab key="typesCodes" href="#typesCodes">Types codes</v-tab>
-          <v-tab key="teams" href="#teams">Teams</v-tab>
-          <v-tab key="ttsettings" href="#ttsettings">Settings</v-tab>
+          <v-tab key="activities" href="#activities">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.activities") }}
+          </v-tab>
+          <v-tab key="clients" href="#clients">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.Clients") }}
+          </v-tab>
+          <v-tab key="projects" href="#projects">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.Projects") }}
+          </v-tab>
+          <v-tab key="features" href="#features">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.Features") }}
+          </v-tab>
+          <v-tab key="activitiesCodes" href="#activitiesCodes">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.ActivitiesCodes") }}
+          </v-tab>
+          <v-tab key="typesCodes" href="#typesCodes">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.TypesCodes") }}
+          </v-tab>
+          <v-tab key="teams" href="#teams">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.Teams") }}
+          </v-tab>
+          <v-tab key="ttsettings" href="#ttsettings">
+            {{ $t("exo.timeTracker.activityManagementApp.vTab.Settings") }}
+          </v-tab>
         </v-tabs>
         <v-tabs-items v-model="selectedTab" class="infoContent">
           <v-tab-item

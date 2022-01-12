@@ -32,7 +32,7 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddActivityDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>{{ $t("exo.timeTracker.activities.activitiesList.button.openAddActivityDrawer") }}
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>{{ $t("exo.timeTracker.activities.text.add") }}
             </button>
           </v-toolbar>
         </template>

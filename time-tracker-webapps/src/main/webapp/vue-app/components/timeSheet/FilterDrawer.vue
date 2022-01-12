@@ -4,7 +4,7 @@
     right
     class="timeSheetFilterDrawer">
     <template slot="title">
-      Filter
+      {{ $t("exo.timeTracker.timeSheet.filterDrawer.toolbarTitle") }}
     </template>
     <template slot="titleIcons">
       <v-menu offset-y>
@@ -14,7 +14,7 @@
             small
             v-bind="attrs"
             v-on="on">
-            Saved Filters
+            {{ $t("exo.timeTracker.timeSheet.filterDrawer.buttonLabelSavedFilters") }}
           </v-btn>
         </template>
         <v-list>
@@ -42,7 +42,7 @@
             v-bind="attrs"
             v-on="on">
             <v-icon>mdi-plus</v-icon>
-            Add Filter
+            {{ $t("exo.timeTracker.timeSheet.filterDrawer.buttonLabelAddFilter") }}
           </v-btn>
         </template>
         <v-card>
@@ -50,7 +50,7 @@
             <v-list-item>
               <v-list-item-content>
                 <v-label for="filterName">
-                  Filter Name
+                  {{ $t("exo.timeTracker.timeSheet.filterDrawer.LabelFilterName") }}
                 </v-label>
                 <input
                   ref="filterName"
@@ -63,12 +63,14 @@
           </v-list>
           <v-card-actions>
             <v-spacer />
-            <v-btn text @click="menu = false">Cancel</v-btn>
+            <v-btn text @click="menu = false">
+              {{ $t("exo.timeTracker.drawerButtonCancel") }}
+            </v-btn>
             <v-btn
               color="primary"
               text
               @click="menu = false;saveFilter()">
-              Save
+              {{ $t("exo.timeTracker.drawerButtonSave") }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -79,7 +81,7 @@
         <form ref="form1">
           <div v-if="employees.length>0">
             <v-label for="employees">
-              Employee
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelEmployee") }}
             </v-label>
             <select
               v-model="employee"
@@ -95,7 +97,7 @@
           </div>
           <div v-if="teams.length>0">
             <v-label for="team">
-              Team
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelTeam") }}
             </v-label>
             <select
               v-model="team"
@@ -111,7 +113,7 @@
           </div>
           <div>
             <v-label for="activity">
-              Activity
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivity") }}
             </v-label>
             <select
               v-model="activity"
@@ -127,7 +129,7 @@
           </div>
           <div>
             <v-label for="location">
-              Location
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelLocation") }}
             </v-label>
             <select
               v-model="location"
@@ -143,7 +145,7 @@
           </div>
           <div>
             <v-label for="office">
-              Office
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelOffice") }}
             </v-label>
             <select
               v-model="office"
@@ -159,7 +161,7 @@
           </div>
           <div>
             <v-label for="type">
-              Type
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelType") }}
             </v-label>
             <select
               v-model="type"
@@ -175,7 +177,7 @@
           </div>
           <div>
             <v-label for="subType">
-              Sub type
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubType") }}
             </v-label>
             <select
               v-model="subType"
@@ -191,7 +193,7 @@
           </div>
           <div>
             <v-label for="activityCode">
-              Activity Code
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivityCode") }}
             </v-label>
             <select
               v-model="activityCode"
@@ -207,7 +209,7 @@
           </div>
           <div>
             <v-label for="subActivityCode">
-              Sub Activity Code
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode") }}
             </v-label>
             <select
               v-model="subActivityCode"
@@ -223,7 +225,7 @@
           </div>
           <div>
             <v-label for="client">
-              Client
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelClient") }}
             </v-label>
             <select
               v-model="client"
@@ -239,7 +241,7 @@
           </div>
           <div>
             <v-label for="project">
-              Project
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelProject") }}
             </v-label>
             <select
               v-model="project"
@@ -255,7 +257,7 @@
           </div>
           <div>
             <v-label for="feature">
-              Feature
+              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelFeature") }}
             </v-label>
             <select
               v-model="project"
@@ -277,17 +279,17 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="reset()">
           <template>
-            Reset
+            {{ $t("exo.timeTracker.drawerButtonReset") }}
           </template>
         </v-btn>
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="aplyFilter()">
           <template>
-            Apply
+            {{ $t("exo.timeTracker.drawerButtonApply") }}
           </template>
         </v-btn>
       </div>

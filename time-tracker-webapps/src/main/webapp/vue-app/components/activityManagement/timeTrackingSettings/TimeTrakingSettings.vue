@@ -8,7 +8,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Offices list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.timeTrackingSettings.office.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -22,7 +24,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddOfficeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add office
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.timeTrackingSettings.text.add.office") }}
             </button>
           </v-toolbar>
         </template>
@@ -37,7 +40,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No offices</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.timeTrackingSettings.textIfNoOffice") }}
+        </template>
       </v-data-table>
     </v-flex>
     <v-flex>
@@ -48,7 +53,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Locations list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.timeTrackingSettings.location.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -62,7 +69,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddLocationDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add location
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.timeTrackingSettings.text.add.location") }}
             </button>
           </v-toolbar>
         </template>
@@ -77,7 +85,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No locations</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.timeTrackingSettings.textIfNoLocation") }}
+        </template>
       </v-data-table>
     </v-flex>
     <v-flex>
@@ -88,7 +98,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Work times list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.timeTrackingSettings.worckTime.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -102,7 +114,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddWorkTimeDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Work Time
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.timeTrackingSettings.text.add.worckTime") }}
             </button>
           </v-toolbar>
         </template>
@@ -117,7 +130,9 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>No Work Time plans</template>
+        <template v-slot:no-data>
+          {{ $t("exo.timeTracker.timeTrackingSettings.textIfNoWorckTime") }}
+        </template>
       </v-data-table>
     </v-flex>
     <v-flex>
@@ -125,7 +140,7 @@
         <v-form ref="form">
           <div>
             <v-label for="label">
-              Users Space 
+              {{ $t("exo.timeTracker.timeTrackingSettings.labelUsersSpace") }}
             </v-label>
             <input
               ref="label"
@@ -136,7 +151,7 @@
           </div>
           <div>
             <v-label for="subActivityCode">
-              Default Sub Activity
+              {{ $t("exo.timeTracker.timeTrackingSettings.labelDefaultSubActivity") }}
             </v-label>
             <select
               v-model="otherSettings.defaultFeatureSubActivity"
@@ -152,7 +167,7 @@
           </div>
           <div>
             <v-label for="weekEndHolidayActivity">
-              Week End Holiday Activity
+              {{ $t("exo.timeTracker.timeTrackingSettings.labelWeekEndHolidayActivity") }}
             </v-label>
             <select
               v-model="otherSettings.weekEndHolidayActivity.id"
@@ -174,7 +189,7 @@
                 class="btn btn-primary"
                 type="button"
                 @click="saveSettings()">
-                Save
+                {{ $t("exo.timeTracker.drawerButtonSave") }}
               </button>
             </div>
           </v-card-actions>

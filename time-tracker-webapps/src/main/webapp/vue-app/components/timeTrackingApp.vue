@@ -41,9 +41,7 @@ export default {
     alert_type: '',
     alertIcon: '',
   }),
-  created() {
-    this.initialize();
-  },
+  
   methods: {
     openTimeTrackingDrawer() {
       this.$refs.timeTrackingDrawer.open();

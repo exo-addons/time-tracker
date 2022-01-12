@@ -14,7 +14,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddTeamDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Team
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.teams.text.add.team") }}
             </button>
           </v-subheader>
           <v-list-item-group v-model="item" color="primary">
@@ -39,13 +40,13 @@
                     <v-list-item @click="openEditDrawer(item)">
                       <v-list-item-title class="subtitle-2">
                         <i class="uiIcon uiIconEdit"></i>
-                        Edit
+                        {{ $t("exo.timeTracker.teams.teamsList.edit") }}
                       </v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="deleteTeam(item)">
                       <v-list-item-title class="subtitle-2">
                         <i class="uiIcon uiIconTrash"></i>
-                        Delete
+                        {{ $t("exo.timeTracker.teams.teamsList.delete") }}
                       </v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -69,7 +70,7 @@
                 class="btn pull-left"
                 type="button"
                 @click="openAddTeamMemberDrawer">
-                <i class="uiIconSocSimplePlus"></i> Add Member
+                <i class="uiIconSocSimplePlus"></i> {{ $t("exo.timeTracker.teams.text.add.member") }}
               </button>
             </v-toolbar>
           </template>
@@ -78,7 +79,9 @@
               delete
             </v-icon>
           </template>
-          <template v-slot:no-data>No Members</template>
+          <template v-slot:no-data>
+            {{ $t("exo.timeTracker.teams.teamsList.textIfNoMember") }}
+          </template>
         </v-data-table>
       </v-flex>
     </v-card>
