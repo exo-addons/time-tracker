@@ -9,7 +9,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Feature list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.features.featuresList.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -29,7 +31,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddFeatureDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Feature
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.features.text.add") }}
             </button>
           </v-toolbar>
         </template>

@@ -32,7 +32,7 @@
               type="button"
               @click="openAddActivityCodeDrawer">
               <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-              {{ $t("exo.timeTracker.codes.codesList.button.openAddActivityCodeDrawer") }}
+              {{ $t("exo.timeTracker.codes.text.add.activity") }}
             </button>
           </v-toolbar>
         </template>
@@ -84,7 +84,7 @@
               subActivityCode="button"
               @click="openAddSubActivityCodeDrawer">
               <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-              {{ $t("exo.timeTracker.codes.codesList.button.openAddSubActivityCodeDrawer") }}
+              {{ $t("exo.timeTracker.codes.text.add.SubActivity") }}
             </button>
           </v-toolbar>
         </template>

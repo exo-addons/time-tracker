@@ -9,7 +9,9 @@
         class="elevation-1">
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Project list</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t("exo.timeTracker.projects.projectsList.toolbarTitle") }}
+            </v-toolbar-title>
             <v-divider
               class="mx-4"
               inset
@@ -29,7 +31,8 @@
               class="btn btn-primary pull-left"
               type="button"
               @click="openAddProjectDrawer">
-              <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add Project
+              <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+              {{ $t("exo.timeTracker.projects.text.add") }}
             </button>
           </v-toolbar>
         </template>

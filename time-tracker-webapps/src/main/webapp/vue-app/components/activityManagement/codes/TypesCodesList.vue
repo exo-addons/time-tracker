@@ -32,7 +32,7 @@
               type="button"
               @click="openAddTypeDrawer">
               <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-              {{ $t("exo.timeTracker.codes.typesCodesList.button.openAddTypeDrawer") }}
+              {{ $t("exo.timeTracker.codes.text.add.type") }}
             </button>
           </v-toolbar>
         </template>
@@ -82,7 +82,7 @@
               type="button"
               @click="openAddSubTypeDrawer">
               <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-              {{ $t("exo.timeTracker.codes.typesCodesList.button.openAddSubTypeDrawer") }}
+              {{ $t("exo.timeTracker.codes.text.add.SubType") }}
             </button>
           </v-toolbar>
         </template>

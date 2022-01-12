@@ -4,14 +4,14 @@
     right
     class="">
     <template slot="title">
-      Add Project
+      {{ $t("exo.timeTracker.projects.text.add") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="code">
-              Code
+              {{ $t("exo.timeTracker.activityManagement.drawerLabelCode") }}
             </v-label>
             <input
               ref="code"
@@ -22,7 +22,7 @@
           </div>
           <div>
             <v-label for="label">
-              Label
+              {{ $t("exo.timeTracker.activityManagement.drawerLabelTextLabel") }}
             </v-label>
             <input
               ref="label"
@@ -33,7 +33,7 @@
           </div>
           <div>
             <v-label for="client">
-              Client
+              {{ $t("exo.timeTracker.label.client") }}
             </v-label>
             <select
               v-model="project.client"
@@ -55,12 +55,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

@@ -39,12 +39,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            {{ $t("exo.timeTracker.clients.clientDrawer.drawerButtonCancel") }}
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            {{ $t("exo.timeTracker.clients.clientDrawer.drawerButtonSave") }}
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

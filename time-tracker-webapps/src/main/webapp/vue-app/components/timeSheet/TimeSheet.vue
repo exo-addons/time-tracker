@@ -26,20 +26,22 @@
                     class="btn btn-primary pull-left"
                     type="button"
                     @click="openAddTTEntryDrawer">
-                    <i class="uiIconSocSimplePlus uiIconSocWhite"></i> Add
-                    Activity
+                    <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
+                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelAddActivity") }}
                   </button>
                   <button
                     class="btn btn-export"
                     type="button"
-                    @click="exportToExcel(json_fields, 'all')">
-                    <i class="uiIconExport"></i> Export All
+                    @click="exportToExcel(json_fields,'all')">
+                    <i class="uiIconExport"></i>
+                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelExportAll") }}
                   </button>
                   <button
                     class="btn btn-export"
                     type="button"
-                    @click="exportToExcel(json_fields_fr, 'fr')">
-                    <i class="uiIconExport"></i> Export FR
+                    @click="exportToExcel(json_fields_fr,'fr')">
+                    <i class="uiIconExport"></i>
+                    {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelExportFR") }}
                   </button>
                   <v-spacer />
                   <v-menu
@@ -67,13 +69,13 @@
                         text
                         color="primary"
                         @click="menu = false">
-                        Cancel
+                        {{ $t("exo.timeTracker.drawerButtonCancel") }}
                       </v-btn>
                       <v-btn
                         text
                         color="primary"
-                        @click="$refs.menu.save(date), setDates()">
-                        OK
+                        @click="$refs.menu.save(date),setDates()">
+                        {{ $t("exo.timeTracker.popupButtonOk") }}
                       </v-btn>
                     </v-date-picker>
                   </v-menu>
@@ -109,9 +111,8 @@
                 delete
               </v-icon>
             </template>
-            <template
-              v-slot:no-data>
-              No Activities
+            <template v-slot:no-data>
+              {{ $t("exo.timeTracker.timeSheet.timeSheet.textIfNoActivities") }}
             </template>
           </v-data-table>
         </v-layout>
@@ -153,7 +154,6 @@
       @saveFilter="saveFilter"
       @deleteFilter="deleteFilter" />
   </div>
-  >>>>>>> badb5a0 (add i18n configuration and code refactoring)
 </template>
 
 <script>

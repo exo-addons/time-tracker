@@ -11,7 +11,7 @@
         <i :class="alertIcon"></i> {{ message }}
       </div>
       <template slot="title">
-        Log Time
+        {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.toolbarTitle") }}
       </template>
       <template slot="titleIcons">
         <v-btn
@@ -19,7 +19,7 @@
           small
           @click="addActivityRecord()">
           <v-icon>mdi-plus</v-icon>
-          {{ $t('exo.timeTracker.label') }}
+          {{ $t("exo.timeTracker.timeTracking.text.add.entry") }}
         </v-btn>
       </template>
       <template slot="content">
@@ -46,7 +46,10 @@
           </v-menu>
         </div>
         <div align="center" justify="center">
-          <h4>Total number of hours: {{ total }}</h4>
+          <h4>
+            {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.text.totlal") }}
+            {{ total }}
+          </h4>
         </div>
         <div align="center" justify="center">
           <v-list v-if="activityRecords.length > 0" class="actList">
@@ -57,15 +60,23 @@
               <v-list-item-action @click="editActivityRecord(item)">
                 <v-list-item-action-text class="numberHr" v-text="item.time" />
               </v-list-item-action>
-              <v-list-item-content @click="editActivityRecord(item)">
-                <v-list-item-title
-                  v-if="item.activity"
-                  class="text-truncate text-left"
-                  v-text="item.activity.label" />
-                <span class="d-inline-block text-truncate">
-                  <v-list-item-subtitle v-text="item.description" />
-                </span>
-              </v-list-item-content>
+              <v-tooltip bottom max-width="200px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-list-item-content
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="editActivityRecord(item)">
+                    <v-list-item-title
+                      v-if="item.activity"
+                      class="text-truncate text-left"
+                      v-text="item.activity.label" />
+                    <span class="d-inline-block text-truncate">
+                      <v-list-item-subtitle v-text="item.description" />
+                    </span>
+                  </v-list-item-content>
+                </template>
+                <span>{{ item.description }}</span>
+              </v-tooltip>
               <v-icon small @click="deleteActivityRecord(item.id)">
                 delete
               </v-icon>
@@ -134,13 +145,10 @@ export default {
       this.getActivityRecords();
     }
   },
-  mounted: function() {
-    const self = this;
-    $(document).mouseup(() => {
-      if (self.activityRecordMenuDatePicker) {
-        setTimeout(() => {
-          self.activityRecordMenuDatePicker = false;
-        }, 100);
+  mounted () {
+    $(this.$refs.timeTrackerDrawer.$el).click(()=> { 
+      if (this.activityRecordMenuDatePicker) {
+        this.activityRecordMenuDatePicker = false;
       }
     });
   },

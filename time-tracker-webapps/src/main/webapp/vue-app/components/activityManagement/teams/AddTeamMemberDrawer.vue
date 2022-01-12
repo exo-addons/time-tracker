@@ -4,14 +4,14 @@
     right
     class="">
     <template slot="title">
-      Add TeamMember
+      {{ $t("exo.timeTracker.teams.text.add.member") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="role">
-              Role
+              {{ $t("exo.timeTracker.teams.addTeamMember.drawerLabelRole") }}
             </v-label>
             <select
               v-model="role"
@@ -27,7 +27,7 @@
           </div>
           <div>
             <v-label for="userName">
-              Members
+              {{ $t("exo.timeTracker.teams.addTeamMember.drawerLabelMembers") }}
             </v-label>
             <exo-identity-suggester
               ref="autoFocusInput3"
@@ -47,12 +47,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancelœ
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

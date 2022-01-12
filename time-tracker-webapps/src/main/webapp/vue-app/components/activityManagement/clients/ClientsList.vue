@@ -30,7 +30,7 @@
               type="button"
               @click="openAddClientDrawer">
               <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
-              {{ $t("exo.timeTracker.clients.clientsList.button.openAddClientDrawer") }}
+              {{ $t("exo.timeTracker.clients.text.add") }}
             </button>
           </v-toolbar>
         </template>

@@ -11,7 +11,7 @@
         <v-form ref="form" v-model="valid">
           <div>
             <v-label for="code">
-              {{$t("exo.timeTracker.codes.editTypeDrawer.drawerLabelCode")}}
+              {{ $t("exo.timeTracker.activityManagement.drawerLabelCode") }}
             </v-label>
             <input
               ref="code"
@@ -22,7 +22,7 @@
           </div>
           <v-row>
             <v-label for="label">
-              {{ $t("exo.timeTracker.codes.editTypeDrawer.drawerLabelCodeLabel") }}
+              {{ $t("exo.timeTracker.activityManagement.drawerLabelTextLabel") }}
             </v-label>
             <input
               ref="label"
@@ -39,12 +39,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            {{ $t("exo.timeTracker.codes.typeDrawer.drawerButtonCancel") }}
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            {{ $t("exo.timeTracker.codes.typeDrawer.drawerButtonSave") }}
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>

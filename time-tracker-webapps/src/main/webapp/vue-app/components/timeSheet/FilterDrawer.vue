@@ -4,7 +4,7 @@
     right
     class="timeSheetFilterDrawer">
     <template slot="title">
-      Filter
+      {{ $t('exo.timeTracker.timeSheet.filterDrawer.toolbarTitle') }}
     </template>
     <template slot="titleIcons">
       <v-menu offset-y>
@@ -14,15 +14,17 @@
             small
             v-bind="attrs"
             v-on="on">
-            Saved Filters
+            {{
+              $t(
+                'exo.timeTracker.timeSheet.filterDrawer.buttonLabelSavedFilters'
+              )
+            }}
           </v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(item, index) in filters" :key="index">
             <v-list-item-title class="pointer" @click="setFilter(item)">
-              {{
-                item.filter.name
-              }}
+              {{ item.filter.name }}
             </v-list-item-title>
             <v-list-item-action>
               <v-btn icon @click="deleteFilter(item)">
@@ -44,14 +46,20 @@
             v-bind="attrs"
             v-on="on">
             <v-icon>mdi-plus</v-icon>
-            Add Filter
+            {{
+              $t('exo.timeTracker.timeSheet.filterDrawer.buttonLabelAddFilter')
+            }}
           </v-btn>
         </template>
         <v-card>
           <v-list>
             <v-list-item>
               <v-list-item-content>
-                <v-label for="filterName"> Filter Name </v-label>
+                <v-label for="filterName">
+                  {{
+                    $t('exo.timeTracker.timeSheet.filterDrawer.LabelFilterName')
+                  }}
+                </v-label>
                 <input
                   ref="filterName"
                   v-model="filterName"
@@ -63,7 +71,9 @@
           </v-list>
           <v-card-actions>
             <v-spacer />
-            <v-btn text @click="menu = false">Cancel</v-btn>
+            <v-btn text @click="menu = false">
+              {{ $t('exo.timeTracker.drawerButtonCancel') }}
+            </v-btn>
             <v-btn
               color="primary"
               text
@@ -71,7 +81,7 @@
                 menu = false;
                 saveFilter();
               ">
-              Save
+              {{ $t('exo.timeTracker.drawerButtonSave') }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -81,8 +91,9 @@
       <div>
         <form ref="form1">
           <div v-if="employees.length > 0">
-            <v-label for="employees"> Employee </v-label>
-
+            <v-label for="employees">
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelEmployee') }}
+            </v-label>
             <select
               v-model="employee"
               employee="team"
@@ -95,9 +106,10 @@
               </option>
             </select>
           </div>
-
           <div v-if="teams.length > 0">
-            <v-label for="team"> Team </v-label>
+            <v-label for="team">
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelTeam') }}
+            </v-label>
             <select
               v-model="team"
               name="team"
@@ -211,9 +223,14 @@
           </div>
 
           <div>
-            <v-label for="subActivityCode"> Sub Activity Code </v-label>
+            <v-label for="subActivityCode">
+              {{
+                $t(
+                  'exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode'
+                )
+              }}
+            </v-label>
             <v-autocomplete
-              ref="subActivityCode"
               v-model="subActivityCode"
               :items="subActivityCodes"
               menu-props="closeOnClick"
@@ -228,7 +245,9 @@
           </div>
 
           <div>
-            <v-label for="client"> Client </v-label>
+            <v-label for="client">
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelClient') }}
+            </v-label>
             <v-autocomplete
               ref="client"
               v-model="client"
@@ -285,17 +304,17 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="reset()">
           <template>
-            Reset
+            {{ $t('exo.timeTracker.drawerButtonReset') }}
           </template>
         </v-btn>
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t('exo.timeTracker.drawerButtonCancel') }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="aplyFilter()">
           <template>
-            Apply
+            {{ $t('exo.timeTracker.drawerButtonApply') }}
           </template>
         </v-btn>
       </div>

@@ -4,7 +4,7 @@
     right
     class="">
     <template slot="title">
-      Add WorkTime
+      {{ $t("exo.timeTracker.timeTrackingSettings.text.add.worckTime") }}
     </template>
     <template slot="content">
       <div>
@@ -35,20 +35,20 @@
                   text
                   color="primary"
                   @click="menu = false">
-                  Cancel
+                  {{ $t("exo.timeTracker.drawerButtonCancel") }}
                 </v-btn>
                 <v-btn
                   text
                   color="primary"
                   @click="$refs.menu.save(date)">
-                  OK
+                  {{ $t("exo.timeTracker.popupButtonOk") }}
                 </v-btn>
               </v-date-picker>
             </v-menu>
           </div>
           <div>
             <v-label for="office">
-              Office
+              {{ $t("exo.timeTracker.label.office") }}
             </v-label>
             <select
               v-model="workTime.office"
@@ -64,7 +64,7 @@
           </div>
           <div>
             <v-label for="userName">
-              Employee
+              {{ $t("exo.timeTracker.label.employee") }}
             </v-label>
             <exo-identity-suggester
               ref="autoFocusInput3"
@@ -78,7 +78,7 @@
           </div>
           <div>
             <v-label for="hours">
-              Hours
+              {{ $t("exo.timeTracker.label.hours") }}
             </v-label>
             <input
               ref="hours"
@@ -89,7 +89,7 @@
           </div>
           <div>
             <v-label for="period">
-              Periode
+              {{ $t("exo.timeTracker.label.periode") }}
             </v-label>
             <select
               v-model="workTime.period"
@@ -105,7 +105,9 @@
           </div>
           <div class="d-flex flex-wrap pt-2">
             <form class="switchEnabled">
-              <label class="col-form-label pt-0" max-rows="6"> Default:</label>
+              <label class="col-form-label pt-0" max-rows="6">
+                {{ $t("exo.timeTracker.label.default") }}
+              </label>
               <label class="switch">
                 <input
                   v-model="workTime.defaultTime"
@@ -121,12 +123,12 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn class="btn btn-primary" @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>
