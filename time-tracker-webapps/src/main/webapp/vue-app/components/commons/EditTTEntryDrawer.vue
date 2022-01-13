@@ -1,15 +1,16 @@
 <template>
   <exo-drawer ref="editDrawer" right>
     <template slot="title">
-      Edit Entry
+      {{ $t("exo.timeTracker.commons.editTTEntryDrawer.toolbarTitle") }}
     </template>
     <template slot="content">
       <div>
         <v-form ref="form">
           <div>
-            <v-label for="description"> Description </v-label>
+            <v-label for="description">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.description") }}
+            </v-label>
             <extended-textarea
-              id="desc"
               ref="description"
               v-model="activityRecord.description"
               :max-length="250"
@@ -17,7 +18,9 @@
               placeholder="What are you working on ?" />
           </div>
           <div>
-            <v-label for="time"> Time spent (hours) </v-label>
+            <v-label for="time">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.hours") }}
+            </v-label>
             <input
               ref="time"
               v-model="activityRecord.time"
@@ -28,7 +31,9 @@
           <div
             id="accessPermissionAutoCompleteActivityEdit"
             class="contactAutoComplete">
-            <v-label for="activity"> Activity </v-label>
+            <v-label for="activity">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.activity") }}
+            </v-label>
             <v-autocomplete
               ref="autocompleteActivityItemEdit"
               v-model="activityRecord.activity"
@@ -52,7 +57,9 @@
                 (selectedActivity.project.code === '<PRJ>' ||
                 selectedActivity.project.code === '<EXO>'))))
             ">
-            <v-label for="project"> Project </v-label>
+            <v-label for="project">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.project") }}
+            </v-label>
             <select
               v-model="activityRecord.project"
               name="project"
@@ -88,7 +95,9 @@
             </select>
           </div>
           <div>
-            <v-label for="projectVersion"> Project Version </v-label>
+            <v-label for="projectVersion">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.projectVersion") }}
+            </v-label>
             <input
               ref="projectVersion"
               v-model="activityRecord.projectVersion"
@@ -97,7 +106,9 @@
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div>
-            <v-label for="salesOrder"> Sales Order </v-label>
+            <v-label for="salesOrder">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.salesOrder") }}
+            </v-label>
             <select
               v-model="so"
               name="salesOrder"
@@ -111,7 +122,9 @@
             </select>
           </div>
           <div>
-            <v-label for="location"> Location </v-label>
+            <v-label for="location">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.location") }}
+            </v-label>
             <select
               v-model="activityRecord.location"
               name="location"
@@ -125,7 +138,9 @@
             </select>
           </div>
           <div>
-            <v-label for="office"> Office </v-label>
+            <v-label for="office">
+              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.office") }}
+            </v-label>
             <select
               v-model="activityRecord.office"
               name="office"
@@ -146,7 +161,7 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            Cancel
+            {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
         </v-btn>
         <v-btn
@@ -154,7 +169,7 @@
           class="btn btn-primary"
           @click="save()">
           <template>
-            Save
+            {{ $t("exo.timeTracker.drawerButtonSave") }}
           </template>
         </v-btn>
       </div>
@@ -164,11 +179,32 @@
 
 <script>
 export default {
-  props: ["activities", "locations", "offices", "clients", "projects"],
+  props: {
+    activities: {
+      type: Array,
+      default: () => null,
+    },
+    locations: {
+      type: Array,
+      default: () => null,
+    },
+    offices: {
+      type: Array,
+      default: () => null,
+    },
+    clients: {
+      type: Array,
+      default: () => null,
+    },
+    projects: {
+      type: Array,
+      default: () => null,
+    }
+  },
   data: () => ({
     salesOrders: [],
     activityRecord: {},
-    so: "",
+    so: '',
     selectedActivity: {}
   }),
   computed: {
@@ -189,7 +225,7 @@ export default {
     }
   },
   watch: {
-    "activityRecord.activity"(newVal) {
+    'activityRecord.activity'(newVal) {
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
         this.selectedActivity = newVal;
@@ -228,7 +264,7 @@ export default {
       if (this.so) {
         this.activityRecord.salesOrder = { id: this.so };
       }
-      this.$emit("save", this.activityRecord);
+      this.$emit('save', this.activityRecord);
       this.$refs.editDrawer.close();
     },
     cancel() {
@@ -247,12 +283,12 @@ export default {
       if (this.activityRecord.salesOrder) {
         this.so = this.activityRecord.salesOrder.id;
       } else {
-        this.so = "";
+        this.so = '';
       }
       this.$refs.editDrawer.open();
     },
     isNotEmpty(str) {
-      return str != null && str !== "";
+      return str != null && str !== '';
     }
   }
 };
