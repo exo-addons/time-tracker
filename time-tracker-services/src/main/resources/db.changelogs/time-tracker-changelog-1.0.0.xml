@@ -384,4 +384,16 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                          constraintName="UK_ADDONS_TT_PROJECT"/>
   </changeSet>
 
+  <changeSet author="timeTracker" id="1.0.0-9" dbms="hsqldb">
+    <createSequence sequenceName="SEQ_ACTIVITY_RECORD" startValue="1" />
+    <createSequence sequenceName="SEQ_ACTIVITY_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_CLIENT_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_SALES_ORDER_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_PROJECT_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_FEATURE_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_ACTIVITY_CODE_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_SUB_ACTIVITY_CODE_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_TYPE_ID" startValue="1" />
+    <createSequence sequenceName="SEQ_SUB_TYPE_ID" startValue="1" />
+  </changeSet>
 </databaseChangeLog>

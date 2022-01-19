@@ -41,7 +41,7 @@ import org.exoplatform.timetracker.dto.Office;
 public class WorkTimeEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_WORK_TIME_ID", sequenceName = "SEQ_WORK_TIME_ID")
+  @SequenceGenerator(name = "SEQ_WORK_TIME_ID", sequenceName = "SEQ_WORK_TIME_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_WORK_TIME_ID")
   @Column(name = "ID")
   private Long         id;
