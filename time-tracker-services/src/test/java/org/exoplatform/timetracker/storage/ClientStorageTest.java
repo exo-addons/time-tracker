@@ -16,20 +16,29 @@
 */
 package org.exoplatform.timetracker.storage;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import org.exoplatform.timetracker.dao.ClientDAO;
-import org.exoplatform.timetracker.dto.Client;
-import org.exoplatform.timetracker.entity.ClientEntity;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.timetracker.dao.ClientDAO;
+import org.exoplatform.timetracker.dto.Client;
+import org.exoplatform.timetracker.entity.ClientEntity;
 
 public class ClientStorageTest {
 
@@ -38,9 +47,17 @@ public class ClientStorageTest {
   private ClientStorage clientStorage;
 
   @Before
-  public void setUp() throws Exception { // NOSONAR
+  public void setUp() {
     clientDAO = mock(ClientDAO.class);
     clientStorage = new ClientStorage(clientDAO);
+    PortalContainer container = PortalContainer.getInstance();
+    ExoContainerContext.setCurrentContainer(container);
+    RequestLifeCycle.begin(container);
+  }
+
+  @After
+  public void tearDown() {
+    RequestLifeCycle.end();
   }
 
   @Test
