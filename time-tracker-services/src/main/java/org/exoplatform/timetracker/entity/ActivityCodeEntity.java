@@ -36,7 +36,7 @@ import lombok.Data;
 public class ActivityCodeEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_ACTIVITY_CODE_ID", sequenceName = "SEQ_ACTIVITY_CODE_ID")
+  @SequenceGenerator(name = "SEQ_ACTIVITY_CODE_ID", sequenceName = "SEQ_ACTIVITY_CODE_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_ACTIVITY_CODE_ID")
   @Column(name = "ID")
   private Long   id;
