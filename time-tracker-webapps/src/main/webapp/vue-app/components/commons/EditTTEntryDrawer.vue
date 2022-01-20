@@ -237,17 +237,16 @@ export default {
       }
     }
   },
-  mounted: function() {
-    const self = this;
-    $(document).mousedown(() => {
+  mounted () {
+    $(this.$refs.editDrawer.$el).mousedown(()=> {
       if (
-        self.$refs &&
-        self.$refs.autocompleteActivityItemEdit &&
-        self.$refs.autocompleteActivityItemEdit.isFocused
+        this.$refs &&
+        this.$refs.autocompleteActivityItemEdit &&
+        this.$refs.autocompleteActivityItemEdit.isFocused
       ) {
         setTimeout(() => {
-          self.$refs.autocompleteActivityItemEdit.isFocused = false;
-          self.$refs.autocompleteActivityItemEdit.isMenuActive = false;
+          this.$refs.autocompleteActivityItemEdit.isFocused = false;
+          this.$refs.autocompleteActivityItemEdit.isMenuActive = false;
         }, 100);
       }
     });
