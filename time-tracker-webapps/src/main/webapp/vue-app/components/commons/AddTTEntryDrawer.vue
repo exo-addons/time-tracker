@@ -262,17 +262,16 @@ export default {
       }
     }
   },
-  mounted: function() {
-    const self = this;
-    $(document).mousedown(() => {
+  mounted () {
+    $(this.$refs.addTTEntryDrawer.$el).mousedown(()=> {
       if (
-        self.$refs &&
-        self.$refs.autocompleteActivityItemAdd &&
-        self.$refs.autocompleteActivityItemAdd.isFocused
+        this.$refs &&
+        this.$refs.autocompleteActivityItemAdd &&
+        this.$refs.autocompleteActivityItemAdd.isFocused
       ) {
         setTimeout(() => {
-          self.$refs.autocompleteActivityItemAdd.isFocused = false;
-          self.$refs.autocompleteActivityItemAdd.isMenuActive = false;
+          this.$refs.autocompleteActivityItemAdd.isFocused = false;
+          this.$refs.autocompleteActivityItemAdd.isMenuActive = false;
         }, 100);
       }
     });
