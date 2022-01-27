@@ -174,11 +174,13 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                 if (StringUtils.isNotEmpty(client) ) {
                     queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in (" + convert(client) + ")";
+                    queryString = queryString + " or activityRecord.clientEntity.id in (" + convert(client) + ")";
                     queryString = queryString + " and ";
                 }
 
                 if (StringUtils.isNotEmpty(project) ) {
                     queryString = queryString + " activityRecord.activityEntity.projectEntity.id in (" + convert(project) + ")";
+                    queryString = queryString + " or activityRecord.projectEntity.id in (" + convert(project) + ")";
                     queryString = queryString + " and ";
                 }
 
