@@ -26,7 +26,7 @@ module.exports = merge(webpackCommonConfig, {
         timeSheet: './src/main/webapp/vue-app/timeSheet.js'
     },
     output: {
-        path: path.join(exoServerPath, '/time-tracker/'),
+        path: path.join(exoServerPath, '/webapps/time-tracker/'),
         filename: 'js/[name].bundle.js'
     },
     devServer: {
