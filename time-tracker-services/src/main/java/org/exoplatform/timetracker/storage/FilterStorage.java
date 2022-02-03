@@ -313,9 +313,10 @@ public class FilterStorage {
     if (filterFieldEntity == null) {
       return null;
     }
+    String[] filterFieldValue = filterFieldEntity.getValue().split(",");
     return new FilterField(filterFieldEntity.getId(),
             filterFieldEntity.getName(),
-            filterFieldEntity.getValue(),
+            filterFieldValue,
             toDTO(filterFieldEntity.getFilterEntity()));
   }
 
@@ -329,9 +330,13 @@ public class FilterStorage {
     if (filterField == null) {
       return null;
     }
+    String str = "";
+	for (String filterFieldValue : filterField.getValue()) {
+		str+= filterFieldValue+",";
+	}
     return new FilterFieldEntity(filterField.getId(),
             filterField.getName(),
-            filterField.getValue(),
+            str,
             toEntity(filterField.getFilter()));
   }
 

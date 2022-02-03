@@ -30,7 +30,7 @@ public class FilterServiceTest extends TestCase {
   public void testCreateFilter() throws Exception {
     // Given
     Filter filter =new Filter(1l,"testName","root");
-    FilterField filterField = new FilterField(1l,"test","test",filter);
+    FilterField filterField = new FilterField(1l,"test",new String[]{"test"},filter);
     List<FilterField> filterFields = new ArrayList<FilterField>();
     filterFields.add(filterField);
     FilterModel filterModel = new FilterModel(filter,filterFields);
@@ -91,9 +91,9 @@ public class FilterServiceTest extends TestCase {
     Filter filter =new Filter(1l,"testName","root");
     Filter filter1 =new Filter(2l,"testName1","root");
     Filter filter2 =new Filter(3l,"testName2","root");
-    FilterField filterField = new FilterField(1l,"test","test",filter);
-    FilterField filterField1 = new FilterField(2l,"test1","test1",filter1);
-    FilterField filterField2 = new FilterField(3l,"test2","test2",filter2);
+    FilterField filterField = new FilterField(1l,"test",new String[]{"test"},filter);
+    FilterField filterField1 = new FilterField(2l,"test1",new String[]{"test1"},filter1);
+    FilterField filterField2 = new FilterField(3l,"test2",new String[]{"test2"},filter2);
     List<FilterField> fieldsList = new ArrayList<FilterField>();
     fieldsList.add(filterField);
     fieldsList.add(filterField1);
