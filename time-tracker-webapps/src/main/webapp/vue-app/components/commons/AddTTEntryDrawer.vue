@@ -1,7 +1,7 @@
 <template>
   <exo-drawer ref="addTTEntryDrawer" right>
     <template slot="title">
-      {{ $t("exo.timeTracker.timeTracking.text.add.entry") }}
+      {{ $t('exo.timeTracker.timeTracking.text.add.entry') }}
     </template>
     <template slot="content">
       <div>
@@ -31,7 +31,9 @@
           </div>
           <div>
             <v-label for="description">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.description") }}
+              {{
+                $t('exo.timeTracker.commons.TTEntryDrawer.label.description')
+              }}
             </v-label>
             <extended-textarea
               id="desc"
@@ -43,7 +45,7 @@
           </div>
           <div>
             <v-label for="time">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.hours") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.hours') }}
             </v-label>
             <input
               ref="time"
@@ -53,10 +55,11 @@
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div
+            ref="timeTrackerDivAutoComplete"
             id="accessPermissionAutoCompleteActivity"
             class=" contactAutoComplete">
             <v-label for="activity">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.activity") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.activity') }}
             </v-label>
             <v-autocomplete
               ref="autocompleteActivityItemAdd"
@@ -64,13 +67,13 @@
               :items="activities"
               class="input-block-level"
               outlined
-              height="30"
               dense
               chips
               small-chips
               item-text="label"
               item-value="id"
-              attach="#accessPermissionAutoCompleteActivity" />
+              attach="#accessPermissionAutoCompleteActivity"
+              @blur="blurAutocomplete('autocompleteActivityItemAdd')" />
           </div>
           <div
             v-if="
@@ -81,7 +84,7 @@
                 selectedActivity.project.code === '<PRJ>')))
             ">
             <v-label for="project">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.project") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.project') }}
             </v-label>
             <select
               v-model="activityRecord.project"
@@ -118,7 +121,9 @@
           </div>
           <div>
             <v-label for="projectVersion">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.projectVersion") }}
+              {{
+                $t('exo.timeTracker.commons.TTEntryDrawer.label.projectVersion')
+              }}
             </v-label>
             <input
               ref="projectVersion"
@@ -129,7 +134,7 @@
           </div>
           <div v-if="salesOrders.length > 0">
             <v-label for="salesOrder">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.salesOrder") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.salesOrder') }}
             </v-label>
             <select
               v-model="activityRecord.salesOrder"
@@ -145,7 +150,7 @@
           </div>
           <div>
             <v-label for="location">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.location") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.location') }}
             </v-label>
             <select
               v-model="activityRecord.location"
@@ -161,7 +166,7 @@
           </div>
           <div>
             <v-label for="office">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.office") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.office') }}
             </v-label>
             <select
               v-model="activityRecord.office"
@@ -183,7 +188,7 @@
         <v-spacer />
         <v-btn class="btn mr-2" @click="cancel()">
           <template>
-            {{ $t("exo.timeTracker.drawerButtonCancel") }}
+            {{ $t('exo.timeTracker.drawerButtonCancel') }}
           </template>
         </v-btn>
         <v-btn
@@ -191,7 +196,7 @@
           class="btn btn-primary"
           @click="save()">
           <template>
-            {{ $t("exo.timeTracker.drawerButtonSave") }}
+            {{ $t('exo.timeTracker.drawerButtonSave') }}
           </template>
         </v-btn>
       </div>
@@ -204,23 +209,23 @@ export default {
   props: {
     activities: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
     locations: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
     offices: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
     clients: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
     projects: {
       type: Array,
-      default: () => null,
+      default: () => null
     }
   },
   data: () => ({
@@ -262,23 +267,19 @@ export default {
       }
     }
   },
-  mounted () {
-    $(this.$refs.addTTEntryDrawer.$el).mousedown(()=> {
+  methods: {
+    blurAutocomplete(ref){
       if (
         this.$refs &&
-        this.$refs.autocompleteActivityItemAdd &&
-        this.$refs.autocompleteActivityItemAdd.isFocused
+        this.$refs[ref] &&
+        this.$refs[ref].isFocused
       ) {
-        setTimeout(() => {
-          this.$refs.autocompleteActivityItemAdd.isFocused = false;
-          this.$refs.autocompleteActivityItemAdd.isMenuActive = false;
-        }, 100);
+        this.$refs[ref].isFocused = false;
+        this.$refs[ref].isMenuActive = false;
       }
-    });
-  },
-  methods: {
+    },
     getLastActivityRecord() {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         fetch(
           '/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/last',
           {
@@ -336,6 +337,9 @@ export default {
         this.date = timeRecord.activityDate;
       }
       this.$refs.addTTEntryDrawer.open();
+    },
+    emitSelectedValue(value){
+      this.activityRecord.type=value;
     }
   }
 };

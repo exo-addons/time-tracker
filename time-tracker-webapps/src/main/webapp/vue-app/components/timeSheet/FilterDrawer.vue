@@ -7,7 +7,7 @@
       {{ $t('exo.timeTracker.timeSheet.filterDrawer.toolbarTitle') }}
     </template>
     <template slot="titleIcons">
-      <v-menu offset-y>
+      <v-menu offset-y ref="filterDrawermenuFilter">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             text
@@ -21,7 +21,7 @@
             }}
           </v-btn>
         </template>
-        <v-list>
+        <v-list ref="filterDrawerlistFilter" class="filterDrawerlistFilter">
           <v-list-item v-for="(item, index) in filters" :key="index">
             <v-list-item-title class="pointer" @click="setFilter(item)">
               {{ item.filter.name }}
@@ -51,7 +51,7 @@
             }}
           </v-btn>
         </template>
-        <v-card>
+        <v-card ref="cardDrawerFilter">
           <v-list>
             <v-list-item>
               <v-list-item-content>
@@ -71,11 +71,17 @@
           </v-list>
           <v-card-actions>
             <v-spacer />
-            <v-btn text @click="menu = false">
+            <v-btn
+              text
+              @click="
+                menu = false;
+                filterName = '';
+              ">
               {{ $t('exo.timeTracker.drawerButtonCancel') }}
             </v-btn>
             <v-btn
               color="primary"
+              :disabled="isDisabled"
               text
               @click="
                 menu = false;
@@ -90,47 +96,63 @@
     <template slot="content">
       <div>
         <form ref="form1">
-          <div v-if="employees.length > 0">
-            <v-label for="employees">
+          <div
+            v-if="employees.length > 0"
+            id="timeTrackerDivAutoCompleteIdemployee"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
+            <v-label for="employee">
               {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelEmployee') }}
             </v-label>
-            <select
+            <v-autocomplete
+              ref="employee"
               v-model="employee"
-              employee="team"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in employees"
-                :key="item.id"
-                :value="item.userName">
-                {{ item.fullName }}
-              </option>
-            </select>
+              :items="employees"
+              class="input-block-level text-left text-justify text-break text-truncate"
+              multiple
+              outlined
+              dense
+              chips
+              small-chips
+              item-text="fullName"
+              item-value="id"
+              attach="#timeTrackerDivAutoCompleteIdemployee"
+              @blur="blurAutocomplete('employee')" />
           </div>
-          <div v-if="teams.length > 0">
+          <div
+            id="timeTrackerDivAutoCompleteIdteam"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="team">
               {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelTeam') }}
             </v-label>
-            <select
+            <v-autocomplete
+              ref="team"
               v-model="team"
-              name="team"
-              class="input-block-level ignore-vuetify-classes my-3">
-              <option
-                v-for="item in teams"
-                :key="item.id"
-                :value="item.id">
-                {{ item.name }}
-              </option>
-            </select>
+              :items="teams"
+              class="input-block-level text-left text-justify text-break text-truncate"
+              multiple
+              outlined
+              dense
+              chips
+              small-chips
+              item-text="name"
+              item-value="id"
+              attach="#timeTrackerDivAutoCompleteIdteam"
+              @blur="blurAutocomplete('team')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdactivity"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="activity">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivity") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelActivity') }}
             </v-label>
             <v-autocomplete
               ref="activity"
               v-model="activity"
               :items="activities"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -138,17 +160,21 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdactivity"
+              @blur="blurAutocomplete('activity')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdlocation"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="location">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelLocation") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelLocation') }}
             </v-label>
             <v-autocomplete
               ref="location"
               v-model="location"
               :items="locations"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -156,17 +182,21 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdlocation"
+              @blur="blurAutocomplete('location')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdOffice"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="office">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelOffice") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelOffice') }}
             </v-label>
             <v-autocomplete
               ref="office"
               v-model="office"
               :items="offices"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -174,17 +204,21 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdOffice"
+              @blur="blurAutocomplete('office')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdtype"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="type">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelType") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelType') }}
             </v-label>
             <v-autocomplete
               ref="type"
               v-model="type"
               :items="types"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -192,16 +226,21 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdtype"
+              @blur="blurAutocomplete('type')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdsubType"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="subType">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubType") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelSubType') }}
             </v-label>
             <v-autocomplete
               ref="subType"
               v-model="subType"
               :items="subTypes"
+              class="input-block-level text-left text-justify text-break text-truncate"
               menu-props="closeOnClick"
               outlined
               dense
@@ -210,17 +249,23 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdsubType"
+              @blur="blurAutocomplete('subType')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdactivityCode"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="activityCode">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelActivityCode") }}
+              {{
+                $t('exo.timeTracker.timeSheet.filterDrawer.labelActivityCode')
+              }}
             </v-label>
             <v-autocomplete
               ref="activityCode"
               v-model="activityCode"
               :items="activityCodes"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -228,9 +273,13 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdactivityCode"
+              @blur="blurAutocomplete('activityCode')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdsubActivityCode"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="subActivityCode">
               {{
                 $t(
@@ -239,9 +288,10 @@
               }}
             </v-label>
             <v-autocomplete
+              ref="subActivityCode"
               v-model="subActivityCode"
               :items="subActivityCodes"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -249,9 +299,13 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdsubActivityCode"
+              @blur="blurAutocomplete('subActivityCode')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdclient"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="client">
               {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelClient') }}
             </v-label>
@@ -259,7 +313,7 @@
               ref="client"
               v-model="client"
               :items="clients"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -267,17 +321,25 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdclient"
+              @blur="blurAutocomplete('client')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdproject"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="project">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode") }}
+              {{
+                $t(
+                  'exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode'
+                )
+              }}
             </v-label>
             <v-autocomplete
               ref="project"
               v-model="project"
               :items="projects"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -285,17 +347,21 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdproject"
+              @blur="blurAutocomplete('project')" />
           </div>
-          <div>
+          <div
+            id="timeTrackerDivAutoCompleteIdfeature"
+            ref="timeTrackerDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="feature">
-              {{ $t("exo.timeTracker.timeSheet.filterDrawer.labelFeature") }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelFeature') }}
             </v-label>
             <v-autocomplete
               ref="feature"
               v-model="feature"
               :items="features"
-              menu-props="closeOnClick"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
@@ -303,7 +369,8 @@
               multiple
               item-text="label"
               item-value="id"
-              @click.stop />
+              attach="#timeTrackerDivAutoCompleteIdfeature"
+              @blur="blurAutocomplete('feature')" />
           </div>
         </form>
       </div>
@@ -390,35 +457,75 @@ export default {
   data: () => ({
     showName: false,
     menu: null,
-    activity: '',
-    type: '',
-    subType: '',
-    activityCode: '',
-    subActivityCode: '',
-    client: '',
-    project: '',
-    feature: '',
-    location: '',
-    office: '',
-    employee: '',
-    team: '',
+    activity: [],
+    activityRecord: {},
+    type: [],
+    subType: [],
+    activityCode: [],
+    subActivityCode: [],
+    client: [],
+    project: [],
+    feature: [],
+    location: [],
+    office: [],
+    employee: [],
+    team: [],
     filter: {},
     filterName: ''
   }),
+  computed: {
+    isDisabled: function() {
+      return !this.isNotEmpty(this.filterName);
+    }
+  },
+  mounted() {
+    $(this.$refs.filterDrawer.$el).click(() => {
+      if (
+        this.$refs &&
+        this.$refs.filterDrawermenuFilter &&
+        this.$refs.filterDrawermenuFilter.isActive
+      ) {
+        this.$refs.filterDrawermenuFilter.isActive = false;
+      }
+    });
+  },
+  watch: {
+    menu: function(val) {
+      if (val) {
+        this.$refs.filterDrawermenuFilter.isActive = false;
+      }
+    }
+  },
   methods: {
+    blurAutocomplete(ref) {
+      if (this.$refs && this.$refs[ref] && this.$refs[ref].isFocused) {
+        this.$refs[ref].isFocused = false;
+        this.$refs[ref].isMenuActive = false;
+      }
+    },
+    isNotEmpty(str) {
+      let stre = '';
+      for (let index = 0; index < str.length; index++) {
+        const element = str[index];
+        if (element !== ' ') {
+          stre += element;
+        }
+      }
+      return str != null && str !== '' && stre.length !== 0;
+    },
     reset() {
-      this.activity = '';
-      this.type = '';
-      this.subType = '';
-      this.activityCode = '';
-      this.subActivityCode = '';
-      this.client = '';
-      this.project = '';
-      this.feature = '';
-      this.location = '';
-      this.office = '';
-      this.employee = '';
-      this.team = '';
+      this.activity = [];
+      this.type = [];
+      this.subType = [];
+      this.activityCode = [];
+      this.subActivityCode = [];
+      this.client = [];
+      this.project = [];
+      this.feature = [];
+      this.location = [];
+      this.office = [];
+      this.employee = [];
+      this.team = [];
     },
     aplyFilter() {
       const filter_ = {
@@ -439,18 +546,35 @@ export default {
       this.$refs.filterDrawer.close();
     },
     setFilter(filter) {
-      this.activity = filter.fields.activity;
-      this.type = filter.fields.type;
-      this.subType = filter.fields.subType;
-      this.activityCode = filter.fields.activityCode;
-      this.subActivityCode = filter.fields.subActivityCode;
-      this.client = filter.fields.client;
-      this.project = filter.fields.project;
-      this.feature = filter.fields.feature;
+      this.reset();
+      this.find(filter.fields.activity, this.activity, this.activities);
+      this.find(filter.fields.type, this.type, this.types);
+      this.find(filter.fields.subType, this.subType, this.subTypes);
+      this.find(
+        filter.fields.activityCode,
+        this.activityCode,
+        this.activityCodes
+      );
+      this.find(
+        filter.fields.subActivityCode,
+        this.subActivityCode,
+        this.subActivityCodes
+      );
+      this.find(filter.fields.client, this.client, this.clients);
+      this.find(filter.fields.project, this.project, this.projects);
+      this.find(filter.fields.feature, this.feature, this.features);
+      this.find(filter.fields.team, this.team, this.teams);
       this.location = filter.fields.location;
       this.office = filter.fields.office;
       this.employee = filter.fields.employee;
-      this.team = filter.fields.team;
+    },
+    find(filters, item, items) {
+      for (const filter of filters) {
+        const found = items.find(element => String(element.id) === filter);
+        if (found) {
+          item.push(found);
+        }
+      }
     },
     cancel() {
       this.$refs.filterDrawer.close();
@@ -475,6 +599,7 @@ export default {
         team: this.team
       };
       this.$emit('saveFilter', filter_);
+      this.filterName = '';
     },
     deleteFilter(item) {
       this.$emit('deleteFilter', item);
@@ -490,5 +615,12 @@ export default {
 
 .pointer {
   cursor: pointer;
+}
+
+.filterDrawerlistFilter {
+  max-width: 390px;
+  max-height: 205px;
+  overflow-y: scroll;
+  background-color: white !important;
 }
 </style>

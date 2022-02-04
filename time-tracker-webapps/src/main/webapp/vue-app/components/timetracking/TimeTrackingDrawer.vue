@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-app>
     <exo-drawer
       ref="timeTrackerDrawer"
       right
@@ -60,7 +60,9 @@
               <v-list-item-action @click="editActivityRecord(item)">
                 <v-list-item-action-text class="numberHr" v-text="item.time" />
               </v-list-item-action>
-              <v-tooltip bottom max-width="200px">
+              <v-tooltip
+                bottom 
+                max-width="200px">
                 <template v-slot:activator="{ on, attrs }">
                   <v-list-item-content
                     v-bind="attrs"
@@ -70,12 +72,12 @@
                       v-if="item.activity"
                       class="text-truncate text-left"
                       v-text="item.activity.label" />
-                    <span class="d-inline-block text-truncate">
+                    <span class="d-inline-block text-truncate text-left">
                       <v-list-item-subtitle v-text="item.description" />
                     </span>
                   </v-list-item-content>
                 </template>
-                <span>{{ item.description }}</span>
+                <span class="text-left text-justify text-break">{{ item.description }}</span>
               </v-tooltip>
               <v-icon small @click="deleteActivityRecord(item.id)">
                 delete
@@ -121,7 +123,7 @@ import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
 export default {
   components: {
     AddTrackingEntryDrawer,
-    EditTrackingEntryDrawer
+    EditTrackingEntryDrawer,
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
