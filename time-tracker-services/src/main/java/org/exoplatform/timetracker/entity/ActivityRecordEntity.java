@@ -41,7 +41,7 @@ public class ActivityRecordEntity {
 
 
   @Id
-  @SequenceGenerator(name = "SEQ_PROJECT_ID", sequenceName = "SEQ_PROJECT_ID")
+  @SequenceGenerator(name = "SEQ_PROJECT_ID", sequenceName = "SEQ_PROJECT_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_PROJECT_ID")
   @Column(name = "ID")
   private Long           id;
