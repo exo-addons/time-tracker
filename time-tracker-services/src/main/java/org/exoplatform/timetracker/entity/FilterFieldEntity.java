@@ -36,7 +36,7 @@ import javax.persistence.*;
 public class FilterFieldEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_FILTER_ID", sequenceName = "SEQ_FILTER_ID")
+  @SequenceGenerator(name = "SEQ_FILTER_ID", sequenceName = "SEQ_FILTER_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_FILTER_ID")
   @Column(name = "ID")
   private Long   id;

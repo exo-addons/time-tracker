@@ -36,7 +36,7 @@ import lombok.Data;
 public class SubTypeEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_SUB_TYPE_ID", sequenceName = "SEQ_SUB_TYPE_ID")
+  @SequenceGenerator(name = "SEQ_SUB_TYPE_ID", sequenceName = "SEQ_SUB_TYPE_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_SUB_TYPE_ID")
   @Column(name = "ID")
   private Long   id;
