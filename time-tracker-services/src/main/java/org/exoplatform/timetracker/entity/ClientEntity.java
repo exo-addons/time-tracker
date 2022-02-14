@@ -36,7 +36,7 @@ import lombok.Data;
 public class ClientEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_CLIENT_ID", sequenceName = "SEQ_CLIENT_ID")
+  @SequenceGenerator(name = "SEQ_CLIENT_ID", sequenceName = "SEQ_CLIENT_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_CLIENT_ID")
   @Column(name = "ID")
   private Long   id;

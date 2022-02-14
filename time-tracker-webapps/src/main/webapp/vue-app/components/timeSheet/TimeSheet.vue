@@ -260,7 +260,7 @@ export default {
     projects: [],
     clients: [],
     features: [],
-    filters: [],
+    filters: {},
     employees: [],
     locations: [],
     offices: [],
@@ -655,6 +655,8 @@ export default {
       this.feature = val.feature;
       this.location = val.location;
       this.office = val.office;
+      this.empolyee= val.empolyee;
+      this.team=val.team;
       const fields = [];
       fields.push({
         name: 'activity',
@@ -700,6 +702,10 @@ export default {
         name: 'team',
         value: val.team
       });
+      fields.push({
+        name: 'employee',
+        value: val.employee
+      });
       const filter = {
         filter: {
           name: val.name
@@ -707,11 +713,11 @@ export default {
         filterFields: fields
       };
       fetch('/portal/rest/timetracker/filtersmgn/filter', {
-        method: 'post',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
+        method: 'post',
         body: JSON.stringify(filter)
       })
         .then(result => {
@@ -812,12 +818,12 @@ export default {
         })
         .then(() => {
           this.confirmDialog = false;
-          this.getFeatures();
+          this.this.getFilters();
           this.displaySusccessMessage('filter deleted');
         })
         .catch(result => {
           this.confirmDialog = false;
-          this.getFeatures();
+          this.getFilters();
           result.text().then(body => {
             this.displayErrorMessage(body);
           });

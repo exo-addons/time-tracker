@@ -35,7 +35,7 @@ public class FilterField implements Serializable {
 
     private String name;
 
-    private String value;
+    private String[] value;
 
     private Filter filter;
 
@@ -54,7 +54,7 @@ public class FilterField implements Serializable {
      * @param value a {@link java.lang.String} object.
      * @param filter a {@link org.exoplatform.timetracker.dto.Filter} object.
      */
-    public FilterField(Long id, String name, String value, Filter filter) {
+    public FilterField(Long id, String name, String[] value, Filter filter) {
         this.id = id;
         this.name = name;
         this.value = value;

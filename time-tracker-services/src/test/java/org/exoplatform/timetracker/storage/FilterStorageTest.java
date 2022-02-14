@@ -98,7 +98,7 @@ public class FilterStorageTest extends TestCase {
     FilterField filterFieldCreated = null;
     FilterEntity filterEntity =new FilterEntity(1l,"testName","root");
     Filter filter =new Filter(1l,"testName","root");
-    FilterField filterField = new FilterField(1l,"test","test",filter);
+    FilterField filterField = new FilterField(1l,"test",new String[]{"test"},filter);
     FilterFieldEntity filterFieldEntity = new FilterFieldEntity(1l,"testName","testValue",filterEntity);
     when(filterFieldDAO.create(any())).thenReturn(filterFieldEntity);
 

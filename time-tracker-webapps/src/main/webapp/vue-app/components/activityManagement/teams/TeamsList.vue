@@ -27,13 +27,16 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-menu bottom left>
+                <v-menu 
+                  bottom 
+                  left
+                  ref="menuItemUpdate">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       icon
                       v-bind="attrs"
                       v-on="on">
-                      <v-icon>mdi-dots-vertical</v-icon>
+                      <v-icon @click="menuItemUpdateFunction(i)">mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
                   <v-list>
@@ -111,7 +114,9 @@ export default {
     }
   },
   data: () => ({
+    menuItemUpdateIndex: -1,
     alert: false,
+    menuItemUpdate: false,
     message: '',
     alert_type: '',
     alertIcon: '',
@@ -162,7 +167,24 @@ export default {
       ];
     }
   },
+  mounted () {
+    $(document).click(()=> { 
+      if (this.$refs && this.$refs.menuItemUpdate && this.$refs.menuItemUpdate[this.menuItemUpdateIndex] ) {
+        if (this.$refs.menuItemUpdate[this.menuItemUpdateIndex].isActive){
+          this.$refs.menuItemUpdate[this.menuItemUpdateIndex].isActive = false;
+        }
+      }
+    });
+  },
   methods: {
+    menuItemUpdateFunction(i){
+      if (this.$refs && this.$refs.menuItemUpdate) {
+        if (this.$refs.menuItemUpdate[this.menuItemUpdateIndex]){
+          this.$refs.menuItemUpdate[this.menuItemUpdateIndex].isActive = false;
+        }
+        this.menuItemUpdateIndex=i;
+      }
+    },
     deleteItem(item) {
       const index = this.teams.indexOf(item);
       this.teams.splice(index, 1);
