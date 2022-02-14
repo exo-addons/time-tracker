@@ -39,7 +39,7 @@ import lombok.Data;
 public class SalesOrderEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_SALES_ORDER_ID", sequenceName = "SEQ_SALES_ORDER_ID")
+  @SequenceGenerator(name = "SEQ_SALES_ORDER_ID", sequenceName = "SEQ_SALES_ORDER_ID", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_SALES_ORDER_ID")
   @Column(name = "ID")
   private Long         id;
