@@ -29,34 +29,28 @@
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div
-            id="accessPermissionAutoCompleteActivityEdit"
+            id="timeTrackerEditDivAutoCompleteIdteam"
+            ref="timeTrackerEditDivAutoComplete"
             class="contactAutoComplete">
             <v-label for="activity">
-              {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.activity") }}
+              {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.activity') }}
             </v-label>
             <v-autocomplete
-              ref="autocompleteActivityItemEdit"
+              ref="activityEdit"
               v-model="activityRecord.activity"
               :items="activities"
-              class="input-block-level"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
-              height="30"
               dense
               chips
               small-chips
               item-text="label"
               item-value="id"
-              attach="#accessPermissionAutoCompleteActivityEdit" />
+              attach="#timeTrackerEditDivAutoCompleteIdteam"
+              @blur="blurAutocomplete('activityEdit')" />
           </div>
           <div
-            v-if="
-              activityRecord.project ||
-                (selectedActivity &&
-                (!selectedActivity.project ||
-                (selectedActivity.project &&
-                (selectedActivity.project.code === '<PRJ>' ||
-                selectedActivity.project.code === '<EXO>'))))
-            ">
+            v-show="isProject">
             <v-label for="project">
               {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.project") }}
             </v-label>
@@ -72,15 +66,7 @@
               </option>
             </select>
           </div>
-          <div
-            v-if="
-              activityRecord.project ||
-                (selectedActivity &&
-                (!selectedActivity.project ||
-                (selectedActivity.project &&
-                (selectedActivity.project.code === '<PRJ>' ||
-                selectedActivity.project.code === '<EXO>'))))
-            ">
+          <div v-show="isClient">
             <v-label for="client"> Client </v-label>
             <select
               v-model="activityRecord.client"
@@ -159,7 +145,7 @@
     <template slot="footer">
       <div class="d-flex">
         <v-spacer />
-        <v-btn class="btn mr-2" @click="cancel()">
+        <v-btn class="btn mr-2" @click="cancel">
           <template>
             {{ $t("exo.timeTracker.drawerButtonCancel") }}
           </template>
@@ -202,6 +188,9 @@ export default {
     }
   },
   data: () => ({
+    isClient: false,
+    isProject: false,
+    isProjectIntial: false,
     salesOrders: [],
     activityRecord: {},
     so: '',
@@ -228,28 +217,47 @@ export default {
     'activityRecord.activity'(newVal) {
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
-        this.selectedActivity = newVal;
       }
       if (newVal && newVal.project && newVal.project.client) {
+        this.activityRecord.activity = newVal;
+        this.activityRecord.project =newVal.project;
+        this.activityRecord.client =newVal.project.client;
         this.salesOrders = newVal.project.client.salesOrders;
       } else {
         this.salesOrders = [];
       }
-    }
-  },
-  mounted () {
-    $(this.$refs.editDrawer.$el).mousedown(()=> {
-      if (
-        this.$refs &&
-        this.$refs.autocompleteActivityItemEdit &&
-        this.$refs.autocompleteActivityItemEdit.isFocused
-      ) {
-        setTimeout(() => {
-          this.$refs.autocompleteActivityItemEdit.isFocused = false;
-          this.$refs.autocompleteActivityItemEdit.isMenuActive = false;
-        }, 100);
+      if (this.selectedActivity.activity.project.code === '<PRJ>' || this.selectedActivity.activity.project.code === '<EXO>'){
+        this.isProjectIntial=true;
+      } else {
+        this.isProjectIntial=false;
       }
-    });
+    },
+    'activityRecord.project'(val) {
+      
+      if (!this.isProjectIntial){
+        if (val &&
+      (val.code === '<PRJ>' ||
+      val.code === '<EXO>')){
+          this.isProject=true;
+          this.isClient=false;
+        } else if (val){
+          this.isProject=false;
+          this.activityRecord.client = val.client;
+          if  (val.client.code==='<CLNT>'){
+            this.isClient=true;
+          } else {
+            this.isClient=false;
+          }
+        }
+      } else {
+        this.isProject=true;
+        if  (val.client.code==='<CLNT>'){
+          this.isClient=true;
+        } else {
+          this.isClient=false;
+        }
+      }
+    },
   },
   methods: {
     save() {
@@ -277,14 +285,32 @@ export default {
       ) {
         this.salesOrders = activityRecord.activity.project.client.salesOrders;
       }
-      this.activityRecord = activityRecord;
-      this.selectedActivity = activityRecord.activity;
+      this.activityRecord = JSON.parse(JSON.stringify(activityRecord));
+      this.selectedActivity=this.activityRecord;
+      if (this.selectedActivity.project.code === '<PRJ>' || this.selectedActivity.project.code === '<EXO>'){
+        this.isProjectIntial=true;
+      } else {
+        this.isProjectIntial=false;
+      }
       if (this.activityRecord.salesOrder) {
         this.so = this.activityRecord.salesOrder.id;
       } else {
         this.so = '';
       }
-      this.$refs.editDrawer.open();
+      if (this.$refs && 
+      this.$refs.editDrawer){
+        this.$refs.editDrawer.open();
+      }
+    },
+    blurAutocomplete(ref){
+      if (
+        this.$refs &&
+        this.$refs[ref] &&
+        this.$refs[ref].isFocused
+      ) {
+        this.$refs[ref].isFocused = false;
+        this.$refs[ref].isMenuActive = false;
+      }
     },
     isNotEmpty(str) {
       return str != null && str !== '';

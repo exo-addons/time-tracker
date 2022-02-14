@@ -11,7 +11,7 @@
             align="center"
             justify="center">
             <v-menu
-              v-model="menu2"
+              v-model="addTTEntryMenuDatePicker"
               :close-on-content-click="false"
               :nudge-right="40"
               transition="scale-transition"
@@ -26,7 +26,9 @@
                   v-bind="attrs"
                   v-on="on" />
               </template>
-              <v-date-picker v-model="date" @input="menu2 = false" />
+              <v-date-picker 
+                v-model="date" 
+                @input="addTTEntryMenuDatePicker = false" />
             </v-menu>
           </div>
           <div>
@@ -55,34 +57,28 @@
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div
-            ref="timeTrackerDivAutoComplete"
-            id="accessPermissionAutoCompleteActivity"
-            class=" contactAutoComplete">
+            id="timeTrackerAddDivAutoCompleteIdteam"
+            ref="timeTrackerAddDivAutoComplete"
+            class="contactAutoComplete">
             <v-label for="activity">
               {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.activity') }}
             </v-label>
             <v-autocomplete
-              ref="autocompleteActivityItemAdd"
+              ref="activityAdd"
               v-model="activityRecord.activity"
               :items="activities"
-              class="input-block-level"
+              class="input-block-level text-left text-justify text-break text-truncate"
               outlined
               dense
               chips
               small-chips
               item-text="label"
               item-value="id"
-              attach="#accessPermissionAutoCompleteActivity"
-              @blur="blurAutocomplete('autocompleteActivityItemAdd')" />
+              attach="#timeTrackerAddDivAutoCompleteIdteam"
+              @blur="blurAutocomplete('activityAdd')" />
           </div>
           <div
-            v-if="
-              activityRecord.project ||
-                (selectedActivity &&
-                (!selectedActivity.project ||
-                (selectedActivity.project &&
-                selectedActivity.project.code === '<PRJ>')))
-            ">
+            v-if="isProject">
             <v-label for="project">
               {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.project') }}
             </v-label>
@@ -98,14 +94,7 @@
               </option>
             </select>
           </div>
-          <div
-            v-if="
-              activityRecord.project ||
-                (selectedActivity &&
-                (!selectedActivity.project ||
-                (selectedActivity.project &&
-                selectedActivity.project.code === '<PRJ>')))
-            ">
+          <div v-show="isClient">
             <v-label for="client"> Client </v-label>
             <select
               v-model="activityRecord.client"
@@ -230,6 +219,10 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    isClient: false,
+    isProject: false,
+    timeRecord: {},
+    addTTEntryMenuDatePicker: false,
     activityRecord: {},
     salesOrders: [],
     showDPicker: false,
@@ -261,11 +254,36 @@ export default {
         this.selectedActivity = newVal;
       }
       if (newVal && newVal.project && newVal.project.client) {
+        this.activityRecord.project =newVal.project;
+        this.activityRecord.client=newVal.project.client;
         this.salesOrders = newVal.project.client.salesOrders;
       } else {
         this.salesOrders = [];
       }
-    }
+    },
+    'activityRecord.project'(val) {
+      if (val &&
+      (val.code === '<PRJ>' ||
+      val.code === '<EXO>')){
+        this.isProject=true;
+        this.isClient=false;
+      } else if (val){
+        this.isProject=false;
+        this.activityRecord.client=val.client;
+        if (val.client.code==='<CLNT>'){
+          this.isClient=true;
+        } else {
+          this.isClient=false;
+        }
+      }
+    },
+  },
+  mounted () {
+    $(this.$refs.addTTEntryDrawer.$el).click(()=> { 
+      if (this.addTTEntryMenuDatePicker) {
+        this.addTTEntryMenuDatePicker = false;
+      }
+    });
   },
   methods: {
     blurAutocomplete(ref){
@@ -316,25 +334,22 @@ export default {
       if (showDPicker) {
         this.showDPicker = true;
       }
-      if (!this.activityRecord.time) {
-        this.getLastActivityRecord().then(data => {
-          if (data.item) {
-            this.activityRecord = data.item;
-            this.activityRecord.time = null;
-            this.activityRecord.description = '';
-            this.activityRecord.salesOrder = null;
-          }
-        });
-      } else {
-        this.activityRecord.time = null;
-      }
       if (timeRecord) {
-        this.activityRecord.activityTime = timeRecord.activityTime;
-        this.activityRecord.activityDate = timeRecord.activityDate;
-        this.activityRecord.userName = timeRecord.userName;
-        this.activityRecord.userFullName = timeRecord.userFullName;
-        this.userName = timeRecord.userName;
-        this.date = timeRecord.activityDate;
+        this.timeRecord=JSON.parse(JSON.stringify(timeRecord));
+        this.activityRecord = this.timeRecord;
+        this.activityRecord.time = null;
+        this.activityRecord.description = '';
+        this.activityRecord.activity = this.timeRecord.activity;
+        this.activityRecord.salesOrder = null;
+        this.activityRecord.project = null;
+        this.activityRecord.client = null;
+        this.activityRecord.activity = this.timeRecord.activity;
+        this.activityRecord.activityTime =this.timeRecord.activityTime;
+        this.activityRecord.activityDate = this.timeRecord.activityDate;
+        this.activityRecord.userName = this.timeRecord.userName;
+        this.activityRecord.userFullName = this.timeRecord.userFullName;
+        this.userName = this.timeRecord.userName;
+        this.date = this.timeRecord.activityDate;
       }
       this.$refs.addTTEntryDrawer.open();
     },
