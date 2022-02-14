@@ -364,10 +364,4 @@ export default {
   text-align: center;
   background: #fff;
 }
-h4 {
-  text-align: center;
-}
-.TimeTrackingDrawerSpan {
-  max-width: 300px;
-}
 </style>
