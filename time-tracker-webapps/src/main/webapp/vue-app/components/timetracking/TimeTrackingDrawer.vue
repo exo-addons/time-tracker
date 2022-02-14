@@ -72,12 +72,12 @@
                       v-if="item.activity"
                       class="text-truncate text-left"
                       v-text="item.activity.label" />
-                    <span class=" TimeTrackingDrawerSpan d-inline-block text-truncate text-left">
+                    <span class="d-inline-block text-truncate text-left">
                       <v-list-item-subtitle v-text="item.description" />
                     </span>
                   </v-list-item-content>
                 </template>
-                <span class="TimeTrackingDrawerSpan text-left text-justify text-break">{{ item.description }}</span>
+                <span class="text-left text-justify text-break">{{ item.description }}</span>
               </v-tooltip>
               <v-icon small @click="deleteActivityRecord(item.id)">
                 delete
@@ -367,10 +367,5 @@ div#middle-topNavigation-container .UIIntermediateContainer > .UIRowContainer {
   text-align: center;
   background: #fff;
 }
-h4 {
-  text-align: center;
-}
-.TimeTrackingDrawerSpan {
-  max-width: 300px;
-}
+
 </style>
