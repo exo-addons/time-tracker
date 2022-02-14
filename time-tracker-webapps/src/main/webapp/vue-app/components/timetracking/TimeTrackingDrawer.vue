@@ -365,10 +365,4 @@ div#middle-topNavigation-container .UIIntermediateContainer > .UIRowContainer {
   text-align: center;
   background: #fff;
 }
-h4 {
-  text-align: center;
-}
-span {
-  max-width: 300px;
-}
 </style>
