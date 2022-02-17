@@ -109,13 +109,12 @@
               v-model="employee"
               :items="employees"
               class="input-block-level text-left text-justify text-break text-truncate"
-              multiple
               outlined
               dense
               chips
               small-chips
               item-text="fullName"
-              item-value="id"
+              item-value="userName"
               attach="#timeTrackerDivAutoCompleteIdemployee"
               @blur="blurAutocomplete('employee')" />
           </div>
