@@ -195,7 +195,6 @@ export default {
     salesOrders: [],
     activityRecord: {},
     so: '',
-    selectedActivity: {}
   }),
   computed: {
     isDisabled: function() {
@@ -227,20 +226,23 @@ export default {
       } else {
         this.salesOrders = [];
       }
-      if (this.selectedActivity.activity.project.code === '<PRJ>' || this.selectedActivity.activity.project.code === '<EXO>'){
-        this.isProjectIntial=true;
+      if (this.activityRecord && 
+        this.activityRecord.activity &&
+        this.activityRecord.activity.project &&
+        this.activityRecord.activity.project.code === '<PRJ>' ||
+        this.activityRecord.activity.project.code === '<EXO>') {
+        this.isProjectIntial= true;
       } else {
-        this.isProjectIntial=false;
+        this.isProjectIntial= false;
       }
     },
     'activityRecord.project'(val) {
-      
-      if (!this.isProjectIntial){
+      if (!this.isProjectIntial) {
         if (val &&
-      (val.code === '<PRJ>' ||
-      val.code === '<EXO>')){
-          this.isProject=true;
-          this.isClient=false;
+        (val.code === '<PRJ>' || val.code === '<EXO>')
+        ){
+          this.isProject= true;
+          this.isClient= false;
         } else if (val){
           this.isProject=false;
           this.activityRecord.client = val.client;
@@ -286,12 +288,12 @@ export default {
       ) {
         this.salesOrders = activityRecord.activity.project.client.salesOrders;
       }
-      this.activityRecord = JSON.parse(JSON.stringify(activityRecord));
-      this.selectedActivity=this.activityRecord;
-      if (this.selectedActivity.project.code === '<PRJ>' || this.selectedActivity.project.code === '<EXO>'){
-        this.isProjectIntial=true;
+      this.activityRecord= JSON.parse(JSON.stringify(activityRecord));
+      
+      if (this.activityRecord && this.activityRecord.project && this.activityRecord.project.code && this.activityRecord.project.code === '<PRJ>' || this.activityRecord.project.code === '<EXO>'){
+        this.isProjectIntial= true;
       } else {
-        this.isProjectIntial=false;
+        this.isProjectIntial= false;
       }
       if (this.activityRecord.salesOrder) {
         this.so = this.activityRecord.salesOrder.id;
