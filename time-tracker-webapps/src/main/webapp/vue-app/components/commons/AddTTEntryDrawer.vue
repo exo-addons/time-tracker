@@ -75,7 +75,8 @@
               item-text="label"
               item-value="id"
               attach="#timeTrackerAddDivAutoCompleteIdteam"
-              @blur="blurAutocomplete('activityAdd')" />
+              @blur="blurAutocomplete('activityAdd')"
+              @click="autocompleteDeleteClass" />
           </div>
           <div
             v-if="isProject">
@@ -355,6 +356,10 @@ export default {
     },
     emitSelectedValue(value){
       this.activityRecord.type=value;
+    },
+    autocompleteDeleteClass() {
+      const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
+      element.classList.remove('v-input--is-focused');
     }
   }
 };

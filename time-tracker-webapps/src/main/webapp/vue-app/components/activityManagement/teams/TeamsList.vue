@@ -46,7 +46,7 @@
                         {{ $t("exo.timeTracker.teams.teamsList.edit") }}
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteTeam(item)">
+                    <v-list-item @click="deleteItem(item)">
                       <v-list-item-title class="subtitle-2">
                         <i class="uiIcon uiIconTrash"></i>
                         {{ $t("exo.timeTracker.teams.teamsList.delete") }}
@@ -188,7 +188,7 @@ export default {
     deleteItem(item) {
       const index = this.teams.indexOf(item);
       this.teams.splice(index, 1);
-      this.$emit('delete', item);
+      this.$emit('deleteTeam', item);
     },
     openAddTeamDrawer() {
       this.$refs.addTeamDrawer.open();

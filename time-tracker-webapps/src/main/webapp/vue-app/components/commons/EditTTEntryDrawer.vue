@@ -47,6 +47,7 @@
               item-text="label"
               item-value="id"
               attach="#timeTrackerEditDivAutoCompleteIdteam"
+              @click="autocompleteDeleteClass"
               @blur="blurAutocomplete('activityEdit')" />
           </div>
           <div
@@ -314,6 +315,10 @@ export default {
     },
     isNotEmpty(str) {
       return str != null && str !== '';
+    },
+    autocompleteDeleteClass() {
+      const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
+      element.classList.remove('v-input--is-focused');
     }
   }
 };
