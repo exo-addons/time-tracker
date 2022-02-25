@@ -109,13 +109,12 @@
               v-model="employee"
               :items="employees"
               class="input-block-level text-left text-justify text-break text-truncate"
-              multiple
               outlined
               dense
               chips
               small-chips
               item-text="fullName"
-              item-value="id"
+              item-value="userName"
               attach="#timeTrackerDivAutoCompleteIdemployee"
               @blur="blurAutocomplete('employee')" />
           </div>
@@ -479,6 +478,8 @@ export default {
     }
   },
   mounted() {
+    const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
+    element.classList.remove('v-input--is-focused');
     $(this.$refs.filterDrawer.$el).click(() => {
       if (
         this.$refs &&
