@@ -46,7 +46,7 @@
                         {{ $t("exo.timeTracker.teams.teamsList.edit") }}
                       </v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteItem(item)">
+                    <v-list-item @click="openConfirmDialogDeleteTeam(item)">
                       <v-list-item-title class="subtitle-2">
                         <i class="uiIcon uiIconTrash"></i>
                         {{ $t("exo.timeTracker.teams.teamsList.delete") }}
@@ -94,6 +94,15 @@
       :team="editedItem"
       @save="updateTeam" />
     <add-team-member-drawer ref="addTeamMemberDrawer" @save="addTeamMember" />
+    <template>
+      <exo-confirm-dialog
+        ref="deleteItemTeamsList"
+        message="Are you sure you want to delete this line?"
+        title="Confirmation"
+        cancel-label="Cancel"
+        ok-label="Yes"
+        @ok="deleteItem()" />
+    </template>
   </div>
 </template>
 
@@ -116,6 +125,7 @@ export default {
   data: () => ({
     menuItemUpdateIndex: -1,
     alert: false,
+    deleteItemTeams: {},
     menuItemUpdate: false,
     message: '',
     alert_type: '',
@@ -185,10 +195,14 @@ export default {
         this.menuItemUpdateIndex=i;
       }
     },
-    deleteItem(item) {
-      const index = this.teams.indexOf(item);
+    deleteItem() {
+      const index = this.teams.indexOf(this.deleteItemTeams);
       this.teams.splice(index, 1);
-      this.$emit('deleteTeam', item);
+      this.$emit('deleteTeam', this.deleteItemTeams);
+    },
+    openConfirmDialogDeleteTeam(item) {
+      this.deleteItemTeams = item;
+      this.$refs.deleteItemTeamsList.open();
     },
     openAddTeamDrawer() {
       this.$refs.addTeamDrawer.open();
