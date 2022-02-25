@@ -119,7 +119,7 @@
               <v-icon
                 v-if="item.id"
                 small
-                @click="deleteItem(item)">
+                @click="openConfirmDialogDeleteTeam(item)">
                 delete
               </v-icon>
             </template>
@@ -130,6 +130,15 @@
         </v-layout>
       </v-card-text>
     </v-card>
+    <template>
+      <exo-confirm-dialog
+        ref="deleteItemTeamsList"
+        message="Are you sure you want to delete this line?"
+        title="Confirmation"
+        cancel-label="Cancel"
+        ok-label="Yes"
+        @ok="deleteItem()" />
+    </template>
     <add-tracking-entry-drawer
       ref="addTTEntryDrawer"
       :activities="activities"
@@ -216,6 +225,7 @@ export default {
       'Sales Order': 'salesOrderName',
       'Project Version': 'projectVersion'
     },
+    deleteItemTeams: {},
     date: [],
     dateRangeText: '',
     menu: false,
@@ -465,6 +475,10 @@ export default {
         this.activityRecordsList = data.items;
         this.totalRecords = data.total;
       });
+    },
+    openConfirmDialogDeleteTeam(item) {
+      this.deleteItemTeams = item;
+      this.$refs.deleteItemTeamsList.open();
     },
     close() {
       this.dialog = false;
@@ -829,10 +843,10 @@ export default {
           });
         });
     },
-    deleteItem(item) {
+    deleteItem() {
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-          item.id
+          this.deleteItemTeams.id
         }`,
         {
           method: 'delete',
