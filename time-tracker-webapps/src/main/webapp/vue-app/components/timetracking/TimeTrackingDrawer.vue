@@ -42,6 +42,7 @@
             </template>
             <v-date-picker
               v-model="date"
+              :first-day-of-week="1"
               @input="activityRecordMenuDatePicker = false" />
           </v-menu>
         </div>
