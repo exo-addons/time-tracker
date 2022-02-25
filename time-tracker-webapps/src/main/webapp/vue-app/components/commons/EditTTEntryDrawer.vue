@@ -189,6 +189,8 @@ export default {
     }
   },
   data: () => ({
+    cont: 0,
+    contProject: 0,
     isClient: false,
     isProject: false,
     isProjectIntial: false,
@@ -215,10 +217,11 @@ export default {
   },
   watch: {
     'activityRecord.activity'(newVal) {
+      this.cont +=1;
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
       }
-      if (newVal && newVal.project && newVal.project.client) {
+      if (newVal && newVal.project && newVal.project.client && this.cont > 1) {
         this.activityRecord.activity = newVal;
         this.activityRecord.project =newVal.project;
         this.activityRecord.client =newVal.project.client;
@@ -229,14 +232,18 @@ export default {
       if (this.activityRecord && 
         this.activityRecord.activity &&
         this.activityRecord.activity.project &&
-        this.activityRecord.activity.project.code === '<PRJ>' ||
-        this.activityRecord.activity.project.code === '<EXO>') {
+        (this.activityRecord.activity.project.code === '<PRJ>' ||
+        this.activityRecord.activity.project.code === '<EXO>')) {
         this.isProjectIntial= true;
       } else {
         this.isProjectIntial= false;
       }
     },
     'activityRecord.project'(val) {
+      this.contProject +=1;
+      if ( this.activityRecord && this.activityRecord.client && this.contProject > 1){
+        this.activityRecord.client=val.client;
+      }
       if (!this.isProjectIntial) {
         if (val &&
         (val.code === '<PRJ>' || val.code === '<EXO>')
@@ -246,7 +253,7 @@ export default {
         } else if (val){
           this.isProject=false;
           this.activityRecord.client = val.client;
-          if  (val.client.code==='<CLNT>'){
+          if  (val.client && val.client.code==='<CLNT>'){
             this.isClient=true;
           } else {
             this.isClient=false;
@@ -289,8 +296,8 @@ export default {
         this.salesOrders = activityRecord.activity.project.client.salesOrders;
       }
       this.activityRecord= JSON.parse(JSON.stringify(activityRecord));
-      
-      if (this.activityRecord && this.activityRecord.project && this.activityRecord.project.code && this.activityRecord.project.code === '<PRJ>' || this.activityRecord.project.code === '<EXO>'){
+      if (this.activityRecord && this.activityRecord.project && this.activityRecord.project.code && (this.activityRecord.project.code === '<PRJ>' || this.activityRecord.project.code === '<EXO>')){
+     
         this.isProjectIntial= true;
       } else {
         this.isProjectIntial= false;
@@ -304,6 +311,8 @@ export default {
       this.$refs.editDrawer){
         this.$refs.editDrawer.open();
       }
+      this.cont=0;
+      this.contProject=0;
     },
     blurAutocomplete(ref){
       if (

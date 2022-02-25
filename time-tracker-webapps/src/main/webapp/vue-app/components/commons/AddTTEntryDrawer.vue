@@ -27,7 +27,8 @@
                   v-on="on" />
               </template>
               <v-date-picker 
-                v-model="date" 
+                v-model="date"
+                :first-day-of-week="1"
                 @input="addTTEntryMenuDatePicker = false" />
             </v-menu>
           </div>
@@ -79,7 +80,7 @@
               @click="autocompleteDeleteClass" />
           </div>
           <div
-            v-if="isProject">
+            v-show="isProject">
             <v-label for="project">
               {{ $t('exo.timeTracker.commons.TTEntryDrawer.label.project') }}
             </v-label>
@@ -220,6 +221,8 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    cont: 0,
+    contProject: 0,
     isClient: false,
     isProject: false,
     timeRecord: {},
@@ -250,28 +253,52 @@ export default {
   },
   watch: {
     'activityRecord.activity'(newVal) {
+      this.cont +=1;
       if (newVal && !newVal.id) {
         newVal = this.activities.find(act => act.id === newVal);
-        this.selectedActivity = newVal;
       }
-      if (newVal && newVal.project && newVal.project.client) {
+      if (newVal && newVal.project && newVal.project.client && this.cont > 1) {
+        this.activityRecord.activity = newVal;
         this.activityRecord.project =newVal.project;
-        this.activityRecord.client=newVal.project.client;
+        this.activityRecord.client =newVal.project.client;
         this.salesOrders = newVal.project.client.salesOrders;
       } else {
         this.salesOrders = [];
       }
+      if (this.activityRecord && 
+        this.activityRecord.activity &&
+        this.activityRecord.activity.project &&
+        ( this.activityRecord.activity.project.code === '<PRJ>' ||
+        this.activityRecord.activity.project.code === '<EXO>')) {
+        this.isProjectIntial= true;
+      } else {
+        this.isProjectIntial= false;
+      }
     },
     'activityRecord.project'(val) {
-      if (val &&
-      (val.code === '<PRJ>' ||
-      val.code === '<EXO>')){
-        this.isProject=true;
-        this.isClient=false;
-      } else if (val){
-        this.isProject=false;
+      this.contProject +=1;
+      if ( this.activityRecord && this.activityRecord.client && this.contProject > 1){
         this.activityRecord.client=val.client;
-        if (val.client.code==='<CLNT>'){
+      }
+      
+      if (!this.isProjectIntial) {
+        if (val &&
+        (val.code === '<PRJ>' || val.code === '<EXO>')
+        ){
+          this.isProject= true;
+          this.isClient= false;
+        } else if (val){
+          this.isProject=false;
+          this.activityRecord.client = val.client;
+          if  (val.client.code==='<CLNT>'){
+            this.isClient=true;
+          } else {
+            this.isClient=false;
+          }
+        }
+      } else {
+        this.isProject=true;
+        if  (val.client.code==='<CLNT>'){
           this.isClient=true;
         } else {
           this.isClient=false;
@@ -342,8 +369,8 @@ export default {
         this.activityRecord.description = '';
         this.activityRecord.activity = this.timeRecord.activity;
         this.activityRecord.salesOrder = null;
-        this.activityRecord.project = null;
-        this.activityRecord.client = null;
+        this.activityRecord.project = this.timeRecord.project;
+        this.activityRecord.client = this.timeRecord.client;
         this.activityRecord.activity = this.timeRecord.activity;
         this.activityRecord.activityTime =this.timeRecord.activityTime;
         this.activityRecord.activityDate = this.timeRecord.activityDate;
@@ -351,6 +378,8 @@ export default {
         this.activityRecord.userFullName = this.timeRecord.userFullName;
         this.userName = this.timeRecord.userName;
         this.date = this.timeRecord.activityDate;
+        this.cont=0;
+        this.contProject=0;
       }
       this.$refs.addTTEntryDrawer.open();
     },
