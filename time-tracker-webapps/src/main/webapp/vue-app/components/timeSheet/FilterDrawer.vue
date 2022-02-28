@@ -479,7 +479,9 @@ export default {
   },
   mounted() {
     const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
-    element.classList.remove('v-input--is-focused');
+    if (element){
+      element.classList.remove('v-input--is-focused');
+    }
     $(this.$refs.filterDrawer.$el).click(() => {
       if (
         this.$refs &&
