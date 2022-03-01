@@ -25,14 +25,14 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <node>
       <uri>userTimeTracking</uri>
       <name>userTimeTracking</name>
-      <label>#{portal.global.userTimeTracking}</label>
+      <label>#{tt.timetracker.navigation.node.label}</label>
       <visibility>SYSTEM</visibility>
       <page-reference>portal::global::userTimeTracking</page-reference>
     </node>
     <node>
       <uri>time_sheet</uri>
       <name>time_sheet</name>
-      <label>#{portal.global.time_sheet}</label>
+      <label>#{tt.timesheet.navigation.node.label}</label>
       <visibility>SYSTEM</visibility>
       <page-reference>portal::global::time_sheet</page-reference>
     </node>
