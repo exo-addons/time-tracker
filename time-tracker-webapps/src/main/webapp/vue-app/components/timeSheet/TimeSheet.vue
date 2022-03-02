@@ -68,6 +68,7 @@
                       <v-text-field
                         v-model="dateRangeText"
                         prepend-icon="event"
+                        class="tt-datepicker-textfeild-cursor ignore-vuetify-classes"
                         readonly
                         v-on="on" />
                     </template>
@@ -669,8 +670,8 @@ export default {
       this.feature = val.feature;
       this.location = val.location;
       this.office = val.office;
-      this.empolyee= val.empolyee;
-      this.team=val.team;
+      this.empolyee = val.empolyee;
+      this.team = val.team;
       const fields = [];
       fields.push({
         name: 'activity',
@@ -1044,5 +1045,8 @@ export default {
 }
 .to-be-fixed {
   background-color: #ffcc80;
+}
+.tt-datepicker-textfeild-cursor input {
+  cursor : pointer;
 }
 </style>
