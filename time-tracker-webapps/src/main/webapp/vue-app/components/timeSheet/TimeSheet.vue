@@ -426,7 +426,10 @@ export default {
         return 'weekend';
       } else if (!item.activity) {
         return 'not-valid';
-      } else if (!item.location || !item.office || item.dailyTimeSum !== 8) {
+      } else if (item.location ==='eXo FR' && item.office ==='FR' &&
+                item.dailyTimeSum !== 7 &&  item.activityTime.day === 5){
+        return 'to-be-fixed';
+      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && item.activityTime.day !== 5) {
         return 'to-be-fixed';
       }
     },
