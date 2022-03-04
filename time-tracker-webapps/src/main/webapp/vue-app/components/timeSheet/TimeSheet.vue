@@ -76,6 +76,7 @@
                       v-model="date"
                       range
                       no-title
+                      :locale="localeLanguage"
                       :first-day-of-week="1"
                       scrollable>
                       <v-spacer />
@@ -277,7 +278,10 @@ export default {
     locations: [],
     offices: [],
     teams: [],
-    existingActicitiesUser: ''
+    existingActicitiesUser: '',
+    localeLanguage: eXo.env.portal.language,
+    day: 0,
+    month: 0,
   }),
   computed: {
     headers() {
@@ -380,12 +384,7 @@ export default {
       return val === true || this.close() === true;
     },
     date() {
-      this.dateRangeText = this.date.join(' ~ ');
-      this.fromDate = this.date[0];
-      this.toDate = this.date[0];
-      if (typeof this.date[1] !== 'undefined') {
-        this.toDate = this.date[1];
-      }
+      this.initDate();
     },
     search: function() {
       if (!this.awaitingSearch) {
@@ -462,9 +461,7 @@ export default {
         firstDay.toISOString().substr(0, 10),
         lastDay.toISOString().substr(0, 10)
       ];
-      this.dateRangeText = this.date.join(' ~ ');
-      this.fromDate = this.date[0];
-      this.toDate = this.date[1];
+      this.initDate();
       this.getEmployees();
       this.getClients();
       this.getProjects();
@@ -480,6 +477,31 @@ export default {
         this.activityRecordsList = data.items;
         this.totalRecords = data.total;
       });
+    },
+    initDate(){
+      if ((this.fromDate !== this.date[0] || this.fromDate !== this.date[1]) &&
+      (this.toDate !== this.date[0] || this.toDate !== this.date[1])){
+        this.fromDate = this.date[0];
+        this.toDate = this.date[0];
+        let fromDateFormated = this.formatDate(this.fromDate);
+        this.dateRangeText= fromDateFormated ;
+        if (typeof this.date[1] !== 'undefined' && this.fromDate !== this.date[1]) {
+          this.toDate = this.date[1];
+          const fromDateInDay = this.day + this.month*30;
+          let toDateFormated = this.formatDate(this.toDate);
+          const toDateInDay = this.day + this.month*30;
+          if (fromDateInDay > toDateInDay){
+            let switchDate = this.fromDate;
+            this.fromDate = this.toDate;
+            this.toDate = switchDate;
+            switchDate = toDateFormated;
+            toDateFormated = fromDateFormated;
+            fromDateFormated = switchDate;
+            this.date.reverse();
+          }
+          this.dateRangeText = `${fromDateFormated} ~ ${toDateFormated}`;
+        }        
+      }
     },
     openConfirmDialogDeleteTeam(item) {
       this.deleteItemTeams = item;
@@ -996,7 +1018,17 @@ export default {
         XLSX.utils.book_append_sheet(wb, records, userName);
         XLSX.writeFile(wb, `TimeSheet_${userName}_${this.dateRangeText}.xlsx`);
       });
-    }
+    },
+    formatDate (date) {
+      const [year, month, day] = date.split('-');
+      this.day = parseInt(day);
+      this.month = parseInt(month);
+      if (this.localeLanguage === 'fr'){
+        return `${day}/${month}/${year}`;
+      } else {
+        return `${year}/${month}/${day}`;
+      }
+    },
   }
 };
 </script>

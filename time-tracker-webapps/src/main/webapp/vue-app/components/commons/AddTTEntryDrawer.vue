@@ -19,7 +19,7 @@
               min-width="290px">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="dateRangeText"
                   centered
                   prepend-icon="event"
                   readonly
@@ -28,6 +28,7 @@
               </template>
               <v-date-picker 
                 v-model="date"
+                :locale="localeLanguage"
                 :first-day-of-week="1"
                 @input="addTTEntryMenuDatePicker = false" />
             </v-menu>
@@ -221,6 +222,8 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    localeLanguage: eXo.env.portal.language,
+    dateRangeText: '',
     cont: 0,
     contProject: 0,
     isClient: false,
@@ -305,6 +308,9 @@ export default {
         }
       }
     },
+    'date' (val){
+      this.formatDate(val);
+    }
   },
   mounted () {
     $(this.$refs.addTTEntryDrawer.$el).click(()=> { 
@@ -381,6 +387,7 @@ export default {
         this.cont=0;
         this.contProject=0;
       }
+      this.formatDate(this.date);
       this.$refs.addTTEntryDrawer.open();
     },
     emitSelectedValue(value){
@@ -389,6 +396,13 @@ export default {
     autocompleteDeleteClass() {
       const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
       element.classList.remove('v-input--is-focused');
+    },
+    formatDate(val){
+      const [year, month, day] = val.split('-');
+      this.dateRangeText= `${year}/${month}/${day}`;
+      if (this.localeLanguage === 'fr'){
+        this.dateRangeText= `${day}/${month}/${year}`;
+      }
     }
   }
 };
