@@ -76,6 +76,7 @@
                       v-model="date"
                       range
                       no-title
+                      :first-day-of-week="1"
                       scrollable>
                       <v-spacer />
                       <v-btn
