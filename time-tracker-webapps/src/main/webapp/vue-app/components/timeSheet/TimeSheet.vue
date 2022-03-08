@@ -449,16 +449,17 @@ export default {
         this.totalRecords = data.total;
       });
     },
-    itemRowBackground: function(item) {
+    itemRowBackground (item) {
       if (item.activityTime.day === 6 || item.activityTime.day === 0) {
-        return 'weekend';
+        return 'timeSheetDay-weekend';
       } else if (!item.activity) {
-        return 'not-valid';
+        return 'timeSheetDay-not-valid';
       } else if (item.location ==='eXo FR' && item.office ==='FR' &&
                 item.dailyTimeSum !== 7 &&  item.activityTime.day === 5){
-        return 'to-be-fixed';
-      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && item.activityTime.day !== 5) {
-        return 'to-be-fixed';
+        return 'timeSheetDay-to-be-fixed';
+      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && 
+      (item.activityTime.day !== 5 || item.location !=='eXo FR' || item.office !=='FR')) {
+        return 'timeSheetDay-to-be-fixed';
       }
     },
     compare(a, b) {
@@ -1068,15 +1069,7 @@ export default {
   border-style: solid !important;
   margin-left: 10px;
 }
-.weekend {
-  background-color: #b3b3b3;
-}
-.not-valid {
-  background-color: #ff9999;
-}
-.to-be-fixed {
-  background-color: #ffcc80;
-}
+
 .tt-datepicker-textfeild-cursor input {
   cursor: pointer;
 }

@@ -46,8 +46,11 @@
               @input="activityRecordMenuDatePicker = false" />
           </v-menu>
         </div>
-        <div align="center" justify="center">
-          <h4>
+        <div 
+          :class="itemRowBackground" 
+          align="center" 
+          justify="center">
+          <h4 class="py-2">
             {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.text.totlal") }}
             {{ total }}
           </h4>
@@ -141,12 +144,17 @@ export default {
     alert_type: '',
     alertIcon: '',
     total: 0,
-    deleteId: 0
+    deleteId: 0,
+    isActivity: true,
+    itemRowBackground: 'timeSheetDay-not-valid',
   }),
   watch: {
     date: function() {
       this.getActivityRecords();
-    }
+    },
+    total(){
+      this.rowBackground();
+    },
   },
   mounted () {
     $(this.$refs.timeTrackerDrawer.$el).click(()=> { 
@@ -156,6 +164,26 @@ export default {
     });
   },
   methods: {
+    rowBackground() {
+      if (this.activityRecords[0] && this.isActivity){
+        if (this.activityRecords[0].activityTime.day === 6 ||
+            this.activityRecords[0].activityTime.day === 0) {
+          this.itemRowBackground= 'timeSheetDay-weekend';
+        } else if (this.activityRecords[0].location ==='eXo FR' &&
+            this.activityRecords[0].office ==='FR' &&
+            this.total !== 7 &&  this.activityRecords[0].activityTime.day === 5){
+          this.itemRowBackground= 'timeSheetDay-to-be-fixed';
+        } else if ((!this.activityRecords[0].location || !this.activityRecords[0].office || this.total !== 8) && 
+        (this.activityRecords[0].activityTime.day !== 5 ||
+        this.activityRecords[0].location !=='eXo FR' || this.activityRecords[0].office !=='FR')) {
+          this.itemRowBackground= 'timeSheetDay-to-be-fixed';
+        } else {
+          this.itemRowBackground= '' ;
+        }
+      } else {
+        this.itemRowBackground= 'timeSheetDay-not-valid';
+      }
+    },
     getActivityRecords() {
       fetch(
         `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
@@ -168,10 +196,12 @@ export default {
         .then(resp => resp.json())
         .then(resp => {
           this.activityRecords = resp;
-          this.total = this.activityRecords.reduce(
-            (accum, item) => accum + item.time,
-            0
-          );
+          this.total=this.activityRecords.reduce((accum, item)=>{
+            if (item.activity === null){
+              this.isActivity = false ;
+            }
+            return accum + item.time;
+          },0);
         });
     },
     getActivities() {
