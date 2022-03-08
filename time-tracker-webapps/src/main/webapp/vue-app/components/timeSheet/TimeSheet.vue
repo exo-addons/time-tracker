@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="ttTimeSheetAplication">
     <div
       v-if="alert"
       id
@@ -20,7 +20,10 @@
             disable-pagination
             hide-default-footer>
             <template v-slot:top>
-              <v-toolbar color="white" flat>
+              <v-toolbar
+                color="white"
+                flat
+                id="TTAplicationToolbar">
                 <template>
                   <button
                     class="btn btn-primary pull-left"
@@ -63,35 +66,40 @@
                     :return-value.sync="date"
                     transition="scale-transition"
                     offset-y
+                    attach="#TTAplicationToolbar"
                     min-width="290px">
-                    <template v-slot:activator="{ on }">
+                    <template
+                      v-slot:activator="{ on }">
                       <v-text-field
                         v-model="dateRangeText"
                         prepend-icon="event"
-                        class="tt-datepicker-textfeild-cursor ignore-vuetify-classes"
+                        class="tt-datepicker-textfeild-cursor"
                         readonly
                         v-on="on" />
                     </template>
-                    <v-date-picker
-                      v-model="date"
-                      range
-                      no-title
-                      :first-day-of-week="1"
-                      scrollable>
-                      <v-spacer />
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="menu = false">
-                        {{ $t('exo.timeTracker.drawerButtonCancel') }}
-                      </v-btn>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.menu.save(date), setDates()">
-                        {{ $t('exo.timeTracker.popupButtonOk') }}
-                      </v-btn>
-                    </v-date-picker>
+                    <v-hover v-slot="{ hover }" open-delay="200">
+                      <v-date-picker
+                        ref="picker"
+                        v-if="isHover(hover)"
+                        v-model="date"
+                        range
+                        no-title
+                        scrollable>
+                        <v-spacer />
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="menu = false">
+                          {{ $t('exo.timeTracker.drawerButtonCancel') }}
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu.save(date), setDates()">
+                          {{ $t('exo.timeTracker.popupButtonOk') }}
+                        </v-btn>
+                      </v-date-picker>
+                    </v-hover>
                   </v-menu>
                   <a
                     class="caption primary--text drawersBtn"
@@ -231,6 +239,7 @@ export default {
     date: [],
     dateRangeText: '',
     menu: false,
+    isHovered: false,
     totalRecords: 0,
     loading: true,
     options: {},
@@ -403,7 +412,25 @@ export default {
   created() {
     this.initialize();
   },
+  mounted() {
+    if (this.$refs && 
+    this.$refs.ttTimeSheetAplication &&
+    this.$refs.ttTimeSheetAplication.__vue__ &&
+    this.$refs.ttTimeSheetAplication.__vue__.$el) {
+      $(this.$refs.ttTimeSheetAplication.__vue__.$el).click(() => {
+        if (this.$refs && this.$refs.menu &&
+        this.$refs.menu.isActive &&
+        !this.isHovered) {
+          this.$refs.menu.isActive = false;
+        }
+      });
+    }
+  },
   methods: {
+    isHover(hover) {
+      this.isHovered= hover;
+      return true;
+    },
     addFilter(val) {
       this.activity = val.activity;
       this.type = val.type;
@@ -422,16 +449,17 @@ export default {
         this.totalRecords = data.total;
       });
     },
-    itemRowBackground: function(item) {
+    itemRowBackground (item) {
       if (item.activityTime.day === 6 || item.activityTime.day === 0) {
-        return 'weekend';
+        return 'timeSheetDay-weekend';
       } else if (!item.activity) {
-        return 'not-valid';
+        return 'timeSheetDay-not-valid';
       } else if (item.location ==='eXo FR' && item.office ==='FR' &&
                 item.dailyTimeSum !== 7 &&  item.activityTime.day === 5){
-        return 'to-be-fixed';
-      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && item.activityTime.day !== 5) {
-        return 'to-be-fixed';
+        return 'timeSheetDay-to-be-fixed';
+      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && 
+      (item.activityTime.day !== 5 || item.location !=='eXo FR' || item.office !=='FR')) {
+        return 'timeSheetDay-to-be-fixed';
       }
     },
     compare(a, b) {
@@ -1041,16 +1069,8 @@ export default {
   border-style: solid !important;
   margin-left: 10px;
 }
-.weekend {
-  background-color: #b3b3b3;
-}
-.not-valid {
-  background-color: #ff9999;
-}
-.to-be-fixed {
-  background-color: #ffcc80;
-}
+
 .tt-datepicker-textfeild-cursor input {
-  cursor : pointer;
+  cursor: pointer;
 }
 </style>
