@@ -17,6 +17,9 @@
 package org.exoplatform.timetracker.dao;
 
 
+import java.util.List;
+
+import javax.persistence.TypedQuery;
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -30,4 +33,13 @@ import org.exoplatform.timetracker.entity.ActivityEntity;
  */
 public class ActivityDAO extends GenericDAOJPAImpl<ActivityEntity, Long> {
   private static final Log LOG = ExoLogger.getLogger(ActivityDAO.class);
+  
+  public List<ActivityEntity> getActivities(){
+	  TypedQuery<ActivityEntity> query = getEntityManager().createNamedQuery("ActivityEntity.getActivities",
+			  ActivityEntity.class);
+	  List<ActivityEntity> activities = query.getResultList();
+		return activities == null ? null : activities;
+	  
+  }
+  
 }
