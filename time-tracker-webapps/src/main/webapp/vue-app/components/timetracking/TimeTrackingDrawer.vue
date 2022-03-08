@@ -33,7 +33,7 @@
             min-width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                :value="date"
+                v-model="dateRangeText"
                 centered
                 prepend-icon="event"
                 readonly
@@ -42,6 +42,7 @@
             </template>
             <v-date-picker
               v-model="date"
+              :locale="localeLanguage"
               :first-day-of-week="1"
               @input="activityRecordMenuDatePicker = false" />
           </v-menu>
@@ -132,6 +133,8 @@ export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
     activityRecordMenuDatePicker: false,
+    localeLanguage: eXo.env.portal.language,
+    dateRangeText: '',
     activities: [],
     offices: [],
     locations: [],
@@ -149,10 +152,11 @@ export default {
     itemRowBackground: 'timeSheetDay-not-valid',
   }),
   watch: {
-    date: function() {
+    date (){
       this.getActivityRecords();
+      this.formatDate(this.date);
     },
-    total(){
+    total (){
       this.rowBackground();
     },
   },
@@ -203,6 +207,7 @@ export default {
             return accum + item.time;
           },0);
         });
+      this.formatDate(this.date);
     },
     getActivities() {
       fetch('/portal/rest/timetracker/activitymgn/activity', {
@@ -339,6 +344,7 @@ export default {
       this.$refs.timeTrackerDrawer.close();
     },
     open() {
+      this.date = new Date().toISOString().substr(0, 10);
       this.getOffices();
       this.getLocations();
       this.getActivityRecords();
@@ -346,6 +352,7 @@ export default {
       this.getProjects();
       this.getClients();
       this.$refs.timeTrackerDrawer.open();
+      this.formatDate(this.date);
     },
     addActivityRecord() {
       this.$refs.addTTEntryDrawer.open();
@@ -373,6 +380,13 @@ export default {
       this.alertIcon = 'uiIconError';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
+    },
+    formatDate(val){
+      const [year, month, day] = val.split('-');
+      this.dateRangeText= `${year}/${month}/${day}`;
+      if (this.localeLanguage === 'fr'){
+        this.dateRangeText= `${day}/${month}/${year}`;
+      }
     }
   }
 };
