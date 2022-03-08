@@ -188,7 +188,7 @@ public class ActivityStorage {
    * @return a {@link java.util.List} object.
    */
   public List<Activity> getActivities() {
-    List<ActivityEntity> applicatiions = activityDAO.findAll();
+    List<ActivityEntity> applicatiions = activityDAO.getActivities();
     return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
   }
 

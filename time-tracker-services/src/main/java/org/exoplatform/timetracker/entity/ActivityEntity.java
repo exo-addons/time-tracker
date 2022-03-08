@@ -32,7 +32,9 @@ import lombok.Data;
 @ExoEntity
 @Table(name = "ADDONS_TT_ACTIVITY")
 @Data
-@NamedQueries({})
+@NamedQueries({
+	 @NamedQuery(name = "ActivityEntity.getActivities", query = "SELECT activity FROM ActivityEntity activity ORDER BY activity.label")
+})
 public class ActivityEntity {
 
   @Id
