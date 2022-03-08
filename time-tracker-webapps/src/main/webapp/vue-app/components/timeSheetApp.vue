@@ -41,9 +41,6 @@ export default {
     alert_type: '',
     alertIcon: '',
   }),
-  created() {
-    this.initialize();
-  },
   methods: {
     displaySusccessMessage(message) {
       this.message = message;
