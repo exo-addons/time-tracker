@@ -330,7 +330,9 @@ export default {
     },
     autocompleteDeleteClass() {
       const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
-      element.classList.remove('v-input--is-focused');
+      if (element){
+        element.classList.remove('v-input--is-focused');
+      }
     }
   }
 };
