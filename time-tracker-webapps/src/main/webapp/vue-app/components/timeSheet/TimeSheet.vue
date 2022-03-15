@@ -10,7 +10,8 @@
     <v-card elevation="0">
       <v-card-text>
         <v-layout>
-          <v-data-table
+          <v-data-table 
+            ref="TTdataTable"
             :headers="headers"
             :items="activityRecordsList"
             elevation="0"
@@ -115,25 +116,58 @@
               {{ roundVlaue(item) }}
             </template>
             <template v-slot:item.action="{ item }">
-              <v-icon
-                small
-                class="mr-2"
-                @click="openAddTTEntryDrawer(item)">
-                add
-              </v-icon>
-              <v-icon
-                v-if="item.id"
-                small
-                class="mr-2"
-                @click="editActivityRecord(item)">
-                edit
-              </v-icon>
-              <v-icon
-                v-if="item.id"
-                small
-                @click="openConfirmDialogDeleteTeam(item)">
-                delete
-              </v-icon>
+              <v-menu
+                :id="item.__ob__.dep.id"
+                close-on-click
+                close-on-content-click
+                bottom 
+                :ref="item.__ob__.dep.id"
+                attach
+                left>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                    @blur="menuBlurred(item.__ob__.dep.id)"
+                    @click="onclickitem()">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list class="text-left" ref="TTlistRef">
+                  <v-list-item 
+                    @click="openAddTTEntryDrawer(item)">
+                    <v-list-item-title class="subtitle-2">
+                      <i class="uiIcon uiIconAdd"></i>
+                      {{ $t("exo.timeTracker.label.add") }}
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item 
+                    v-if="item.id"
+                    @click="editActivityRecord(item)">
+                    <v-list-item-title class="subtitle-2">
+                      <i class="uiIcon uiIconEdit"></i>
+                      {{ $t("exo.timeTracker.teams.teamsList.edit") }}
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item 
+                    v-if="item.id"
+                    :key="item.id"
+                    @click="openConfirmDialogDeleteTeam(item)">
+                    <v-list-item-title class="subtitle-2">
+                      <i class="uiIcon uiIconTrash"></i>
+                      {{ $t("exo.timeTracker.teams.teamsList.delete") }}
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item 
+                    @click="openAddTTEntryDrawer(item,true)">
+                    <v-list-item-title class="subtitle-2">
+                      <i class="uiIcon uiIconCloneNode"></i>
+                      {{ $t("exo.timeTracker.label.duplicate") }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </template>
             <template v-slot:no-data>
               {{ $t('exo.timeTracker.timeSheet.timeSheet.textIfNoActivities') }}
@@ -238,6 +272,7 @@ export default {
       'Project Version': 'projectVersion'
     },
     deleteItemTeams: {},
+    idMenuItemRef: '',
     date: [],
     dateRangeText: '',
     menu: false,
@@ -387,7 +422,7 @@ export default {
           value: 'action'
         }
       ];
-    }
+    },
   },
   watch: {
     dialog(val) {
@@ -427,9 +462,31 @@ export default {
     }
   },
   methods: {
+    generateId(){
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    },
+    menuBlurred(ref){
+      if (this.$refs && this.$refs[this.idMenuItemRef] && this.$refs[this.idMenuItemRef].isActive){
+        setTimeout(() => {
+          this.$refs[this.idMenuItemRef].isActive= false;
+          if (this.$refs && this.$refs[this.itemId] && this.$refs[this.itemId].isActive){
+            this.$refs[this.itemId].isActive= false;
+          }
+        },200);
+      }
+      setTimeout(() => {
+        this.itemId=this.idMenuItemRef;
+        this.idMenuItemRef=ref;
+      },500);
+    },
     isHover(hover) {
       this.isHovered= hover;
       return true;
+    },
+    onclickitem(){
+      if (this.$refs && this.$refs[this.idMenuItemRef] && this.$refs[this.idMenuItemRef].isActive){
+        this.$refs[this.idMenuItemRef].isActive= false;
+      }
     },
     addFilter(val) {
       this.activity = val.activity;
@@ -476,11 +533,16 @@ export default {
     toggleFilterDrawer() {
       this.$refs.filterDrawer.open();
     },
-    openAddTTEntryDrawer(item) {
+    openAddTTEntryDrawer(item,isDuplicate) {
       if (this.existingActicitiesUser !== item.userName) {
         this.getActivities(item.userName);
       }
-      this.$refs.addTTEntryDrawer.open(item, true);
+      if (isDuplicate) {
+        this.$refs.addTTEntryDrawer.open(item, true,true);
+      } else {
+        this.$refs.addTTEntryDrawer.open(item, true);
+      }
+      
     },
     initialize() {
       const date = new Date();
