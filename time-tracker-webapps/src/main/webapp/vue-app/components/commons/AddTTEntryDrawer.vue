@@ -364,17 +364,17 @@ export default {
     cancel() {
       this.$refs.addTTEntryDrawer.close();
     },
-    open(timeRecord, showDPicker) {
+    open(timeRecord, showDPicker,isDuplicate) {
       if (showDPicker) {
         this.showDPicker = true;
       }
       if (timeRecord) {
         this.timeRecord=JSON.parse(JSON.stringify(timeRecord));
         this.activityRecord = this.timeRecord;
-        this.activityRecord.time = null;
-        this.activityRecord.description = '';
+        this.activityRecord.time = (isDuplicate)? this.timeRecord.time : null;
+        this.activityRecord.description = (isDuplicate)? this.timeRecord.description : '';
         this.activityRecord.activity = this.timeRecord.activity;
-        this.activityRecord.salesOrder = null;
+        this.activityRecord.salesOrder = (isDuplicate)? this.timeRecord.salesOrder : null;
         this.activityRecord.project = this.timeRecord.project;
         this.activityRecord.client = this.timeRecord.client;
         this.activityRecord.activity = this.timeRecord.activity;
