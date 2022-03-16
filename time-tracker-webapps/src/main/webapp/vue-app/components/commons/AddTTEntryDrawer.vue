@@ -364,12 +364,29 @@ export default {
     cancel() {
       this.$refs.addTTEntryDrawer.close();
     },
+    openAddTTEntryDrawer(){
+      this.getLastActivityRecord().then(data => {
+        if (data.item) {
+          this.activityRecord = data.item;
+          this.activityRecord.time = null;
+          this.activityRecord.description = '';
+          this.activityRecord.salesOrder =  null;
+          this.activityRecord.activityTime =  null;
+          this.activityRecord.activityDate =  null;
+          this.date = '';
+          this.cont=0;
+          this.contProject=0;
+        }
+      }).then(() =>
+        this.$refs.addTTEntryDrawer.open()
+      );
+    },
     open(timeRecord, showDPicker,isDuplicate) {
       if (showDPicker) {
         this.showDPicker = true;
       }
       if (timeRecord) {
-        this.timeRecord=JSON.parse(JSON.stringify(timeRecord));
+        this.timeRecord = JSON.parse(JSON.stringify(timeRecord));
         this.activityRecord = this.timeRecord;
         this.activityRecord.time = (isDuplicate)? this.timeRecord.time : null;
         this.activityRecord.description = (isDuplicate)? this.timeRecord.description : '';
@@ -377,9 +394,9 @@ export default {
         this.activityRecord.salesOrder = (isDuplicate)? this.timeRecord.salesOrder : null;
         this.activityRecord.project = this.timeRecord.project;
         this.activityRecord.client = this.timeRecord.client;
-        this.activityRecord.activity = this.timeRecord.activity;
-        this.activityRecord.activityTime =this.timeRecord.activityTime;
-        this.activityRecord.activityDate = this.timeRecord.activityDate;
+        this.activityRecord.activity =  this.timeRecord.activity ; 
+        this.activityRecord.activityTime = (showDPicker) ? this.timeRecord.activityTime : null;
+        this.activityRecord.activityDate = (showDPicker) ? this.timeRecord.activityDate : null;
         this.activityRecord.userName = this.timeRecord.userName;
         this.activityRecord.userFullName = this.timeRecord.userFullName;
         this.userName = this.timeRecord.userName;
@@ -387,7 +404,18 @@ export default {
         this.cont=0;
         this.contProject=0;
       }
-      this.formatDate(this.date);
+      if (timeRecord && !timeRecord.time) {
+        this.getLastActivityRecord().then(data => {
+          if (data.item) {
+            this.activityRecord.activity = data.item.activity;
+            this.activityRecord.office = data.item.office;
+            this.activityRecord.location = data.item.location;
+          }
+        });
+      }
+      if (this.date){
+        this.formatDate(this.date);
+      }
       this.$refs.addTTEntryDrawer.open();
     },
     emitSelectedValue(value){
@@ -398,10 +426,14 @@ export default {
       element.classList.remove('v-input--is-focused');
     },
     formatDate(val){
-      const [year, month, day] = val.split('-');
-      this.dateRangeText= `${year}/${month}/${day}`;
-      if (this.localeLanguage === 'fr'){
-        this.dateRangeText= `${day}/${month}/${year}`;
+      if (String(val).includes('-')){
+        const [year, month, day] = val.split('-');
+        this.dateRangeText= `${year}/${month}/${day}`;
+        if (this.localeLanguage === 'fr'){
+          this.dateRangeText= `${day}/${month}/${year}`;
+        } 
+      } else {
+        this.dateRangeText = val;
       }
     }
   }
