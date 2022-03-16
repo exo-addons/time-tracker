@@ -160,6 +160,8 @@
                     </v-list-item-title>
                   </v-list-item>
                   <v-list-item 
+                    v-if="item.id"
+                    :key="item.id"
                     @click="openAddTTEntryDrawer(item,true)">
                     <v-list-item-title class="subtitle-2">
                       <i class="uiIcon uiIconCloneNode"></i>
@@ -472,7 +474,7 @@ export default {
           if (this.$refs && this.$refs[this.itemId] && this.$refs[this.itemId].isActive){
             this.$refs[this.itemId].isActive= false;
           }
-        },200);
+        },300);
       }
       setTimeout(() => {
         this.itemId=this.idMenuItemRef;

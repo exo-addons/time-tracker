@@ -355,7 +355,7 @@ export default {
       this.formatDate(this.date);
     },
     addActivityRecord() {
-      this.$refs.addTTEntryDrawer.open();
+      this.$refs.addTTEntryDrawer.openAddTTEntryDrawer();
     },
     editActivityRecord(item) {
       this.activityRecord = item;
