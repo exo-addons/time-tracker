@@ -13,15 +13,6 @@
       <template slot="title">
         {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.toolbarTitle") }}
       </template>
-      <template slot="titleIcons">
-        <v-btn
-          text
-          small
-          @click="addActivityRecord()">
-          <v-icon>mdi-plus</v-icon>
-          {{ $t("exo.timeTracker.timeTracking.text.add.entry") }}
-        </v-btn>
-      </template>
       <template slot="content">
         <div align="center" justify="center">
           <v-menu
@@ -55,6 +46,20 @@
             {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.text.totlal") }}
             {{ total }}
           </h4>
+        </div>
+        <div>
+          <v-btn 
+            class="TTDrawerButtonAdd"
+            block
+            large
+            text
+            plain
+            @click="addActivityRecord()">
+            <v-icon class=" text--lighten-1" left>mdi-plus</v-icon>
+            <span>
+              {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelAddActivity") }}
+            </span>
+          </v-btn>
         </div>
         <div align="center" justify="center">
           <v-list v-if="activityRecords.length > 0" class="actList">
