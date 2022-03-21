@@ -13,15 +13,6 @@
       <template slot="title">
         {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.toolbarTitle") }}
       </template>
-      <template slot="titleIcons">
-        <v-btn
-          text
-          small
-          @click="addActivityRecord()">
-          <v-icon>mdi-plus</v-icon>
-          {{ $t("exo.timeTracker.timeTracking.text.add.entry") }}
-        </v-btn>
-      </template>
       <template slot="content">
         <div align="center" justify="center">
           <v-menu
@@ -48,23 +39,20 @@
           </v-menu>
         </div>
         <div 
-          :class="itemRowBackground" 
           align="center" 
           justify="center">
-          <h4 class="py-2">
+          <h4 :class="itemRowBackground">
             {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.text.totlal") }}
             {{ total }}
           </h4>
         </div>
+        
         <div align="center" justify="center">
           <v-list v-if="activityRecords.length > 0" class="actList">
             <v-list-item
-              v-for="item in activityRecords"
-              :key="item.id"
-              class="actItem">
-              <v-list-item-action @click="editActivityRecord(item)">
-                <v-list-item-action-text class="numberHr" v-text="item.time" />
-              </v-list-item-action>
+              v-for="(item,i) in activityRecords"
+              :key="i"
+              class="actItem pr-n6">
               <v-tooltip
                 bottom 
                 max-width="200px">
@@ -75,20 +63,83 @@
                     @click="editActivityRecord(item)">
                     <v-list-item-title
                       v-if="item.activity"
-                      class="text-truncate text-left"
+                      class="text-truncate text-left mb-2"
                       v-text="item.activity.label" />
-                    <span class=" TimeTrackingDrawerSpan d-inline-block text-truncate text-left">
+                    <span class=" TimeTrackingDrawerSpan d-inline-block text-truncate text-left mb-n2">
                       <v-list-item-subtitle v-text="item.description" />
-                    </span>
+                    </span>                   
                   </v-list-item-content>
                 </template>
                 <span class="TimeTrackingDrawerSpan text-left text-justify text-break">{{ item.description }}</span>
               </v-tooltip>
-              <v-icon small @click="deleteActivityRecord(item.id)">
-                delete
-              </v-icon>
+              <v-list-item-action
+                
+                @click="editActivityRecord(item)">
+                <template>
+                  <v-menu
+                    ref="TTDrawerMenuBlured"
+                    class="d-flex align-self-start"
+                    close-on-click
+                    close-on-content-click
+                    bottom 
+                    attach
+                    nudge-bottom="29"
+                    left>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="d-flex mt-n3 mb-1 mr-n4"
+                        small
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="menuItemFunction(i)">
+                        <v-icon small size="10">mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list class="text-left TTbackgroundList mt-n2" ref="TTlistRef">
+                      <v-list-item 
+                        @click="editActivityRecord(item)">
+                        <v-list-item-title class="subtitle-2">
+                          <i class="uiIcon uiIconEdit"></i>
+                          {{ $t("exo.timeTracker.teams.teamsList.edit") }}
+                        </v-list-item-title>
+                      </v-list-item>
+                      <v-list-item 
+                        @click="deleteActivityRecord(item.id)">
+                        <v-list-item-title class="subtitle-2">
+                          <i class="uiIcon uiIconTrash"></i>
+                          {{ $t("exo.timeTracker.teams.teamsList.delete") }}
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </template>
+                <template>
+                  <div
+                    class="numberHr d-flex justify-content-flex-start mt-2">
+                    <i class="text-left notranslate mdi mdi-clock"></i>
+                    <span>
+                      {{ item.time }}h
+                    </span>
+                  </div>
+                </template>
+              </v-list-item-action>
             </v-list-item>
           </v-list>
+        </div>
+        <div>
+          <v-btn 
+            class="TTDrawerButtonAdd"
+            block
+            large
+            text
+            plain
+            @click="addActivityRecord()">
+            <v-icon class=" text--lighten-1" left>mdi-plus</v-icon>
+            <span>
+              {{ $t("exo.timeTracker.timeSheet.timeSheet.buttonLabelAddActivity") }}
+            </span>
+          </v-btn>
         </div>
       </template>
       <template slot="footer"> </template>
@@ -149,7 +200,9 @@ export default {
     total: 0,
     deleteId: 0,
     isActivity: true,
-    itemRowBackground: 'timeSheetDay-not-valid',
+    itemRowBackground: 'timeSheetTime-not-valid',
+    menuItemIndex: -1,
+    
   }),
   watch: {
     date (){
@@ -165,27 +218,40 @@ export default {
       if (this.activityRecordMenuDatePicker) {
         this.activityRecordMenuDatePicker = false;
       }
+      if (this.$refs && this.$refs.TTDrawerMenuBlured && this.$refs.TTDrawerMenuBlured[this.menuItemIndex] ) {
+        if (this.$refs.TTDrawerMenuBlured[this.menuItemIndex].isActive){
+          this.$refs.TTDrawerMenuBlured[this.menuItemIndex].isActive = false;
+        }
+      }
     });
   },
   methods: {
+    menuItemFunction(i){
+      if (this.$refs && this.$refs.TTDrawerMenuBlured) {
+        if (this.$refs.TTDrawerMenuBlured[this.menuItemIndex]){
+          this.$refs.TTDrawerMenuBlured[this.menuItemIndex].isActive = false;
+        }
+        this.menuItemIndex=i;
+      }
+    },
     rowBackground() {
       if (this.activityRecords[0] && this.isActivity){
         if (this.activityRecords[0].activityTime.day === 6 ||
             this.activityRecords[0].activityTime.day === 0) {
-          this.itemRowBackground= 'timeSheetDay-weekend';
+          this.itemRowBackground= 'timeSheetTime-weekend';
         } else if (this.activityRecords[0].location ==='eXo FR' &&
             this.activityRecords[0].office ==='FR' &&
             this.total !== 7 &&  this.activityRecords[0].activityTime.day === 5){
-          this.itemRowBackground= 'timeSheetDay-to-be-fixed';
+          this.itemRowBackground= 'timeSheetTime-to-be-fixed';
         } else if ((!this.activityRecords[0].location || !this.activityRecords[0].office || this.total !== 8) && 
         (this.activityRecords[0].activityTime.day !== 5 ||
         this.activityRecords[0].location !=='eXo FR' || this.activityRecords[0].office !=='FR')) {
-          this.itemRowBackground= 'timeSheetDay-to-be-fixed';
+          this.itemRowBackground= 'timeSheetTime-to-be-fixed';
         } else {
           this.itemRowBackground= '' ;
         }
       } else {
-        this.itemRowBackground= 'timeSheetDay-not-valid';
+        this.itemRowBackground= 'timeSheetTime-not-valid';
       }
     },
     getActivityRecords() {
@@ -397,16 +463,19 @@ export default {
   width: 100%;
 }
 .actItem {
-  background-color: #c3e4f6;
+  background: #f6f7fa;
   margin-bottom: 5px;
+  border: 0.5px solid;
+  border-radius: 6px;
+  border-color: #e1e8ee;
 }
 .numberHr {
-  font-size: 30px !important;
-  font-weight: 900;
-  width: 46px !important;
-  border-radius: 250px;
-  color: #3f51b5 !important;
-  text-align: center;
-  background: #fff;
+  min-width: 55px;
+  font-size: 16px !important;
+  color: #578dc9 !important;
+  text-align: left;
+}
+.TTbackgroundList {
+  background:#fff !important;
 }
 </style>
