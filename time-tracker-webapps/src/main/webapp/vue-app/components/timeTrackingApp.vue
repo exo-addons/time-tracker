@@ -10,8 +10,8 @@
             icon
             class="uiApplicationIconButton"
             @click="openTimeTrackingDrawer()">
-            <v-icon class="timeTrackingIcon">
-              mdi-clock
+            <v-icon class="timeTrackingIcon" size="22">
+              fa-clock
             </v-icon>
           </v-btn>
         </v-layout>
