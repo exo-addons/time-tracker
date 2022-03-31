@@ -13,6 +13,8 @@ import java.util.List;
  * @version $Id: $Id
  */
 public class RecordsAccessList {
+	private List<ActivityRecord>  activityRecords;
+    private Long size;
 
     /**
      * <p>Constructor for RecordsAccessList.</p>
@@ -29,7 +31,6 @@ public class RecordsAccessList {
     this.activityRecords=activityRecords;
     this.size=size;
     }
-    private List<ActivityRecord>  activityRecords;
-    private Long size;
+    
 }
 

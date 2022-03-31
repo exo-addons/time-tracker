@@ -12,9 +12,10 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 public class FilterServiceTest extends TestCase {
   private FilterService filterService;
@@ -45,6 +46,14 @@ public class FilterServiceTest extends TestCase {
     assertNotNull(newFilterModel);
     verify(filterStorage, times(1)).createFilter(any());
     verify(filterStorage, times(1)).createFilterField(any());
+    
+    //Throw
+    try {
+    	newFilterModel = filterService.createFilter(null,"root");
+		fail("Activity is mandatory");
+	} catch (IllegalArgumentException e) {
+		// Expected, activity remoteId is mandatory
+	}
   }
 
   public void testDeleteFilter() throws IllegalAccessException {
@@ -61,6 +70,26 @@ public class FilterServiceTest extends TestCase {
     verify(filterStorage, times(1)).getFilterById(anyLong());
     verify(filterStorage, times(1)).deleteFilter(anyLong());
     verify(filterStorage, times(1)).deleteAllFilterFieldsByFilter(anyLong());
+    
+     //Throw
+    try {
+		Long filterId=null;
+		filterService.deleteFilter(filterId);
+		fail("Filter must be a positive integer");
+		filterId=-1l;
+		filterService.deleteFilter(filterId);
+		fail("Filter must be a positive integer");
+	} catch (IllegalArgumentException e) {
+		// Expected, Filter remoteId is mandatory
+	}
+    try {
+		Long filterId=storedFilter.getId();
+		when(filterStorage.getFilterById(filterId)).thenReturn(null);
+		filterService.deleteFilter(filterId);
+		fail("Filter with id wasn't found");
+	} catch (EntityNotFoundException e) {
+		// Expected, Filter remoteId is mandatory
+	}
   }
 
   public void testGetFiltersList() {
