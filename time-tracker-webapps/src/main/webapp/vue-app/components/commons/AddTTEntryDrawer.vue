@@ -56,6 +56,7 @@
               v-model="activityRecord.time"
               type="text"
               name="time"
+              maxlength="4"
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
           <div

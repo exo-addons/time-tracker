@@ -120,7 +120,8 @@
                 :id="item.__ob__.dep.id"
                 close-on-click
                 close-on-content-click
-                bottom 
+                bottom
+                nudge-bottom="36"
                 :ref="item.__ob__.dep.id"
                 attach
                 left>
