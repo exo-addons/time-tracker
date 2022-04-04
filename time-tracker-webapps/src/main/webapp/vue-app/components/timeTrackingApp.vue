@@ -16,16 +16,17 @@
           </v-btn>
         </v-layout>
       </v-container>
-      <div
-        v-if="alert"
-        id
-        :class="alert_type"
-        class="alert">
-        <i :class="alertIcon"></i>
-        {{ message }}
-      </div>
+      
       <time-tracking-drawer ref="timeTrackingDrawer" />
     </main>
+    <div
+      v-if="alert"
+      id
+      :class="alert_type"
+      class="alert">
+      <i :class="alertIcon"></i>
+      {{ message }}
+    </div>
   </v-app>
 </template>
 
@@ -48,7 +49,7 @@ export default {
     },
     displaySusccessMessage(message) {
       this.message = message;
-      this.alert_type = 'alert-success';
+      this.alert_type = 'success';
       this.alertIcon = 'uiIconSuccess';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
@@ -56,7 +57,7 @@ export default {
     displayErrorMessage(message) {
       this.isUpdating = false;
       this.message = message;
-      this.alert_type = 'alert-error';
+      this.alert_type = 'alerterror';
       this.alertIcon = 'uiIconError';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);

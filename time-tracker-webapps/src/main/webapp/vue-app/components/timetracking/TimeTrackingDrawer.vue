@@ -4,12 +4,6 @@
       ref="timeTrackerDrawer"
       right
       class="logTimeDrawer">
-      <div
-        v-if="alert"
-        :class="alert_type"
-        class="alert">
-        <i :class="alertIcon"></i> {{ message }}
-      </div>
       <template slot="title">
         {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.toolbarTitle") }}
       </template>
@@ -72,9 +66,7 @@
                 </template>
                 <span class="TimeTrackingDrawerSpan text-left text-justify text-break">{{ item.description }}</span>
               </v-tooltip>
-              <v-list-item-action
-                
-                @click="editActivityRecord(item)">
+              <v-list-item-action>
                 <template>
                   <v-menu
                     ref="TTDrawerMenuBlured"
@@ -168,7 +160,28 @@
         title="Confirmation"
         cancel-label="Cancel"
         ok-label="Yes"
-        @ok="deleteActivity" />
+        @ok="deleteConfirm()" />
+    </template>
+    <template>
+      <v-alert
+        id
+        v-model="alert"
+        :class="alert_type"
+        :type="alert_type"
+        border="left"
+        elevation="2"
+        colored-border
+        outlined
+        dismissible>
+        {{ $t(message) }}
+        <v-btn
+          v-if="undo === true"
+          class="primary--text"
+          @click="deleteItemConfirm=true"
+          text>
+          Undo
+        </v-btn>
+      </v-alert>
     </template>
   </div>
 </template>
@@ -183,6 +196,8 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    undo: false,
+    deleteItemConfirm: false,
     activityRecordMenuDatePicker: false,
     localeLanguage: eXo.env.portal.language,
     dateRangeText: '',
@@ -205,6 +220,14 @@ export default {
     
   }),
   watch: {
+    deleteItemConfirm(val){
+      if (val){
+        this.undo=false;
+        this.alert=false;
+        this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageCancel');
+        this.deleteItemConfirm= false;
+      }
+    },
     date (){
       this.getActivityRecords();
       this.formatDate(this.date);
@@ -226,6 +249,18 @@ export default {
     });
   },
   methods: {
+    deleteConfirm(){
+      this.undo=true;
+      this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageDelete');
+      setTimeout(()=> {
+        if (!this.deleteItemConfirm){
+          this.deleteActivity();
+          this.undo=false;
+        } else {
+          this.deleteItemConfirm = false;
+        }
+      }, 5000);
+    },
     menuItemFunction(i){
       if (this.$refs && this.$refs.TTDrawerMenuBlured) {
         if (this.$refs.TTDrawerMenuBlured[this.menuItemIndex]){
@@ -340,7 +375,7 @@ export default {
         })
         .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage('activity added');
+          this.displaySusccessMessage(('exo.timeTracker.label.displaySusccessMessageAdd'));
         })
         .catch(result => {
           this.getActivityRecords();
@@ -368,7 +403,7 @@ export default {
         })
         .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage('activity added');
+          this.displaySusccessMessage(('exo.timeTracker.label.displaySusccessMessageEdit'));
         })
         .catch(result => {
           this.getActivityRecords();
@@ -378,33 +413,35 @@ export default {
         });
     },
     deleteActivity() {
-      fetch(
-        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-          this.deleteId
-        }`,
-        {
-          method: 'delete',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
+      if (this.undo){
+        fetch(
+          `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
+            this.deleteId
+          }`,
+          {
+            method: 'delete',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        }
-      )
-        .then(result => {
-          if (!result.ok) {
-            throw result;
-          }
-        })
-        .then(() => {
-          this.getActivityRecords();
-          this.displaySusccessMessage('activity deleted');
-        })
-        .catch(result => {
-          this.getActivityRecords();
-          result.text().then(body => {
-            this.displayErrorMessage(body);
+        )
+          .then(result => {
+            if (!result.ok) {
+              throw result;
+            }
+          })
+          .then(() => {
+            this.getActivityRecords();
+            this.deleteItemConfirm = false;
+          })
+          .catch(result => {
+            this.getActivityRecords();
+            result.text().then(body => {
+              this.displayErrorMessage(body);
+            });
           });
-        });
+      }
     },
     cancel() {
       this.$refs.timeTrackerDrawer.close();
@@ -433,7 +470,7 @@ export default {
     },
     displaySusccessMessage(message) {
       this.message = message;
-      this.alert_type = 'alert-success';
+      this.alert_type = 'success';
       this.alertIcon = 'uiIconSuccess';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
@@ -442,7 +479,7 @@ export default {
     displayErrorMessage(message) {
       this.isUpdating = false;
       this.message = message;
-      this.alert_type = 'alert-error';
+      this.alert_type = 'error';
       this.alertIcon = 'uiIconError';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
