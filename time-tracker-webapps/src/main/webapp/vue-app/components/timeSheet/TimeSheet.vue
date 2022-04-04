@@ -134,6 +134,7 @@
                 close-on-click
                 close-on-content-click
                 bottom
+                nudge-bottom="36"
                 :ref="item.__ob__.dep.id"
                 attach
                 left>
