@@ -20,19 +20,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.exoplatform.timetracker.dto.Client;
+import org.exoplatform.timetracker.storage.ClientStorage;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import org.exoplatform.timetracker.dto.Client;
-import org.exoplatform.timetracker.dto.Feature;
-import org.exoplatform.timetracker.storage.ClientStorage;
 
 public class ClientServiceTest {
 

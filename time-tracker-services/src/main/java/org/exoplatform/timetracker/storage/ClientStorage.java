@@ -74,10 +74,9 @@ public class ClientStorage {
     if (client == null) {
       throw new IllegalArgumentException("Client is mandatory");
     }
-    Long clientId = client.getId();
     ClientEntity clientEntity = clientDAO.find(client.getId());
     if (clientEntity == null) {
-      throw new EntityNotFoundException("Client with id " + clientId + " wasn't found");
+      throw new EntityNotFoundException("Client with id " + client.getId() + " wasn't found");
     }
 
     clientEntity = toEntity(client);

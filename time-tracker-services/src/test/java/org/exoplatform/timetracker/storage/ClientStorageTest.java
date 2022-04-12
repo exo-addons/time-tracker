@@ -18,75 +18,111 @@ package org.exoplatform.timetracker.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.timetracker.dao.ClientDAO;
 import org.exoplatform.timetracker.dto.Client;
-import org.exoplatform.timetracker.entity.ClientEntity;
+import org.exoplatform.timetracker.service.BaseTimeTrackerTest;
+import org.junit.Test;
 
-public class ClientStorageTest {
+public class ClientStorageTest extends BaseTimeTrackerTest {
 
-  private ClientDAO     clientDAO;
+	private ClientDAO clientDAO;
 
-  private ClientStorage clientStorage;
+	// private ClientStorage clientStorage;
 
-  @Before
-  public void setUp() {
-    clientDAO = mock(ClientDAO.class);
-    clientStorage = new ClientStorage(clientDAO);
-    PortalContainer container = PortalContainer.getInstance();
-    ExoContainerContext.setCurrentContainer(container);
-    RequestLifeCycle.begin(container);
-  }
+	/*
+	 * @Before public void setUp() { clientDAO = mock(ClientDAO.class);
+	 * clientStorage = new ClientStorage(clientDAO); PortalContainer container =
+	 * PortalContainer.getInstance();
+	 * ExoContainerContext.setCurrentContainer(container);
+	 * RequestLifeCycle.begin(container); }
+	 * 
+	 * @After public void tearDown() { RequestLifeCycle.end(); }
+	 * 
+	 * @Test public void testGetClientById() { ClientEntity clientEntity = new
+	 * ClientEntity(2l, "code", "label");
+	 * when(clientDAO.find(eq(2l))).thenReturn(clientEntity); Client
+	 * notExistingClient = clientStorage.getClientById(1l);
+	 * assertNull(notExistingClient); verify(clientDAO, times(1)).find(anyLong());
+	 * Client client = clientStorage.getClientById(2l); assertNotNull(client);
+	 * verify(clientDAO, times(2)).find(anyLong()); }
+	 * 
+	 * @Test public void testGetClients() { ClientEntity clientEntity = new
+	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity1 = new
+	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity2 = new
+	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity3 = new
+	 * ClientEntity(2l, "code", "label"); List<ClientEntity> clients = new
+	 * ArrayList<>(); clients.add(clientEntity); clients.add(clientEntity1);
+	 * clients.add(clientEntity2); clients.add(clientEntity3);
+	 * when(clientDAO.findAll()).thenReturn(clients); List<Client> clientsList =
+	 * clientStorage.getClients(); assertEquals(4,clientsList.size());
+	 * verify(clientDAO, times(1)).findAll(); }
+	 */
 
-  @After
-  public void tearDown() {
-    RequestLifeCycle.end();
-  }
+	@Test
+	public void testcreateClient() throws Exception {
+		Client client = new Client(null, null, null);
+		Client clientTest = null;
+		Client clientNew = null;
+		try {
+			clientTest = new Client(null, "test", "test");
+			assertNotNull(clientTest);
+			clientNew = clientStorage.createClient(clientTest);
+		} catch (IllegalArgumentException e) {
+			fail("Client is mandatory");
+			//Exception
+		}
+		
+		try {
+			clientNew = clientStorage.createClient(clientTest);
+			assertNotNull(clientNew);
+		} catch (Exception e) {
+			fail("Client is mandatory");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Client clientNewTest = null;
+		try {
+			clientNewTest = clientStorage.createClient(clientTest);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(clientTest.getCode(), clientNewTest.getCode());
+		
+		try {
+			clientStorage.updateClient(client);
+		}catch(IllegalArgumentException e){
+			fail("aaaaaaaaaaa");
+		}
 
-  @Test
-  public void testGetClientById() {
-    ClientEntity clientEntity = new ClientEntity(2l, "code", "label");
-    when(clientDAO.find(eq(2l))).thenReturn(clientEntity);
-    Client notExistingClient = clientStorage.getClientById(1l);
-    assertNull(notExistingClient);
-    verify(clientDAO, times(1)).find(anyLong());
-    Client client = clientStorage.getClientById(2l);
-    assertNotNull(client);
-    verify(clientDAO, times(2)).find(anyLong());
-  }
+	}
 
-  @Test
-  public void testGetClients() {
-    ClientEntity clientEntity = new ClientEntity(2l, "code", "label");
-    ClientEntity clientEntity1 = new ClientEntity(2l, "code", "label");
-    ClientEntity clientEntity2 = new ClientEntity(2l, "code", "label");
-    ClientEntity clientEntity3 = new ClientEntity(2l, "code", "label");
-    List<ClientEntity> clients = new ArrayList<>();
-    clients.add(clientEntity);
-    clients.add(clientEntity1);
-    clients.add(clientEntity2);
-    clients.add(clientEntity3);
-    when(clientDAO.findAll()).thenReturn(clients);
-    List<Client> clientsList = clientStorage.getClients();
-    assertEquals(4,clientsList.size());
-    verify(clientDAO, times(1)).findAll();
-  }
+	@Test
+	public void testUpdateClient() throws Exception {
+		Client client = new Client(null, "test", "test");
+
+		Client clientCreated = null;
+
+			clientCreated = clientStorage.createClient(client);
+		clientCreated.setCode("testUpdated");
+
+		try {
+			assertNotNull(clientCreated.getId());
+		} catch (IllegalArgumentException e) {
+			// Exception
+			fail("Client is mandatory");
+		}
+		Client clientEntity = clientStorage.getClientById(clientCreated.getId());
+		
+		
+		try {
+			Client clientNew = clientStorage.updateClient(clientEntity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }
