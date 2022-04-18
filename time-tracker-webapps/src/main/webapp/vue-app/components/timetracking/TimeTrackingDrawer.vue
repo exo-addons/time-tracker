@@ -13,6 +13,17 @@
       <template slot="title">
         {{ $t("exo.timeTracker.timeTracking.timeTrackingDrawer.toolbarTitle") }}
       </template>
+      <template slot="titleIcons">
+        <v-btn
+          :href="`/portal/dw/time_sheet?date=${date}`"
+          icon>
+          <v-icon
+            :title="$t('exoplatform.chat.open.chat')"
+            class="my-auto">
+            mdi-open-in-new
+          </v-icon>
+        </v-btn>
+      </template>
       <template slot="content">
         <div align="center" justify="center">
           <v-menu
@@ -226,6 +237,9 @@ export default {
     });
   },
   methods: {
+    navigateTo() {
+      window.location.href = `/portal/dw/time_sheet?date=${this.date}`;
+    },
     menuItemFunction(i){
       if (this.$refs && this.$refs.TTDrawerMenuBlured) {
         if (this.$refs.TTDrawerMenuBlured[this.menuItemIndex]){
