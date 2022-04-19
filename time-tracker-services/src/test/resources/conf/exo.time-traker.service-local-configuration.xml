@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (C) 2003-2011 eXo Platform SAS.
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
-
--->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd" xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+<!-- Copyright (C) 2003-2011 eXo Platform SAS. This program is free software: 
+  you can redistribute it and/or modify it under the terms of the GNU Affero 
+  General Public License as published by the Free Software Foundation, either 
+  version 3 of the License, or (at your option) any later version. This program 
+  is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+  PURPOSE. See the GNU Affero General Public License for more details. You 
+  should have received a copy of the GNU Affero General Public License along 
+  with this program. If not, see <http://www.gnu.org/licenses/>. -->
+<configuration
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
+  xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
   <component>
     <type>org.exoplatform.web.security.codec.CodecInitializer</type>
@@ -30,14 +24,14 @@
   </component>
 
   <component>
-     <type>org.exoplatform.download.DownloadService</type>
-     <init-params>
-        <value-param>
-           <name>download.resource.cache.size</name>
-           <description>Maximun number of the download can be in the cache</description>
-           <value>10</value>
-        </value-param>
-     </init-params>
+    <type>org.exoplatform.download.DownloadService</type>
+    <init-params>
+      <value-param>
+        <name>download.resource.cache.size</name>
+        <description>Maximun number of the download can be in the cache</description>
+        <value>10</value>
+      </value-param>
+    </init-params>
   </component>
 
   <component>
@@ -62,11 +56,13 @@
         <object-param>
           <name>configuration</name>
           <description>description</description>
-          <object type="org.exoplatform.services.organization.impl.NewUserConfig">
+          <object
+            type="org.exoplatform.services.organization.impl.NewUserConfig">
             <field name="group">
               <collection type="java.util.ArrayList">
                 <value>
-                  <object type="org.exoplatform.services.organization.impl.NewUserConfig$JoinGroup">
+                  <object
+                    type="org.exoplatform.services.organization.impl.NewUserConfig$JoinGroup">
                     <field name="groupId">
                       <string>/platform/users</string>
                     </field>
@@ -116,11 +112,13 @@
         <object-param>
           <name>configuration</name>
           <description>description</description>
-          <object type="org.exoplatform.services.organization.OrganizationConfig">
+          <object
+            type="org.exoplatform.services.organization.OrganizationConfig">
             <field name="user">
               <collection type="java.util.ArrayList">
                 <value>
-                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
                     <field name="userName">
                       <string>testuser1</string>
                     </field>
@@ -142,7 +140,8 @@
                   </object>
                 </value>
                 <value>
-                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
                     <field name="userName">
                       <string>testuser2</string>
                     </field>
@@ -164,7 +163,8 @@
                   </object>
                 </value>
                 <value>
-                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
                     <field name="userName">
                       <string>testuser3</string>
                     </field>
@@ -186,7 +186,8 @@
                   </object>
                 </value>
                 <value>
-                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
                     <field name="userName">
                       <string>testuser4</string>
                     </field>
@@ -208,7 +209,8 @@
                   </object>
                 </value>
                 <value>
-                  <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
                     <field name="userName">
                       <string>testuser5</string>
                     </field>
@@ -226,6 +228,99 @@
                     </field>
                     <field name="groups">
                       <string>member:/platform/users</string>
+                    </field>
+                  </object>
+                </value>
+              </collection>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>init.service.listener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.services.organization.OrganizationDatabaseInitializer</type>
+      <description>this listener populate organization data for reward application</description>
+      <init-params>
+        <value-param>
+          <name>checkDatabaseAlgorithm</name>
+          <description>check database</description>
+          <value>entry</value>
+        </value-param>
+        <value-param>
+          <name>printInformation</name>
+          <description>Print information init database</description>
+          <value>false</value>
+        </value-param>
+        <object-param>
+          <name>configuration</name>
+          <description>description</description>
+          <object
+            type="org.exoplatform.services.organization.OrganizationConfig">
+            <field name="group">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field name="name">
+                      <string>time-tracking-managers</string>
+                    </field>
+                    <field name="label">
+                      <string>time tracking managers</string>
+                    </field>
+                    <field name="description">
+                      <string>time tracking managers group</string>
+                    </field>
+                    <field name="parentId">
+                      <string>/platform</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                    <field name="name">
+                      <string>teams</string>
+                    </field>
+                    <field name="label">
+                      <string>Teams</string>
+                    </field>
+                    <field name="description">
+                      <string>teams of the organization</string>
+                    </field>
+                    <field name="parentId">
+                      <string>/organization</string>
+                    </field>
+                  </object>
+                </value>
+              </collection>
+            </field>
+            <field name="membershipType">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$MembershipType">
+                    <field name="type">
+                      <string>reviewer</string>
+                    </field>
+                    <field name="description">
+                      <string>reviewer membership type</string>
+                    </field>
+                  </object>
+                </value>
+              </collection>
+            </field>
+            <field name="user">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object
+                    type="org.exoplatform.services.organization.OrganizationConfig$User">
+                    <field name="userName">
+                      <string>${exo.super.user}</string>
+                    </field>
+                    <field name="groups">
+                      <string>*:/platform/time-tracking-managers</string>
                     </field>
                   </object>
                 </value>

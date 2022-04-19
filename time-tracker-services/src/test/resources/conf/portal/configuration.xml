@@ -63,7 +63,9 @@
 
   <import>jar:/conf/exo.time-traker.service-configuration.xml</import>
   <import>jar:/conf/exo.time-traker.service-dependencies-configuration.xml</import>
+  <import>jar:/conf/exo.time-traker.service-local-configuration.xml</import>
 
   <remove-configuration>org.exoplatform.services.naming.InitialContextInitializer</remove-configuration>
   <remove-configuration>org.exoplatform.commons.search.rest.IndexingManagementRestServiceV1</remove-configuration>
+  <remove-configuration>org.exoplatform.commons.search.index.IndexingOperationProcessor</remove-configuration>
 </configuration>

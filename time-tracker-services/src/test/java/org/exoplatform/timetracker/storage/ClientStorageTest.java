@@ -16,113 +16,108 @@
 */
 package org.exoplatform.timetracker.storage;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.timetracker.dao.ClientDAO;
 import org.exoplatform.timetracker.dto.Client;
+import org.exoplatform.timetracker.entity.ClientEntity;
 import org.exoplatform.timetracker.service.BaseTimeTrackerTest;
+import org.gatein.api.EntityNotFoundException;
 import org.junit.Test;
+
+import java.util.List;
 
 public class ClientStorageTest extends BaseTimeTrackerTest {
 
-	private ClientDAO clientDAO;
+  @Test
+  public void testCreateClient() throws Exception {
 
-	// private ClientStorage clientStorage;
+    Client client = new Client(null, "test", "test");
+    Client clientNew = null;
+    // When
+    clientNew = clientStorage.createClient(client);
+    // Then
+    assertNotNull(clientNew);
+    // Throw
+    assertThrows(IllegalArgumentException.class, () -> clientStorage.createClient(null));
+  }
 
-	/*
-	 * @Before public void setUp() { clientDAO = mock(ClientDAO.class);
-	 * clientStorage = new ClientStorage(clientDAO); PortalContainer container =
-	 * PortalContainer.getInstance();
-	 * ExoContainerContext.setCurrentContainer(container);
-	 * RequestLifeCycle.begin(container); }
-	 * 
-	 * @After public void tearDown() { RequestLifeCycle.end(); }
-	 * 
-	 * @Test public void testGetClientById() { ClientEntity clientEntity = new
-	 * ClientEntity(2l, "code", "label");
-	 * when(clientDAO.find(eq(2l))).thenReturn(clientEntity); Client
-	 * notExistingClient = clientStorage.getClientById(1l);
-	 * assertNull(notExistingClient); verify(clientDAO, times(1)).find(anyLong());
-	 * Client client = clientStorage.getClientById(2l); assertNotNull(client);
-	 * verify(clientDAO, times(2)).find(anyLong()); }
-	 * 
-	 * @Test public void testGetClients() { ClientEntity clientEntity = new
-	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity1 = new
-	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity2 = new
-	 * ClientEntity(2l, "code", "label"); ClientEntity clientEntity3 = new
-	 * ClientEntity(2l, "code", "label"); List<ClientEntity> clients = new
-	 * ArrayList<>(); clients.add(clientEntity); clients.add(clientEntity1);
-	 * clients.add(clientEntity2); clients.add(clientEntity3);
-	 * when(clientDAO.findAll()).thenReturn(clients); List<Client> clientsList =
-	 * clientStorage.getClients(); assertEquals(4,clientsList.size());
-	 * verify(clientDAO, times(1)).findAll(); }
-	 */
+  @Test
+  public void testUpdateClient() throws Exception {
+    Client client = new Client(null, "test", "test");
+    Client clientNew = clientStorage.createClient(client);
+    clientNew.setCode("testUpdate");
+    Client clientNotFound = new Client(5000l, "testCode", "testLabel");
+    clientStorage.updateClient(clientNew);
 
-	@Test
-	public void testcreateClient() throws Exception {
-		Client client = new Client(null, null, null);
-		Client clientTest = null;
-		Client clientNew = null;
-		try {
-			clientTest = new Client(null, "test", "test");
-			assertNotNull(clientTest);
-			clientNew = clientStorage.createClient(clientTest);
-		} catch (IllegalArgumentException e) {
-			fail("Client is mandatory");
-			//Exception
-		}
-		
-		try {
-			clientNew = clientStorage.createClient(clientTest);
-			assertNotNull(clientNew);
-		} catch (Exception e) {
-			fail("Client is mandatory");
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Client clientNewTest = null;
-		try {
-			clientNewTest = clientStorage.createClient(clientTest);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		assertEquals(clientTest.getCode(), clientNewTest.getCode());
-		
-		try {
-			clientStorage.updateClient(client);
-		}catch(IllegalArgumentException e){
-			fail("aaaaaaaaaaa");
-		}
+    // Throw
+    assertThrows(IllegalArgumentException.class, () -> clientStorage.updateClient(null));
+    assertThrows(EntityNotFoundException.class, () -> clientStorage.updateClient(clientNotFound));
+  }
 
-	}
+  @Test
+  public void testDeleteClient() throws Exception {
+    Client client = new Client(null, "test", "test");
+    Client clientNew = clientStorage.createClient(client);
+    Long clientId = clientNew.getId();
+    Long clientIdNull = 0l;
+    Long clientIdNotFound = 5000l;
 
-	@Test
-	public void testUpdateClient() throws Exception {
-		Client client = new Client(null, "test", "test");
+    // When
+    clientStorage.deleteClient(clientId);
 
-		Client clientCreated = null;
+    // Throw
+    assertThrows(IllegalArgumentException.class, () -> clientStorage.deleteClient(clientIdNull));
+    assertThrows(EntityNotFoundException.class, () -> clientStorage.deleteClient(clientIdNotFound));
 
-			clientCreated = clientStorage.createClient(client);
-		clientCreated.setCode("testUpdated");
+  }
 
-		try {
-			assertNotNull(clientCreated.getId());
-		} catch (IllegalArgumentException e) {
-			// Exception
-			fail("Client is mandatory");
-		}
-		Client clientEntity = clientStorage.getClientById(clientCreated.getId());
-		
-		
-		try {
-			Client clientNew = clientStorage.updateClient(clientEntity);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+  @Test
+  public void testGetClientById() throws Exception {
+    Client client = new Client(null, "test", "test");
+    Client clientNew = clientStorage.createClient(client);
+    Long clientId = clientNew.getId();
+    Long clientIdNull = 0l;
+    Client newClientUpdated = null;
+
+    // When
+    newClientUpdated = clientStorage.getClientById(clientId);
+
+    // Throw
+    assertNotNull(newClientUpdated);
+    assertThrows(IllegalArgumentException.class, () -> clientStorage.getClientById(clientIdNull));
+
+  }
+
+  @Test
+  public void testGetClients() {
+    List<Client> clients = clientStorage.getClients();
+    assertNotNull(clients);
+    assertTrue(!clients.isEmpty());
+  }
+
+  @Test
+  public void testCountClients() throws Exception {
+    Client client = new Client(null, "test", "test");
+    clientStorage.createClient(client);
+    Long countClient = clientStorage.countClients();
+    assertNotNull(countClient);
+  }
+
+  @Test
+  public void toDTO() {
+    ClientEntity clientEntityNull = null;
+    Client clientDTO = clientStorage.toDTO(clientEntityNull);
+    assertNull(clientDTO);
+  }
+
+  @Test
+  public void toEntity() {
+    Client clientNull = null;
+    ClientEntity clientEntity = clientStorage.toEntity(clientNull);
+    assertNull(clientEntity);
+  }
 
 }

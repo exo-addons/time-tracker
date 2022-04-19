@@ -10,18 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.exoplatform.commons.api.settings.SettingService;
-import org.exoplatform.timetracker.dto.Activity;
-import org.exoplatform.timetracker.dto.ActivityCode;
-import org.exoplatform.timetracker.dto.Client;
-import org.exoplatform.timetracker.dto.Feature;
 import org.exoplatform.timetracker.dto.Location;
 import org.exoplatform.timetracker.dto.Office;
-import org.exoplatform.timetracker.dto.Project;
-import org.exoplatform.timetracker.dto.SubActivityCode;
-import org.exoplatform.timetracker.dto.SubType;
-import org.exoplatform.timetracker.dto.Team;
-import org.exoplatform.timetracker.dto.TimeTrackerSetting;
-import org.exoplatform.timetracker.dto.Type;
 import org.exoplatform.timetracker.dto.WorkTime;
 import org.exoplatform.timetracker.storage.SettingsStorage;
 import org.exoplatform.ws.frameworks.json.JsonGenerator;

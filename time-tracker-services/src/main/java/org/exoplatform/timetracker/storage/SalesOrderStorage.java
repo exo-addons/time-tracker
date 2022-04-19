@@ -22,7 +22,9 @@ import java.util.stream.Collectors;
 import org.gatein.api.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.SalesOrderDAO;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.SalesOrder;
+import org.exoplatform.timetracker.entity.ClientEntity;
 import org.exoplatform.timetracker.entity.SalesOrderEntity;
 
 /**
@@ -62,7 +64,7 @@ public class SalesOrderStorage {
     salesOrder.setId(null);
     SalesOrderEntity salesOrderEntity = toEntity(salesOrder);
     salesOrderEntity = salesOrderDAO.create(salesOrderEntity);
-    return toDTOWoClient(salesOrderEntity);
+    return toDTO(salesOrderEntity);
   }
 
   /**
@@ -77,15 +79,15 @@ public class SalesOrderStorage {
       throw new IllegalArgumentException("SalesOrder is mandatory");
     }
     Long salesOrderId = salesOrder.getId();
-    SalesOrderEntity salesOrderEntity = salesOrderDAO.find(salesOrder.getId());
+    SalesOrderEntity salesOrderEntity = salesOrderDAO.find(salesOrderId);
     if (salesOrderEntity == null) {
       throw new EntityNotFoundException("SalesOrder with id " + salesOrderId + " wasn't found");
     }
-
     salesOrderEntity = toEntity(salesOrder);
-    salesOrderEntity = salesOrderDAO.update(salesOrderEntity);
-
-    return toDTO(salesOrderEntity);
+    SalesOrder salesOrderDTO= toDTO(salesOrderEntity);
+    Client client= clientStorage.getClientById(salesOrder.getClient().getId());
+    salesOrderDTO.setClient(client);
+    return salesOrderDTO;
   }
 
   /**
