@@ -1,16 +1,30 @@
 <template>
   <div ref="ttTimeSheetAplication">
-    <div
-      v-if="alert"
-      id
-      :class="alert_type"
-      class="alert">
-      <i :class="alertIcon"></i> {{ message }}
-    </div>
+    <template>
+      <v-alert
+        id
+        v-model="alert"
+        :class="alert_type"
+        :type="alert_type"
+        border="left"
+        elevation="2"
+        colored-border
+        outlined
+        dismissible>
+        {{ $t(message) }}
+        <v-btn
+          v-if="undo === true"
+          class="primary--text"
+          @click="deleteItemConfirm=true"
+          text>
+          Undo
+        </v-btn>
+      </v-alert>
+    </template>
     <v-card elevation="0">
       <v-card-text>
         <v-layout>
-          <v-data-table 
+          <v-data-table
             ref="TTdataTable"
             :headers="headers"
             :items="activityRecordsList"
@@ -70,8 +84,7 @@
                     offset-y
                     attach="#TTAplicationToolbar"
                     min-width="290px">
-                    <template
-                      v-slot:activator="{ on }">
+                    <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="dateRangeText"
                         prepend-icon="event"
@@ -137,37 +150,34 @@
                   </v-btn>
                 </template>
                 <v-list class="text-left" ref="TTlistRef">
-                  <v-list-item 
-                    @click="openAddTTEntryDrawer(item)">
+                  <v-list-item @click="openAddTTEntryDrawer(item)">
                     <v-list-item-title class="subtitle-2">
                       <i class="uiIcon uiIconAdd"></i>
-                      {{ $t("exo.timeTracker.label.add") }}
+                      {{ $t('exo.timeTracker.label.add') }}
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item 
-                    v-if="item.id"
-                    @click="editActivityRecord(item)">
+                  <v-list-item v-if="item.id" @click="editActivityRecord(item)">
                     <v-list-item-title class="subtitle-2">
                       <i class="uiIcon uiIconEdit"></i>
-                      {{ $t("exo.timeTracker.teams.teamsList.edit") }}
+                      {{ $t('exo.timeTracker.teams.teamsList.edit') }}
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item 
+                  <v-list-item
                     v-if="item.id"
                     :key="item.id"
                     @click="openConfirmDialogDeleteTeam(item)">
                     <v-list-item-title class="subtitle-2">
                       <i class="uiIcon uiIconTrash"></i>
-                      {{ $t("exo.timeTracker.teams.teamsList.delete") }}
+                      {{ $t('exo.timeTracker.teams.teamsList.delete') }}
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item 
+                  <v-list-item
                     v-if="item.id"
                     :key="item.id"
-                    @click="openAddTTEntryDrawer(item,true)">
+                    @click="openAddTTEntryDrawer(item, true)">
                     <v-list-item-title class="subtitle-2">
                       <i class="uiIcon uiIconCloneNode"></i>
-                      {{ $t("exo.timeTracker.label.duplicate") }}
+                      {{ $t('exo.timeTracker.label.duplicate') }}
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -187,7 +197,7 @@
         title="Confirmation"
         cancel-label="Cancel"
         ok-label="Yes"
-        @ok="deleteItem()" />
+        @ok="deleteConfirm()" />
     </template>
     <add-tracking-entry-drawer
       ref="addTTEntryDrawer"
@@ -275,6 +285,8 @@ export default {
       'Sales Order': 'salesOrderName',
       'Project Version': 'projectVersion'
     },
+    undo: false,
+    deleteItemConfirm: false,
     deleteItemTeams: {},
     dateParam: '',
     idMenuItemRef: '',
@@ -331,7 +343,7 @@ export default {
     existingActicitiesUser: '',
     localeLanguage: eXo.env.portal.language,
     day: 0,
-    month: 0,
+    month: 0
   }),
   computed: {
     headers() {
@@ -427,9 +439,17 @@ export default {
           value: 'action'
         }
       ];
-    },
+    }
   },
   watch: {
+    deleteItemConfirm(val){
+      if (val){
+        this.undo=false;
+        this.alert=false;
+        this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageCancel');
+        this.deleteItemConfirm= false;
+      }
+    },
     dialog(val) {
       return val === true || this.close() === true;
     },
@@ -453,14 +473,19 @@ export default {
     this.initialize();
   },
   mounted() {
-    if (this.$refs && 
-    this.$refs.ttTimeSheetAplication &&
-    this.$refs.ttTimeSheetAplication.__vue__ &&
-    this.$refs.ttTimeSheetAplication.__vue__.$el) {
+    if (
+      this.$refs &&
+      this.$refs.ttTimeSheetAplication &&
+      this.$refs.ttTimeSheetAplication.__vue__ &&
+      this.$refs.ttTimeSheetAplication.__vue__.$el
+    ) {
       $(this.$refs.ttTimeSheetAplication.__vue__.$el).click(() => {
-        if (this.$refs && this.$refs.menu &&
-        this.$refs.menu.isActive &&
-        !this.isHovered) {
+        if (
+          this.$refs &&
+          this.$refs.menu &&
+          this.$refs.menu.isActive &&
+          !this.isHovered
+        ) {
           this.$refs.menu.isActive = false;
         }
       });
@@ -484,30 +509,60 @@ export default {
         el.scrollIntoView(true);
       } 
     },
-    generateId(){
-      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    deleteConfirm(){
+      this.undo=true;
+      this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageDelete');
+      setTimeout(()=> {
+        if (!this.deleteItemConfirm){
+          this.deleteItem();
+          this.undo=false;
+        } else {
+          this.deleteItemConfirm = false;
+        }
+      }, 5000);
     },
-    menuBlurred(ref){
-      if (this.$refs && this.$refs[this.idMenuItemRef] && this.$refs[this.idMenuItemRef].isActive){
+    generateId() {
+      return (
+        Date.now().toString(36) +
+        Math.random()
+          .toString(36)
+          .substr(2)
+      );
+
+    },
+    menuBlurred(ref) {
+      if (
+        this.$refs &&
+        this.$refs[this.idMenuItemRef] &&
+        this.$refs[this.idMenuItemRef].isActive
+      ) {
         setTimeout(() => {
-          this.$refs[this.idMenuItemRef].isActive= false;
-          if (this.$refs && this.$refs[this.itemId] && this.$refs[this.itemId].isActive){
-            this.$refs[this.itemId].isActive= false;
+          this.$refs[this.idMenuItemRef].isActive = false;
+          if (
+            this.$refs &&
+            this.$refs[this.itemId] &&
+            this.$refs[this.itemId].isActive
+          ) {
+            this.$refs[this.itemId].isActive = false;
           }
-        },300);
+        }, 300);
       }
       setTimeout(() => {
-        this.itemId=this.idMenuItemRef;
-        this.idMenuItemRef=ref;
-      },500);
+        this.itemId = this.idMenuItemRef;
+        this.idMenuItemRef = ref;
+      }, 500);
     },
     isHover(hover) {
-      this.isHovered= hover;
+      this.isHovered = hover;
       return true;
     },
-    onclickitem(){
-      if (this.$refs && this.$refs[this.idMenuItemRef] && this.$refs[this.idMenuItemRef].isActive){
-        this.$refs[this.idMenuItemRef].isActive= false;
+    onclickitem() {
+      if (
+        this.$refs &&
+        this.$refs[this.idMenuItemRef] &&
+        this.$refs[this.idMenuItemRef].isActive
+      ) {
+        this.$refs[this.idMenuItemRef].isActive = false;
       }
     },
     addFilter(val) {
@@ -528,16 +583,24 @@ export default {
         this.totalRecords = data.total;
       });
     },
-    itemRowBackground (item) {
+    itemRowBackground(item) {
       if (item.activityTime.day === 6 || item.activityTime.day === 0) {
         return 'timeSheetDay-weekend';
       } else if (!item.activity) {
         return 'timeSheetDay-not-valid';
-      } else if (item.location ==='eXo FR' && item.office ==='FR' &&
-                item.dailyTimeSum !== 7 &&  item.activityTime.day === 5){
+      } else if (
+        item.location === 'eXo FR' &&
+        item.office === 'FR' &&
+        item.dailyTimeSum !== 7 &&
+        item.activityTime.day === 5
+      ) {
         return 'timeSheetDay-to-be-fixed';
-      } else if ((!item.location || !item.office || item.dailyTimeSum !== 8) && 
-      (item.activityTime.day !== 5 || item.location !=='eXo FR' || item.office !=='FR')) {
+      } else if (
+        (!item.location || !item.office || item.dailyTimeSum !== 8) &&
+        (item.activityTime.day !== 5 ||
+          item.location !== 'eXo FR' ||
+          item.office !== 'FR')
+      ) {
         return 'timeSheetDay-to-be-fixed';
       }
     },
@@ -555,16 +618,15 @@ export default {
     toggleFilterDrawer() {
       this.$refs.filterDrawer.open();
     },
-    openAddTTEntryDrawer(item,isDuplicate) {
+    openAddTTEntryDrawer(item, isDuplicate) {
       if (this.existingActicitiesUser !== item.userName) {
         this.getActivities(item.userName);
       }
       if (isDuplicate) {
-        this.$refs.addTTEntryDrawer.open(item, true,true);
+        this.$refs.addTTEntryDrawer.open(item, true, true);
       } else {
         this.$refs.addTTEntryDrawer.open(item, true);
       }
-      
     },
     initialize() {
       const url = new URL( window.location.href );
@@ -595,19 +657,24 @@ export default {
         });
       }, 400);
     },
-    initDate(){
-      if ((this.fromDate !== this.date[0] || this.fromDate !== this.date[1]) &&
-      (this.toDate !== this.date[0] || this.toDate !== this.date[1])){
+    initDate() {
+      if (
+        (this.fromDate !== this.date[0] || this.fromDate !== this.date[1]) &&
+        (this.toDate !== this.date[0] || this.toDate !== this.date[1])
+      ) {
         this.fromDate = this.date[0];
         this.toDate = this.date[0];
         let fromDateFormated = this.formatDate(this.fromDate);
-        this.dateRangeText= fromDateFormated ;
-        if (typeof this.date[1] !== 'undefined' && this.fromDate !== this.date[1]) {
+        this.dateRangeText = fromDateFormated;
+        if (
+          typeof this.date[1] !== 'undefined' &&
+          this.fromDate !== this.date[1]
+        ) {
           this.toDate = this.date[1];
-          const fromDateInDay = this.day + this.month*30;
+          const fromDateInDay = this.day + this.month * 30;
           let toDateFormated = this.formatDate(this.toDate);
-          const toDateInDay = this.day + this.month*30;
-          if (fromDateInDay > toDateInDay){
+          const toDateInDay = this.day + this.month * 30;
+          if (fromDateInDay > toDateInDay) {
             let switchDate = this.fromDate;
             this.fromDate = this.toDate;
             this.toDate = switchDate;
@@ -617,7 +684,7 @@ export default {
             this.date.reverse();
           }
           this.dateRangeText = `${fromDateFormated} ~ ${toDateFormated}`;
-        }        
+        }
       }
     },
     openConfirmDialogDeleteTeam(item) {
@@ -640,7 +707,7 @@ export default {
     },
     displaySusccessMessage(message) {
       this.message = message;
-      this.alert_type = 'alert-success';
+      this.alert_type = 'success';
       this.alertIcon = 'uiIconSuccess';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
@@ -649,7 +716,7 @@ export default {
     displayErrorMessage(message) {
       this.isUpdating = false;
       this.message = message;
-      this.alert_type = 'alert-error';
+      this.alert_type = 'error';
       this.alertIcon = 'uiIconError';
       this.alert = true;
       setTimeout(() => (this.alert = false), 5000);
@@ -918,7 +985,7 @@ export default {
           this.getActivityRecords().then(data => {
             this.activityRecordsList = data.items;
           });
-          this.displaySusccessMessage('activity added');
+          this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageAdd');
         })
         .catch(result => {
           this.getActivityRecords().then(data => {
@@ -950,7 +1017,7 @@ export default {
           this.getActivityRecords().then(data => {
             this.activityRecordsList = data.items;
           });
-          this.displaySusccessMessage('activity added');
+          this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageEdit');
         })
         .catch(result => {
           this.getActivityRecords().then(data => {
@@ -988,39 +1055,38 @@ export default {
         });
     },
     deleteItem() {
-      fetch(
-        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-          this.deleteItemTeams.id
-        }`,
-        {
-          method: 'delete',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
+      if (this.undo){
+        fetch(
+          `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
+            this.deleteItemTeams.id
+          }`,
+          {
+            method: 'delete',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        }
-      )
-        .then(result => {
-          if (!result.ok) {
-            throw result;
-          }
-        })
-        .then(() => {
-          this.confirmDialog = false;
-          this.getActivityRecords().then(data => {
-            this.activityRecordsList = data.items;
+        )
+          .then(result => {
+            if (!result.ok) {
+              throw result;
+            }
+          })
+          .then(() => {
+            this.getActivityRecords().then(data => {
+              this.activityRecordsList = data.items;
+            });
+          })
+          .catch(result => {
+            this.getActivityRecords().then(data => {
+              this.activityRecordsList = data.items;
+            });
+            result.text().then(body => {
+              this.displayErrorMessage(body);
+            });
           });
-          this.displaySusccessMessage('client deleted');
-        })
-        .catch(result => {
-          this.confirmDialog = false;
-          this.getActivityRecords().then(data => {
-            this.activityRecordsList = data.items;
-          });
-          result.text().then(body => {
-            this.displayErrorMessage(body);
-          });
-        });
+      }
     },
     cancel() {
       this.$refs.timeTrackerDrawer.close();
@@ -1136,16 +1202,16 @@ export default {
         XLSX.writeFile(wb, `TimeSheet_${userName}_${this.dateRangeText}.xlsx`);
       });
     },
-    formatDate (date) {
+    formatDate(date) {
       const [year, month, day] = date.split('-');
       this.day = parseInt(day);
       this.month = parseInt(month);
-      if (this.localeLanguage === 'fr'){
+      if (this.localeLanguage === 'fr') {
         return `${day}/${month}/${year}`;
       } else {
         return `${year}/${month}/${day}`;
       }
-    },
+    }
   }
 };
 </script>
