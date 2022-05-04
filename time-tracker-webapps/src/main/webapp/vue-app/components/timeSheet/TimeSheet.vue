@@ -28,6 +28,7 @@
             ref="TTdataTable"
             :headers="headers"
             :items="activityRecordsList"
+            :item-key="item => item.id"
             elevation="0"
             :item-class="itemRowBackground"
             :loading="loading"
@@ -287,6 +288,7 @@ export default {
     undo: false,
     deleteItemConfirm: false,
     deleteItemTeams: {},
+    dateParam: '',
     idMenuItemRef: '',
     date: [],
     dateRangeText: '',
@@ -488,8 +490,25 @@ export default {
         }
       });
     }
+    setTimeout(() => {
+      this.scroll();
+    }, 800);
+    
   },
   methods: {
+    findItemByDate() {
+      return this.activityRecordsList.find(item => {
+        return item.activityDate === this.dateParam?item:'';
+      });
+    },
+    scroll(){
+      const item = this.findItemByDate();
+      if (item) {
+        const index = this.activityRecordsList.indexOf(item);
+        const el = this.$refs.TTdataTable.$el.querySelectorAll('tbody tr')[index];
+        el.scrollIntoView(true);
+      } 
+    },
     deleteConfirm(){
       this.undo=true;
       this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageDelete');
@@ -509,6 +528,7 @@ export default {
           .toString(36)
           .substr(2)
       );
+
     },
     menuBlurred(ref) {
       if (
@@ -609,29 +629,33 @@ export default {
       }
     },
     initialize() {
-      const date = new Date();
-      const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
-      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
-      this.date = [
-        firstDay.toISOString().substr(0, 10),
-        lastDay.toISOString().substr(0, 10)
-      ];
-      this.initDate();
-      this.getEmployees();
-      this.getClients();
-      this.getProjects();
-      this.getActivityCodes();
-      this.getSubActivityCodes();
-      this.getTypes();
-      this.getSubTypes();
-      this.getActivities();
-      this.getFilters();
-      this.getOffices();
-      this.getLocations();
-      this.getActivityRecords().then(data => {
-        this.activityRecordsList = data.items;
-        this.totalRecords = data.total;
-      });
+      const url = new URL( window.location.href );
+      this.dateParam = url.searchParams.get('date');
+      const date = this.dateParam && new Date(this.dateParam) || new Date();
+      const isoDate = date.toISOString();
+      const month = parseInt(isoDate.substring(3, 5));
+      const year = parseInt(isoDate.substring(0, 4));
+      const startOfMonth = new Date(`${year}-${month}-01 00:00:00Z`);
+      const endOfMonth = new Date(`${year}-${month + 1}-01 00:00:00Z`);
+      endOfMonth.setMilliseconds(-1);
+      this.date = [startOfMonth.toISOString().substring(0, 10), endOfMonth.toISOString().substring(0, 10)];
+      setTimeout(() => {
+        this.getEmployees();
+        this.getClients();
+        this.getProjects();
+        this.getActivityCodes();
+        this.getSubActivityCodes();
+        this.getTypes();
+        this.getSubTypes();
+        this.getActivities();
+        this.getFilters();
+        this.getOffices();
+        this.getLocations();
+        this.getActivityRecords().then(data => {
+          this.activityRecordsList = data.items;
+          this.totalRecords = data.total;
+        });
+      }, 400);
     },
     initDate() {
       if (
