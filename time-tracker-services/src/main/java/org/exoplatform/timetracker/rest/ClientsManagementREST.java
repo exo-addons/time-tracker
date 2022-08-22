@@ -34,7 +34,11 @@ import org.exoplatform.social.service.rest.Util;
 import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.service.ClientService;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * <p>ClientsManagementREST class.</p>
@@ -44,7 +48,7 @@ import io.swagger.annotations.*;
  */
 @Path("timetracker/clientsmgn")
 @RolesAllowed("users")
-@Api(value = "/timetracker", description = "Manage and access Clients") // NOSONAR
+@Tag(name = "/timetracker", description = "Manage and access Clients") // NOSONAR
 public class ClientsManagementREST implements ResourceContainer {
 
   private static final Log      LOG                 = ExoLogger.getLogger(ClientsManagementREST.class);
@@ -72,9 +76,9 @@ public class ClientsManagementREST implements ResourceContainer {
   @Path("client")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getClients() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -98,11 +102,11 @@ public class ClientsManagementREST implements ResourceContainer {
   @Path("client")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new Client", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createClient(@ApiParam(value = "Client to save", required = true) Client client) {
+  @Operation(summary = "Creates a new Client", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createClient(@Parameter(description = "Client to save", required = true) Client client) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -129,11 +133,11 @@ public class ClientsManagementREST implements ResourceContainer {
   @PUT
   @Path("client")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Updates an existing Client identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateClient(@ApiParam(value = "Client to update", required = true) Client client) {
+  @Operation(summary = "Updates an existing Client identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateClient(@Parameter(description = "Client to update", required = true) Client client) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -163,11 +167,11 @@ public class ClientsManagementREST implements ResourceContainer {
   @DELETE
   @Path("client/{clientId}")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing Client identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteClient(@ApiParam(value = "Client technical id to delete", required = true) @PathParam("clientId") Long clientId) {
+  @Operation(summary = "Deletes an existing Client identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteClient(@Parameter(description = "Client technical id to delete", required = true) @PathParam("clientId") Long clientId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();

@@ -23,7 +23,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.jaxrs.PATCH;
+import org.exoplatform.services.rest.http.PATCH;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
@@ -39,11 +39,12 @@ import org.exoplatform.timetracker.dto.TimeTrackerSetting;
 import org.exoplatform.timetracker.dto.WorkTime;
 import org.exoplatform.timetracker.service.TimeTrackerSettingsService;
 
-import io.swagger.annotations.*;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
@@ -55,7 +56,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Path("timetracker/settings")
 @RolesAllowed("users")
-@Api(value = "/timetracker", description = "Manage and access Codes") // NOSONAR
+@Tag(name = "/timetracker", description = "Manage and access Codes") // NOSONAR
 public class SettingsManagementREST implements ResourceContainer {
 
   private static final Log      LOG                 = ExoLogger.getLogger(SettingsManagementREST.class);
@@ -91,9 +92,9 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("worktime")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getWorkTimes() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -119,11 +120,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("worktime")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new WorkTime", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createWorkTime(@ApiParam(value = "WorkTime to save", required = true) WorkTime workTime) {
+  @Operation(summary = "Creates a new WorkTime", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createWorkTime(@Parameter(description = "WorkTime to save", required = true) WorkTime workTime) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -162,11 +163,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @PUT
   @Path("worktime")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Updates an existing WorkTime identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateWorkTime(@ApiParam(value = "WorkTime to update", required = true) WorkTime workTime) {
+  @Operation(summary = "Updates an existing WorkTime identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateWorkTime(@Parameter(description = "WorkTime to update", required = true) WorkTime workTime) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -198,11 +199,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @DELETE
   @Path("workTime/{workTimeId}")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing WorkTime identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteWorkTime(@ApiParam(value = "WorkTime technical id to delete", required = true) @PathParam("workTimeId") Long workTimeId) {
+  @Operation(summary = "Deletes an existing WorkTime identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteWorkTime(@Parameter(description = "WorkTime technical id to delete", required = true) @PathParam("workTimeId") Long workTimeId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -234,9 +235,9 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("location")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getLocations() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -262,11 +263,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("location")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new Location", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createLocation(@ApiParam(value = "Location to save", required = true) Location location) {
+  @Operation(summary = "Creates a new Location", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createLocation(@Parameter(description = "Location to save", required = true) Location location) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -295,11 +296,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @PUT
   @Path("location")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Updates an existing Location identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateLocation(@ApiParam(value = "Location to update", required = true) Location location) {
+  @Operation(summary = "Updates an existing Location identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateLocation(@Parameter(description = "Location to update", required = true) Location location) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -331,11 +332,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @DELETE
   @Path("location/{code}")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing Location identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteLocation(@ApiParam(value = "Location technical id to delete", required = true) @PathParam("code") String code) {
+  @Operation(summary = "Deletes an existing Location identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteLocation(@Parameter(description = "Location technical id to delete", required = true) @PathParam("code") String code) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -367,9 +368,9 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("office")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getOffices() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -395,11 +396,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("office")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new Office", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createOffice(@ApiParam(value = "Office to save", required = true) Office office) {
+  @Operation(summary = "Creates a new Office", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createOffice(@Parameter(description = "Office to save", required = true) Office office) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -428,11 +429,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @PUT
   @Path("office")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Updates an existing Office identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateOffice(@ApiParam(value = "Office to update", required = true) Office office) {
+  @Operation(summary = "Updates an existing Office identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateOffice(@Parameter(description = "Office to update", required = true) Office office) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -464,11 +465,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @DELETE
   @Path("office/{code}")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing Office identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteOffice(@ApiParam(value = "Office technical id to delete", required = true) @PathParam("code") String code) {
+  @Operation(summary = "Deletes an existing Office identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteOffice(@Parameter(description = "Office technical id to delete", required = true) @PathParam("code") String code) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -500,9 +501,9 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("other")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available resources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available resources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getOtherSettings() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -528,11 +529,11 @@ public class SettingsManagementREST implements ResourceContainer {
   @Path("others")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "update settings", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response saveSettings(@ApiParam(value = "WorkTime to save", required = true) TimeTrackerSetting ttSettings) {
+  @Operation(summary = "update settings", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response saveSettings(@Parameter(description = "WorkTime to save", required = true) TimeTrackerSetting ttSettings) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();

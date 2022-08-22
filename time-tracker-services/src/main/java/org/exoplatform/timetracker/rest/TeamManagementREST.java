@@ -16,7 +16,12 @@
  */
 package org.exoplatform.timetracker.rest;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -46,7 +51,7 @@ import java.util.List;
  */
 @Path("timetracker/teamsmgn")
 @RolesAllowed("users")
-@Api(value = "/timetracker", description = "Manage and access Teams") // NOSONAR
+@Tag(name = "/timetracker", description = "Manage and access Teams") // NOSONAR
 public class TeamManagementREST implements ResourceContainer {
 
   private static final Log      LOG                 = ExoLogger.getLogger(TeamManagementREST.class);
@@ -74,9 +79,9 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("team")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getTeams() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -99,9 +104,9 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("team/all")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getAll() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -125,11 +130,11 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("team")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new Team", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createTeam(@ApiParam(value = "Team to save", required = true) Team team) {
+  @Operation(summary = "Creates a new Team", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createTeam(@Parameter(description = "Team to save", required = true) Team team) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -156,11 +161,11 @@ public class TeamManagementREST implements ResourceContainer {
   @PUT
   @Path("team")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Updates an existing Team identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateTeam(@ApiParam(value = "Team to update", required = true) Team team) {
+  @Operation(summary = "Updates an existing Team identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateTeam(@Parameter(description = "Team to update", required = true) Team team) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -190,11 +195,11 @@ public class TeamManagementREST implements ResourceContainer {
   @DELETE
   @Path("team")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing Team identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteTeam(@ApiParam(value = "Team technical id to delete", required = true) @QueryParam("teamId") String teamId) {
+  @Operation(summary = "Deletes an existing Team identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteTeam(@Parameter(description = "Team technical id to delete", required = true) @QueryParam("teamId") String teamId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -226,10 +231,10 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("teamMember")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response getTeamMembers(@ApiParam(value = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response getTeamMembers(@Parameter(description = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
@@ -252,11 +257,11 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("teamMember")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new TeamMember", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createTeamMember(@ApiParam(value = "TeamMember to save", required = true) TeamMember teamMember) {
+  @Operation(summary = "Creates a new TeamMember", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createTeamMember(@Parameter(description = "TeamMember to save", required = true) TeamMember teamMember) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -284,11 +289,11 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("teamMember/all")
   @RolesAllowed("time-tracking-managers")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new TeamMember", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createAllTeamMember(@ApiParam(value = "TeamMember to save", required = true) List<TeamMember> teamMembers) {
+  @Operation(summary = "Creates a new TeamMember", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createAllTeamMember(@Parameter(description = "TeamMember to save", required = true) List<TeamMember> teamMembers) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -316,11 +321,11 @@ public class TeamManagementREST implements ResourceContainer {
   @DELETE
   @Path("teamMember")
   @RolesAllowed("time-tracking-managers")
-  @ApiOperation(value = "Deletes an existing TeamMember identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-          @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteTeamMember(@ApiParam(value = "TeamMember technical id to delete", required = true) @QueryParam("teamMemberId") String teamMemberId) {
+  @Operation(summary = "Deletes an existing TeamMember identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteTeamMember(@Parameter(description = "TeamMember technical id to delete", required = true) @QueryParam("teamMemberId") String teamMemberId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -352,10 +357,10 @@ public class TeamManagementREST implements ResourceContainer {
   @Path("employees")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all employees related to current user", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-          @ApiResponse(code = 500, message = "Internal server error") })
-  public Response getEmployees(@ApiParam(value = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
+  @Operation(summary = "Retrieves all employees related to current user", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+          @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response getEmployees(@Parameter(description = "Team technical id", required = true) @QueryParam("teamId") String teamId) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {

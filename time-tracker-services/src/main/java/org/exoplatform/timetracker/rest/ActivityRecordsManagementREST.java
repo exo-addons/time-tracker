@@ -16,17 +16,9 @@
  */
 package org.exoplatform.timetracker.rest;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityExistsException;
@@ -39,21 +31,23 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.service.rest.Util;
 import org.exoplatform.timetracker.dto.*;
 import org.exoplatform.timetracker.service.ActivityRecordService;
 import org.exoplatform.timetracker.service.TeamService;
 import org.exoplatform.timetracker.service.TimeTrackerSettingsService;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * <p>ActivityRecordsManagementREST class.</p>
@@ -63,7 +57,7 @@ import io.swagger.annotations.*;
  */
 @Path("timetracker/activityRecordrecordsmgn")
 @RolesAllowed("users")
-@Api(value = "/timetracker", description = "Manage and access ActivityRecord center ActivityRecords") // NOSONAR
+@Tag(name = "/timetracker", description = "Manage and access ActivityRecord center ActivityRecords") // NOSONAR
 public class ActivityRecordsManagementREST implements ResourceContainer {
 
   private static final Log      LOG                 = ExoLogger.getLogger(ActivityRecordsManagementREST.class);
@@ -100,9 +94,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @Path("activityrecord")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getActivityRecords() {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -143,9 +137,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @Path("activityrecord/list")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getActivityRecordsList(@Context UriInfo uriInfo,
                                          @QueryParam("search") String search,
                                          @QueryParam("activity") String activity,
@@ -204,9 +198,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @Path("activityrecord/last")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getActivityRecordsList(@Context UriInfo uriInfo,
                                          @QueryParam("userName") String userName) {
     try {
@@ -234,9 +228,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @Path("activityrecord/{day}")
   @RolesAllowed("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = 500, message = "Internal server error") })
+  @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getActivityRecords(@PathParam("day") String day) {
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -260,11 +254,11 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @Path("activityrecord")
   @RolesAllowed("users")
   @Consumes(MediaType.APPLICATION_JSON)
-  @ApiOperation(value = "Creates a new ActivityRecord", httpMethod = "POST", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response createActivityRecord(@ApiParam(value = "ActivityRecord to save", required = true) ActivityRecord activityRecord) {
+  @Operation(summary = "Creates a new ActivityRecord", method = "POST", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createActivityRecord(@Parameter(description = "ActivityRecord to save", required = true) ActivityRecord activityRecord) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -297,11 +291,11 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @PUT
   @Path("activityrecord")
   @RolesAllowed("users")
-  @ApiOperation(value = "Updates an existing ActivityRecord identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response updateActivityRecord(@ApiParam(value = "ActivityRecord to update", required = true) ActivityRecord activityRecord) {
+  @Operation(summary = "Updates an existing ActivityRecord identified by its id", method = "PUT", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response updateActivityRecord(@Parameter(description = "ActivityRecord to update", required = true) ActivityRecord activityRecord) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -331,11 +325,11 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   @DELETE
   @Path("activityrecord/{activityrecordId}")
   @RolesAllowed("users")
-  @ApiOperation(value = "Deletes an existing ActivityRecord identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = 500, message = "Internal server error") })
-  public Response deleteActivityRecord(@ApiParam(value = "ActivityRecord technical id to delete", required = true) @PathParam("activityrecordId") Long activityRecordId) {
+  @Operation(summary = "Deletes an existing ActivityRecord identified by its id", method = "DELETE", description = "empty response")
+  @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response deleteActivityRecord(@Parameter(description = "ActivityRecord technical id to delete", required = true) @PathParam("activityrecordId") Long activityRecordId) {
     Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
     if (sourceIdentity == null) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
