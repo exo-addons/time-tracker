@@ -16,7 +16,12 @@
  */
 package org.exoplatform.timetracker.rest;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
@@ -49,7 +54,7 @@ import java.util.stream.Collectors;
  */
 @Path("timetracker/activitymgn")
 @RolesAllowed("users")
-@Api(value = "/timetracker", description = "Manage and access Activity center Activitys") // NOSONAR
+@Tag(name = "/timetracker", description = "Manage and access Activity center Activitys") // NOSONAR
 public class ActivitiesManagementREST implements ResourceContainer {
 
     private static final Log LOG = ExoLogger.getLogger(ActivitiesManagementREST.class);
@@ -80,9 +85,9 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @Path("activity/all")
     @RolesAllowed("users")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-    @ApiResponses(value = {@ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-            @ApiResponse(code = 500, message = "Internal server error")})
+    @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Request fulfilled"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Response getAllActivities() {
         try {
             Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -105,9 +110,9 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @Path("activity")
     @RolesAllowed("users")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieves all available subresources of current endpoint", httpMethod = "GET", response = Response.class, produces = "application/json")
-    @ApiResponses(value = {@ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-            @ApiResponse(code = 500, message = "Internal server error")})
+    @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Request fulfilled"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
     public Response getActivities(@QueryParam("userName") String userName) {
         try {
             Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
@@ -142,11 +147,11 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @Path("activity")
     @RolesAllowed("time-tracking-managers")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates a new Activity", httpMethod = "POST", response = Response.class, notes = "empty response")
-    @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-            @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-            @ApiResponse(code = 500, message = "Internal server error")})
-    public Response createActivity(@ApiParam(value = "Activity to save", required = true) Activity activity) {
+    @Operation(summary = "Creates a new Activity", method = "POST", description = "empty response")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Request fulfilled"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
+    public Response createActivity(@Parameter(description = "Activity to save", required = true) Activity activity) {
         Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
         if (sourceIdentity == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -173,11 +178,11 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @PUT
     @Path("activity")
     @RolesAllowed("time-tracking-managers")
-    @ApiOperation(value = "Updates an existing Activity identified by its id", httpMethod = "PUT", response = Response.class, notes = "empty response")
-    @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-            @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-            @ApiResponse(code = 500, message = "Internal server error")})
-    public Response updateActivity(@ApiParam(value = "Activity to update", required = true) Activity activity) {
+    @Operation(summary = "Updates an existing Activity identified by its id", method = "PUT", description = "empty response")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Request fulfilled"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
+    public Response updateActivity(@Parameter(description = "Activity to update", required = true) Activity activity) {
         Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
         if (sourceIdentity == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -207,11 +212,11 @@ public class ActivitiesManagementREST implements ResourceContainer {
     @DELETE
     @Path("activity/{activityId}")
     @RolesAllowed("time-tracking-managers")
-    @ApiOperation(value = "Deletes an existing Activity identified by its id", httpMethod = "DELETE", response = Response.class, notes = "empty response")
-    @ApiResponses(value = {@ApiResponse(code = HTTPStatus.NO_CONTENT, message = "Request fulfilled"),
-            @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-            @ApiResponse(code = 500, message = "Internal server error")})
-    public Response deleteActivity(@ApiParam(value = "Activity technical id to delete", required = true) @PathParam("activityId") Long activityId) {
+    @Operation(summary = "Deletes an existing Activity identified by its id", method = "DELETE", description = "empty response")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Request fulfilled"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")})
+    public Response deleteActivity(@Parameter(description = "Activity technical id to delete", required = true) @PathParam("activityId") Long activityId) {
         Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
         if (sourceIdentity == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
