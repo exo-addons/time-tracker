@@ -633,7 +633,7 @@ export default {
       this.dateParam = url.searchParams.get('date');
       const date = this.dateParam && new Date(this.dateParam) || new Date();
       const isoDate = date.toISOString();
-      const month = parseInt(isoDate.substring(3, 5));
+      const month = parseInt(isoDate.substring(5, 7));
       const year = parseInt(isoDate.substring(0, 4));
       const startOfMonth = new Date(`${year}-${month}-01 00:00:00Z`);
       const endOfMonth = new Date(`${year}-${month + 1}-01 00:00:00Z`);
