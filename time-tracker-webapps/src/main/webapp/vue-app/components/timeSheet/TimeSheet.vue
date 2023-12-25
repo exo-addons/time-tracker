@@ -1,26 +1,5 @@
 <template>
   <div ref="ttTimeSheetAplication">
-    <template>
-      <v-alert
-        id
-        v-model="alert"
-        :class="alert_type"
-        :type="alert_type"
-        border="left"
-        elevation="2"
-        colored-border
-        outlined
-        dismissible>
-        {{ $t(message) }}
-        <v-btn
-          v-if="undo === true"
-          class="primary--text"
-          @click="deleteItemConfirm=true"
-          text>
-          Undo
-        </v-btn>
-      </v-alert>
-    </template>
     <v-card elevation="0">
       <v-card-text>
         <v-layout>
@@ -285,8 +264,6 @@ export default {
       'Sales Order': 'salesOrderName',
       'Project Version': 'projectVersion'
     },
-    undo: false,
-    deleteItemConfirm: false,
     deleteItemTeams: {},
     dateParam: '',
     idMenuItemRef: '',
@@ -317,13 +294,7 @@ export default {
     awaitingSearch: false,
     dialog: false,
     itemToDelete: 0,
-    alert: false,
     message: '',
-    alert_type: '',
-    alertIcon: '',
-    alert_edit: false,
-    message_edit: '',
-    alert_type_add: '',
     activityRecordsList: [],
     editedIndex: -1,
     toExport: false,
@@ -442,14 +413,6 @@ export default {
     }
   },
   watch: {
-    deleteItemConfirm(val){
-      if (val){
-        this.undo=false;
-        this.alert=false;
-        this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageCancel');
-        this.deleteItemConfirm= false;
-      }
-    },
     dialog(val) {
       return val === true || this.close() === true;
     },
@@ -471,6 +434,7 @@ export default {
   },
   created() {
     this.initialize();
+    document.addEventListener('alert-message-dismissed', this.deleteItemConfirm);
   },
   mounted() {
     if (
@@ -510,16 +474,7 @@ export default {
       } 
     },
     deleteConfirm(){
-      this.undo=true;
-      this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageDelete');
-      setTimeout(()=> {
-        if (!this.deleteItemConfirm){
-          this.deleteItem();
-          this.undo=false;
-        } else {
-          this.deleteItemConfirm = false;
-        }
-      }, 5000);
+      this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageDelete'),true);
     },
     generateId() {
       return (
@@ -711,21 +666,36 @@ export default {
         this.totalRecords = data.total;
       });
     },
-    displaySusccessMessage(message) {
-      this.message = message;
-      this.alert_type = 'success';
-      this.alertIcon = 'uiIconSuccess';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
-      this.editedItem = this.defaultItem;
+    closeAlert() {
+      document.dispatchEvent(new CustomEvent('close-alert-message'));
+    },
+    deleteItemConfirm() {
+      if (this.deleteItemTeams && this.deleteItemTeams.id) {
+        this.deleteItem();
+      }
+    },
+    deleteItemCancel() {
+      this.closeAlert();
+      this.deleteItemTeams = null;
+      this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageCancel'));
+    },
+    displaySusccessMessage(message,undo) {
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: undo ? 'warning' : 'success',
+          alertLinkText: undo ? 'Undo' : null,
+          alertLinkCallback: undo ? this.deleteItemCancel : null,
+        }
+      }));
     },
     displayErrorMessage(message) {
-      this.isUpdating = false;
-      this.message = message;
-      this.alert_type = 'error';
-      this.alertIcon = 'uiIconError';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'error'
+        }
+      }));
     },
     getActivityRecords(toExport, dest) {
       this.loading = true;
@@ -990,8 +960,8 @@ export default {
         .then(() => {
           this.getActivityRecords().then(data => {
             this.activityRecordsList = data.items;
+            this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageAdd'));
           });
-          this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageAdd');
         })
         .catch(result => {
           this.getActivityRecords().then(data => {
@@ -1022,8 +992,8 @@ export default {
         .then(() => {
           this.getActivityRecords().then(data => {
             this.activityRecordsList = data.items;
+            this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageEdit'));
           });
-          this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageEdit');
         })
         .catch(result => {
           this.getActivityRecords().then(data => {
@@ -1061,38 +1031,36 @@ export default {
         });
     },
     deleteItem() {
-      if (this.undo){
-        fetch(
-          `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-            this.deleteItemTeams.id
-          }`,
-          {
-            method: 'delete',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json'
-            }
+      fetch(
+        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
+          this.deleteItemTeams.id
+        }`,
+        {
+          method: 'delete',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
           }
-        )
-          .then(result => {
-            if (!result.ok) {
-              throw result;
-            }
-          })
-          .then(() => {
-            this.getActivityRecords().then(data => {
-              this.activityRecordsList = data.items;
-            });
-          })
-          .catch(result => {
-            this.getActivityRecords().then(data => {
-              this.activityRecordsList = data.items;
-            });
-            result.text().then(body => {
-              this.displayErrorMessage(body);
-            });
+        }
+      )
+        .then(result => {
+          if (!result.ok) {
+            throw result;
+          }
+        })
+        .then(() => {
+          this.getActivityRecords().then(data => {
+            this.activityRecordsList = data.items;
           });
-      }
+        })
+        .catch(result => {
+          this.getActivityRecords().then(data => {
+            this.activityRecordsList = data.items;
+          });
+          result.text().then(body => {
+            this.displayErrorMessage(body);
+          });
+        });
     },
     cancel() {
       this.$refs.timeTrackerDrawer.close();

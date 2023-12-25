@@ -1,10 +1,5 @@
 <template>
   <div>
-    <v-card-text v-if="error" class="errorMessage">
-      <v-alert type="error">
-        {{ error }}
-      </v-alert>
-    </v-card-text>
     <v-card class="d-flex flex py-4 ma-4" flat>
       <v-flex class="sm12 md4" flat>
         <v-list>
@@ -124,12 +119,9 @@ export default {
   },
   data: () => ({
     menuItemUpdateIndex: -1,
-    alert: false,
     deleteItemTeams: {},
     menuItemUpdate: false,
     message: '',
-    alert_type: '',
-    alertIcon: '',
     valid: true,
     members: [],
     selectedTeam: null,
@@ -293,19 +285,20 @@ export default {
         });
     },
     displaySusccessMessage(message) {
-      this.message = message;
-      this.alert_type = 'alert-success';
-      this.alertIcon = 'uiIconSuccess';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'success',
+        }
+      }));
     },
     displayErrorMessage(message) {
-      this.isUpdating = false;
-      this.message = message;
-      this.alert_type = 'alert-error';
-      this.alertIcon = 'uiIconError';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'error'
+        }
+      }));
     },
   }
 };

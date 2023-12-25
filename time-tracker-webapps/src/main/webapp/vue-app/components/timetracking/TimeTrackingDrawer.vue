@@ -173,27 +173,6 @@
         ok-label="Yes"
         @ok="deleteConfirm()" />
     </template>
-    <template>
-      <v-alert
-        id
-        v-model="alert"
-        :class="alert_type"
-        :type="alert_type"
-        border="left"
-        elevation="2"
-        colored-border
-        outlined
-        dismissible>
-        {{ $t(message) }}
-        <v-btn
-          v-if="undo === true"
-          class="primary--text"
-          @click="deleteItemConfirm=true"
-          text>
-          Undo
-        </v-btn>
-      </v-alert>
-    </template>
   </div>
 </template>
 
@@ -207,8 +186,6 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
-    undo: false,
-    deleteItemConfirm: false,
     activityRecordMenuDatePicker: false,
     localeLanguage: eXo.env.portal.language,
     dateRangeText: '',
@@ -219,10 +196,6 @@ export default {
     clients: [],
     activityRecords: [],
     activityRecord: {},
-    alert: false,
-    message: '',
-    alert_type: '',
-    alertIcon: '',
     total: 0,
     deleteId: 0,
     isActivity: true,
@@ -231,14 +204,6 @@ export default {
     
   }),
   watch: {
-    deleteItemConfirm(val){
-      if (val){
-        this.undo=false;
-        this.alert=false;
-        this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageCancel');
-        this.deleteItemConfirm= false;
-      }
-    },
     date (){
       this.getActivityRecords();
       this.formatDate(this.date);
@@ -246,6 +211,9 @@ export default {
     total (){
       this.rowBackground();
     },
+  },
+  created () {
+    document.addEventListener('alert-message-dismissed', this.deleteItemConfirm);
   },
   mounted () {
     $(this.$refs.timeTrackerDrawer.$el).click(()=> { 
@@ -261,16 +229,7 @@ export default {
   },
   methods: {
     deleteConfirm(){
-      this.undo=true;
-      this.displaySusccessMessage('exo.timeTracker.label.displaySusccessMessageDelete');
-      setTimeout(()=> {
-        if (!this.deleteItemConfirm){
-          this.deleteActivity();
-          this.undo=false;
-        } else {
-          this.deleteItemConfirm = false;
-        }
-      }, 5000);
+      this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageDelete'),true);
     },
     menuItemFunction(i){
       if (this.$refs && this.$refs.TTDrawerMenuBlured) {
@@ -386,7 +345,7 @@ export default {
         })
         .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage(('exo.timeTracker.label.displaySusccessMessageAdd'));
+          this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageAdd'));
         })
         .catch(result => {
           this.getActivityRecords();
@@ -414,7 +373,7 @@ export default {
         })
         .then(() => {
           this.getActivityRecords();
-          this.displaySusccessMessage(('exo.timeTracker.label.displaySusccessMessageEdit'));
+          this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageEdit'));
         })
         .catch(result => {
           this.getActivityRecords();
@@ -424,35 +383,31 @@ export default {
         });
     },
     deleteActivity() {
-      if (this.undo){
-        fetch(
-          `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
-            this.deleteId
-          }`,
-          {
-            method: 'delete',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json'
-            }
+      fetch(
+        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/${
+          this.deleteId
+        }`,
+        {
+          method: 'delete',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
           }
-        )
-          .then(result => {
-            if (!result.ok) {
-              throw result;
-            }
-          })
-          .then(() => {
-            this.getActivityRecords();
-            this.deleteItemConfirm = false;
-          })
-          .catch(result => {
-            this.getActivityRecords();
-            result.text().then(body => {
-              this.displayErrorMessage(body);
-            });
+        })
+        .then(result => {
+          if (!result.ok) {
+            throw result;
+          }
+        })
+        .then(() => {
+          this.getActivityRecords();
+        })
+        .catch(result => {
+          this.getActivityRecords();
+          result.text().then(body => {
+            this.displayErrorMessage(body);
           });
-      }
+        });
     },
     cancel() {
       this.$refs.timeTrackerDrawer.close();
@@ -479,21 +434,37 @@ export default {
       this.deleteId = id;
       this.$refs.deleteTTEntryDrawer.open();
     },
-    displaySusccessMessage(message) {
-      this.message = message;
-      this.alert_type = 'success';
-      this.alertIcon = 'uiIconSuccess';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
-      this.editedItem = this.defaultItem;
+    
+    closeAlert() {
+      document.dispatchEvent(new CustomEvent('close-alert-message'));
+    },
+    deleteItemConfirm() {
+      if (this.deleteId) {
+        this.deleteActivity();
+      }
+    },
+    deleteItemCancel() {
+      this.closeAlert();
+      this.deleteId = null;
+      this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageCancel'));
+    },
+    displaySusccessMessage(message,undo) {
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: undo ? 'warning' : 'success',
+          alertLinkText: undo ? 'Undo' : null,
+          alertLinkCallback: undo ? this.deleteItemCancel : null,
+        }
+      }));
     },
     displayErrorMessage(message) {
-      this.isUpdating = false;
-      this.message = message;
-      this.alert_type = 'error';
-      this.alertIcon = 'uiIconError';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message.message,
+          alertType: 'error'
+        }
+      }));
     },
     formatDate(val){
       const [year, month, day] = val.split('-');

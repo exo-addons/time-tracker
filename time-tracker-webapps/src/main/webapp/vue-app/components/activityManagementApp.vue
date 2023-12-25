@@ -4,14 +4,6 @@
     class="VuetifyApp timeTrackingApp "
     color="transaprent">
     <main>
-      <div
-        v-if="alert"
-        id
-        :class="alert_type"
-        class="alert">
-        <i :class="alertIcon"></i>
-        {{ message }}
-      </div>
       <template>
         <v-tabs
           v-model="selectedTab"
@@ -185,10 +177,6 @@ export default {
     TimeTrackingSettings,
   },
   data: () => ({
-    alert: false,
-    message: '',
-    alert_type: '',
-    alertIcon: '',
     selectedTab: 'activities',
     clients: [],
     projects: [],
@@ -1216,20 +1204,21 @@ export default {
         });
     },
     displaySusccessMessage(message) {
-      this.message = message;
-      this.alert_type = 'alert-success';
-      this.alertIcon = 'uiIconSuccess';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'success',
+        }
+      }));
     },
     displayErrorMessage(message) {
-      this.isUpdating = false;
-      this.message = message;
-      this.alert_type = 'alert-error';
-      this.alertIcon = 'uiIconError';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
-    },
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'error'
+        }
+      }));
+    }
   },
 };
 </script>
