@@ -19,14 +19,6 @@
       
       <time-tracking-drawer ref="timeTrackingDrawer" />
     </main>
-    <div
-      v-if="alert"
-      id
-      :class="alert_type"
-      class="alert">
-      <i :class="alertIcon"></i>
-      {{ message }}
-    </div>
   </v-app>
 </template>
 
@@ -37,10 +29,7 @@ export default {
     TimeTrackingDrawer
   },
   data: () => ({
-    alert: false,
     message: '',
-    alert_type: '',
-    alertIcon: '',
   }),
   
   methods: {
@@ -48,19 +37,20 @@ export default {
       this.$refs.timeTrackingDrawer.open();
     },
     displaySusccessMessage(message) {
-      this.message = message;
-      this.alert_type = 'success';
-      this.alertIcon = 'uiIconSuccess';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'success',
+        }
+      }));
     },
     displayErrorMessage(message) {
-      this.isUpdating = false;
-      this.message = message;
-      this.alert_type = 'alerterror';
-      this.alertIcon = 'uiIconError';
-      this.alert = true;
-      setTimeout(() => (this.alert = false), 5000);
+      document.dispatchEvent(new CustomEvent('alert-message', {
+        detail: {
+          alertMessage: message,
+          alertType: 'error'
+        }
+      }));
     },
   },
 };
