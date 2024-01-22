@@ -16,7 +16,7 @@
  */
 package org.exoplatform.timetracker.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.exoplatform.commons.api.persistence.ExoEntity;
 

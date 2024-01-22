@@ -16,13 +16,24 @@
  */
 package org.exoplatform.timetracker.rest;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -33,18 +44,16 @@ import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.service.rest.Util;
 import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.Team;
-import org.exoplatform.timetracker.dto.TeamMember;
 import org.exoplatform.timetracker.service.ActivityService;
 import org.exoplatform.timetracker.service.TeamService;
 
-import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * <p>ActivitiesManagementREST class.</p>
@@ -104,6 +113,7 @@ public class ActivitiesManagementREST implements ResourceContainer {
     /**
      * <p>getActivities.</p>
      *
+     * @param userName Current userName
      * @return a {@link javax.ws.rs.core.Response} object.
      */
     @GET

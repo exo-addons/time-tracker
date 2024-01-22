@@ -21,21 +21,28 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.QueryParam;
-
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.timetracker.dto.*;
+import org.exoplatform.timetracker.dto.Activity;
+import org.exoplatform.timetracker.dto.ActivityRecord;
+import org.exoplatform.timetracker.dto.Project;
+import org.exoplatform.timetracker.dto.RecordsAccessList;
+import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.storage.ActivityRecordStorage;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store ActivityRecords
@@ -91,7 +98,7 @@ public class ActivityRecordService {
 
   /**
    * Update an existing ActivityRecord on datasource. If the ActivityRecord
-   * doesn't exit an {@link javax.persistence.EntityNotFoundException} will be
+   * doesn't exit an {@link jakarta.persistence.EntityNotFoundException} will be
    * thrown.
    *
    * @param activityRecord dto to update on store
@@ -125,7 +132,7 @@ public class ActivityRecordService {
    *
    * @param activityRecordId technical identifier of ActivityRecord
    * @param username user currently deleting ActivityRecord
-   * @throws javax.persistence.EntityNotFoundException if ActivityRecord wasn't
+   * @throws jakarta.persistence.EntityNotFoundException if ActivityRecord wasn't
    *           found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete
    *           ActivityRecord
@@ -437,7 +444,6 @@ public class ActivityRecordService {
         to_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
       }
       String office_ = "";
-      ActivityRecord lastAct = null;
       for (LocalDate d : getDatesBetween(from_, to_)) {
         String day = d.format(formatter);
         act = recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());

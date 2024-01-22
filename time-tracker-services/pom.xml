@@ -22,7 +22,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <parent>
     <groupId>org.exoplatform.addons.time-tracker</groupId>
     <artifactId>time-tracker</artifactId>
-    <version>1.0.x-SNAPSHOT</version>
+    <version>1.1.x-SNAPSHOT</version>
   </parent>
   <artifactId>time-tracker-services</artifactId>
   <name>Add-on:: Time Tracker - Services</name>
@@ -31,8 +31,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </properties>
   <dependencies>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -73,7 +73,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <!--swagger-->
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-annotations</artifactId>
+      <artifactId>swagger-annotations-jakarta</artifactId>
       <scope>provided</scope>
     </dependency>
     <!-- Test dependencies -->
@@ -189,22 +189,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <exo.files.storage.dir>${project.build.directory}</exo.files.storage.dir>
           </systemPropertyVariables>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-          <detectJavaApiLink>false</detectJavaApiLink>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

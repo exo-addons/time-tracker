@@ -39,7 +39,6 @@ public class CodesServiceTest extends TestCase {
 
   public void testUpdateActivityCode() throws Exception {
     // Given
-    ActivityCode newActivityCode = null;
     ActivityCode activityCode = new ActivityCode(1l, "testCode", "testLabel");
     ActivityCode activityCodeUpdated = new ActivityCode(1l, "testCodeUpdated", "testLabelUpdated");
     when(codesStorage.getActivityCodeById(anyLong())).thenReturn(activityCode);

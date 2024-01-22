@@ -16,17 +16,16 @@
  */
 package org.exoplatform.timetracker.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.FilterEntity;
-import org.exoplatform.timetracker.entity.FilterFieldEntity;
-import org.exoplatform.timetracker.entity.TypeEntity;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 /**
  * <p>FilterDAO class.</p>

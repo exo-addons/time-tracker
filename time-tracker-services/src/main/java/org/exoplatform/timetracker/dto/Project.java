@@ -18,8 +18,6 @@ package org.exoplatform.timetracker.dto;
 
 import java.io.Serializable;
 
-import org.exoplatform.timetracker.entity.ClientEntity;
-
 import lombok.Data;
 
 /**

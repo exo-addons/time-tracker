@@ -16,23 +16,29 @@
  */
 package org.exoplatform.timetracker.storage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.gatein.api.EntityNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentRequestLifecycle;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.*;
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.GroupHandler;
+import org.exoplatform.services.organization.Membership;
+import org.exoplatform.services.organization.MembershipHandler;
+import org.exoplatform.services.organization.MembershipType;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.dto.TeamMember;
-import org.exoplatform.timetracker.service.TeamService;
-import org.gatein.api.EntityNotFoundException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Storage service to access / load and save Teams. This service will be

@@ -16,20 +16,21 @@
  */
 package org.exoplatform.timetracker.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.Filter;
 import org.exoplatform.timetracker.dto.FilterField;
 import org.exoplatform.timetracker.dto.FilterModel;
 import org.exoplatform.timetracker.storage.FilterStorage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -55,7 +56,7 @@ public class FilterService {
 
     /**
      * Create new Filter that will be available for all users. If the Filter
-     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+     * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
      *
      * @param filter Filter to create
      * @return stored {@link org.exoplatform.timetracker.dto.Filter} in datasource
@@ -83,7 +84,7 @@ public class FilterService {
      * delete it.
      *
      * @param filterId technical identifier of Filter
-     * @throws javax.persistence.EntityNotFoundException if Filter wasn't found
+     * @throws jakarta.persistence.EntityNotFoundException if Filter wasn't found
      * @throws java.lang.IllegalAccessException  if user is not allowed to delete Filter
      */
     public void deleteFilter(Long filterId) throws EntityNotFoundException, IllegalAccessException {

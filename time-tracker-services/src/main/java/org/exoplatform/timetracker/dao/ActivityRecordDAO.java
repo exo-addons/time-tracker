@@ -17,14 +17,14 @@
 package org.exoplatform.timetracker.dao;
 
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.ActivityRecordEntity;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -133,6 +133,8 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                                                          boolean sortDesc) {
 
         try {
+            Date from = null;
+            Date to = null;
             String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord";
             if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                     || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
@@ -208,9 +210,8 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                 if (StringUtils.isNotEmpty(fromDate)) {
                     try {
-                        long from = formatter.parse(fromDate).getTime();
-                        String date = quryDateFormatter.format(from);
-                        queryString = queryString + " TIMESTAMP(activityRecord.activityTime) >= '" + date + "'";
+                        from = formatter.parse(fromDate);
+                        queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                         queryString = queryString + " and ";
                     } catch (Exception e) {
                         LOG.error("Cannot parse from date, the from date filer will not applied to get th list of activityRecords");
@@ -218,14 +219,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
                 if (StringUtils.isNotEmpty(toDate)) {
                     try {
-                        Date to = formatter.parse(toDate);
+                        to = formatter.parse(toDate);
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(to);
                         cal.set(Calendar.MINUTE, 59);
                         cal.set(Calendar.SECOND, 59);
                         cal.set(Calendar.HOUR_OF_DAY, 23);
-                        String date = quryDateFormatter.format(cal.getTime());
-                        queryString = queryString + " TIMESTAMP(activityRecord.activityTime) <= '" + date + "'";
+                        to = cal.getTime();
+                        queryString = queryString + " activityRecord.activityTime <= :toDate";
                         queryString = queryString + " and ";
                     } catch (Exception e) {
                         LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
@@ -245,6 +246,12 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 queryString = queryString + " ORDER BY activityRecord.activityTime DESC";
             }
             TypedQuery<ActivityRecordEntity> query = getEntityManager().createQuery(queryString, ActivityRecordEntity.class);
+            if (from != null) {
+                query.setParameter("fromDate",from);
+            }
+            if (to != null) {
+                query.setParameter("toDate",to);
+            }
             if (offset >= 0 && limit > 0) {
                 query.setFirstResult(offset).setMaxResults(limit);
             }
@@ -291,6 +298,8 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
     {
 
             try {
+                Date to = null;
+                Date from = null;
                 String queryString = "SELECT count(activityRecord.id) FROM  ActivityRecordEntity activityRecord";
                 if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                         || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
@@ -360,13 +369,10 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                         queryString = queryString + " activityRecord.office in (" + convert(office) + ")";
                         queryString = queryString + " and ";
                     }
-
-
                     if (StringUtils.isNotEmpty(fromDate)) {
                         try {
-                            long from = formatter.parse(fromDate).getTime();
-                            String date = quryDateFormatter.format(from);
-                            queryString = queryString + " TIMESTAMP(activityRecord.activityTime) >= '" + date + "'";
+                            from = formatter.parse(fromDate);
+                            queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                             queryString = queryString + " and ";
                         } catch (Exception e) {
                             LOG.error("Cannot parse from date, the from date filer will not applied to get th list of activityRecords");
@@ -374,14 +380,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     }
                     if (StringUtils.isNotEmpty(toDate)) {
                         try {
-                            Date to = formatter.parse(toDate);
+                            to = formatter.parse(toDate);
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(to);
                             cal.set(Calendar.MINUTE, 59);
                             cal.set(Calendar.SECOND, 59);
                             cal.set(Calendar.HOUR_OF_DAY, 23);
-                            String date = quryDateFormatter.format(cal.getTime());
-                            queryString = queryString + " TIMESTAMP(activityRecord.activityTime) <= '" + date + "'";
+                            to = cal.getTime();
+                            queryString = queryString + " activityRecord.activityTime <= :toDate";
                             queryString = queryString + " and ";
                         } catch (Exception e) {
                             LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
@@ -391,7 +397,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                         queryString = queryString.substring(0, queryString.length() - 5);
                     }
                 }
-            return getEntityManager().createQuery(queryString, Long.class).getSingleResult();
+                TypedQuery<Long> query = getEntityManager().createQuery(queryString, Long.class);
+                if (from != null) {
+                   query.setParameter("fromDate",from);
+                }
+                if (to != null) {
+                    query.setParameter("toDate",to);
+                }
+            return query.getSingleResult();
         } catch (Exception e) {
             LOG.warn("Exception while attempting to get activityRecords count.", e);
             throw e;
