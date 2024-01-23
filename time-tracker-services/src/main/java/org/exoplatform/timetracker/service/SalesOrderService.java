@@ -18,15 +18,12 @@ package org.exoplatform.timetracker.service;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.SalesOrder;
 import org.exoplatform.timetracker.storage.SalesOrderStorage;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -35,8 +32,6 @@ import org.exoplatform.timetracker.storage.SalesOrderStorage;
  * @version $Id: $Id
  */
 public class SalesOrderService {
-
-  private static final Log      LOG = ExoLogger.getLogger(SalesOrderService.class);
 
   private final SalesOrderStorage salesOrderStorage;
 
@@ -52,7 +47,7 @@ public class SalesOrderService {
 
   /**
    * Create new SalesOrder that will be available for all users. If the SalesOrder
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param salesOrder SalesOrder to create
    * @return stored {@link org.exoplatform.timetracker.dto.SalesOrder} in datasource
@@ -73,7 +68,7 @@ public class SalesOrderService {
 
   /**
    * Update an existing SalesOrder on datasource. If the SalesOrder doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param SalesOrder dto to update on store
    * @param username username storing SalesOrder
@@ -105,7 +100,7 @@ public class SalesOrderService {
    *
    * @param salesOrderId technical identifier of SalesOrder
    * @param username user currently deleting SalesOrder
-   * @throws javax.persistence.EntityNotFoundException if SalesOrder wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if SalesOrder wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete SalesOrder
    */
   public void deleteSalesOrder(Long salesOrderId, String username) throws EntityNotFoundException, IllegalAccessException {

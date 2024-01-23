@@ -17,8 +17,6 @@
 package org.exoplatform.timetracker.dao;
 
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.OfficeEntity;
 
 /**
@@ -30,5 +28,4 @@ import org.exoplatform.timetracker.entity.OfficeEntity;
  * @version $Id: $Id
  */
 public class OfficeDAO extends GenericDAOJPAImpl<OfficeEntity, String> {
-  private static final Log LOG = ExoLogger.getLogger(OfficeDAO.class);
 }

@@ -17,8 +17,6 @@
 package org.exoplatform.timetracker.dao;
 
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.FeatureEntity;
 
 /**
@@ -28,5 +26,4 @@ import org.exoplatform.timetracker.entity.FeatureEntity;
  * @version $Id: $Id
  */
 public class FeatureDAO extends GenericDAOJPAImpl<FeatureEntity, Long> {
-  private static final Log LOG = ExoLogger.getLogger(FeatureDAO.class);
 }

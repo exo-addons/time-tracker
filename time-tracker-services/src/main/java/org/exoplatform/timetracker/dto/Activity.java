@@ -19,9 +19,6 @@ package org.exoplatform.timetracker.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.exoplatform.timetracker.entity.FeatureEntity;
-import org.exoplatform.timetracker.entity.ProjectEntity;
-
 import lombok.Data;
 
 /**

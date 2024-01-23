@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.exoplatform.addons.time-tracker</groupId>
     <artifactId>time-tracker</artifactId>
-    <version>1.0.x-SNAPSHOT</version>
+    <version>1.1.x-SNAPSHOT</version>
   </parent>
   <artifactId>time-tracker-webapps</artifactId>
   <packaging>war</packaging>

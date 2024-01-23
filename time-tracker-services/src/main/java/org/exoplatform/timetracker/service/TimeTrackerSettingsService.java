@@ -19,18 +19,12 @@ package org.exoplatform.timetracker.service;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.commons.api.settings.SettingService;
 import org.exoplatform.commons.api.settings.SettingValue;
 import org.exoplatform.commons.api.settings.data.Context;
 import org.exoplatform.commons.api.settings.data.Scope;
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.timetracker.dto.Location;
 import org.exoplatform.timetracker.dto.Office;
 import org.exoplatform.timetracker.dto.TimeTrackerSetting;
@@ -38,7 +32,13 @@ import org.exoplatform.timetracker.dto.WorkTime;
 import org.exoplatform.timetracker.storage.SettingsStorage;
 import org.exoplatform.ws.frameworks.json.JsonGenerator;
 import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.*;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -47,8 +47,6 @@ import org.exoplatform.ws.frameworks.json.impl.*;
  * @version $Id: $Id
  */
 public class TimeTrackerSettingsService {
-
-  private static final Log   LOG = ExoLogger.getLogger(TimeTrackerSettingsService.class);
 
   private final SettingsStorage settingsStorage;
 
@@ -86,7 +84,7 @@ public class TimeTrackerSettingsService {
 
   /**
    * Create new WorkTime. If the WorkTime already exits an
-   * {@link javax.persistence.EntityExistsException} will be thrown.
+   * {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param workTime WorkTime to create
    * @return stored {@link WorkTime} in
@@ -143,7 +141,7 @@ public class TimeTrackerSettingsService {
   /**
    * Create new Location that will be available for all users. If the
    * Location already exits an
-   * {@link javax.persistence.EntityExistsException} will be thrown.
+   * {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param location Location to create
    * @return stored {@link Location} in
@@ -200,7 +198,7 @@ public class TimeTrackerSettingsService {
 
   /**
    * Create new Office that will be available for all users. If the Office already
-   * exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param office Office to create
    * @return stored {@link Office} in datasource
@@ -274,8 +272,6 @@ public class TimeTrackerSettingsService {
     if (timeTrackerSetting == null) {
       throw new IllegalArgumentException("Empty settings to save");
     }
-
-    TimeTrackerSetting oldSettings = getSettings();
 
     String settingsString = toJsonString(timeTrackerSetting);
     settingService.set(TIME_TRACKER_CONTEXT,

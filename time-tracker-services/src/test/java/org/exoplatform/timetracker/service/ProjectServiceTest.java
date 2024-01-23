@@ -7,7 +7,7 @@ import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.Project;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -16,20 +16,16 @@
  */
 package org.exoplatform.timetracker.service;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.ecs.html.S;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.timetracker.dto.Project;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.dto.TeamMember;
 import org.exoplatform.timetracker.storage.TeamStorage;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Teams
@@ -38,8 +34,6 @@ import java.util.Map;
  * @version $Id: $Id
  */
 public class TeamService {
-
-    private static final Log LOG = ExoLogger.getLogger(TeamService.class);
 
     private static  Map<String, List<Team>> teams = new HashMap<>();
 
@@ -57,7 +51,7 @@ public class TeamService {
 
     /**
      * Create new Team that will be available for all users. If the Team
-     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+     * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
      *
      * @param team Team to create
      * @return stored {@link org.exoplatform.timetracker.dto.Team} in datasource
@@ -75,7 +69,7 @@ public class TeamService {
 
     /**
      * Update an existing Project on datasource. If the Project doesn't exit an
-     * {@link javax.persistence.EntityNotFoundException} will be thrown.
+     * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
      *
      * @param team dto to update on store
      * @return stored {@link org.exoplatform.timetracker.dto.Team} in datasource
@@ -176,7 +170,7 @@ public class TeamService {
 
     /**
      * Create new TeamMember that will be available for all users. If the TeamMember
-     * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+     * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
      *
      * @param teamMember TeamMember to create
      * @throws java.lang.Exception when TeamMember already exists or an error occurs while

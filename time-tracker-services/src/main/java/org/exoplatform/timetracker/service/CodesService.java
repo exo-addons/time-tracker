@@ -18,15 +18,13 @@ package org.exoplatform.timetracker.service;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.timetracker.dto.*;
+import org.exoplatform.timetracker.dto.ActivityCode;
+import org.exoplatform.timetracker.dto.SubActivityCode;
+import org.exoplatform.timetracker.dto.SubType;
+import org.exoplatform.timetracker.dto.Type;
 import org.exoplatform.timetracker.storage.CodesStorage;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -35,8 +33,6 @@ import org.exoplatform.timetracker.storage.CodesStorage;
  * @version $Id: $Id
  */
 public class CodesService {
-
-  private static final Log      LOG = ExoLogger.getLogger(CodesService.class);
 
   private final CodesStorage codesStorage;
 
@@ -52,7 +48,7 @@ public class CodesService {
 
   /**
    * Create new ActivityCode. If the ActivityCode
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param activityCode ActivityCode to create
    * @return stored {@link org.exoplatform.timetracker.dto.ActivityCode} in datasource
@@ -65,7 +61,7 @@ public class CodesService {
 
   /**
    * Update an existing ActivityCode on datasource. If the ActivityCode doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param activityCode to update on store
    * @param username username storing ActivityCode
@@ -84,7 +80,7 @@ public class CodesService {
    *
    * @param activityCodeId technical identifier of ActivityCode
    * @param username user currently deleting ActivityCode
-   * @throws javax.persistence.EntityNotFoundException if ActivityCode wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if ActivityCode wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete ActivityCode
    */
   public void deleteActivityCode(Long activityCodeId, String username) throws EntityNotFoundException, IllegalAccessException {
@@ -107,7 +103,7 @@ public class CodesService {
 
   /**
    * Create new SubActivityCode that will be available for all users. If the SubActivityCode
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param subActivityCode SubActivityCode to create
    * @return stored {@link org.exoplatform.timetracker.dto.SubActivityCode} in datasource
@@ -120,7 +116,7 @@ public class CodesService {
 
   /**
    * Update an existing SubActivityCode on datasource. If the SubActivityCode doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param SubActivityCode dto to update on store
    * @param username username storing SubActivityCode
@@ -138,7 +134,7 @@ public class CodesService {
    *
    * @param subActivityCodeId technical identifier of SubActivityCode
    * @param username user currently deleting SubActivityCode
-   * @throws javax.persistence.EntityNotFoundException if SubActivityCode wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if SubActivityCode wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete SubActivityCode
    */
   public void deleteSubActivityCode(Long subActivityCodeId, String username) throws EntityNotFoundException, IllegalAccessException {
@@ -160,7 +156,7 @@ public class CodesService {
 
   /**
    * Create new Type that will be available for all users. If the Type
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param type Type to create
    * @return stored {@link org.exoplatform.timetracker.dto.Type} in datasource
@@ -174,7 +170,7 @@ public class CodesService {
 
   /**
    * Update an existing Type on datasource. If the Type doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param type dto to update on store
    * @param username username storing Type
@@ -193,7 +189,7 @@ public class CodesService {
    *
    * @param typeId technical identifier of Type
    * @param username user currently deleting Type
-   * @throws javax.persistence.EntityNotFoundException if Type wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if Type wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete Type
    */
   public void deleteType(Long typeId, String username) throws EntityNotFoundException, IllegalAccessException {
@@ -214,7 +210,7 @@ public class CodesService {
 
   /**
    * Create new SubType that will be available for all users. If the SubType
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param subType SubType to create
    * @return stored {@link org.exoplatform.timetracker.dto.SubType} in datasource
@@ -227,7 +223,7 @@ public class CodesService {
 
   /**
    * Update an existing SubType on datasource. If the SubType doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param SubType dto to update on store
    * @param username username storing SubType
@@ -245,7 +241,7 @@ public class CodesService {
    *
    * @param subTypeId technical identifier of SubType
    * @param username user currently deleting SubType
-   * @throws javax.persistence.EntityNotFoundException if SubType wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if SubType wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete SubType
    */
   public void deleteSubType(Long subTypeId, String username) throws EntityNotFoundException, IllegalAccessException {

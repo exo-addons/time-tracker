@@ -18,15 +18,12 @@ package org.exoplatform.timetracker.service;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.storage.ClientStorage;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -35,8 +32,6 @@ import org.exoplatform.timetracker.storage.ClientStorage;
  * @version $Id: $Id
  */
 public class ClientService {
-
-  private static final Log      LOG = ExoLogger.getLogger(ClientService.class);
 
   private final ClientStorage clientStorage;
 
@@ -52,7 +47,7 @@ public class ClientService {
 
   /**
    * Create new Client that will be available for all users. If the Client
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param client Client to create
    * @return stored {@link org.exoplatform.timetracker.dto.Client} in datasource
@@ -73,7 +68,7 @@ public class ClientService {
 
   /**
    * Update an existing Client on datasource. If the Client doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param Client dto to update on store
    * @param username username storing Client
@@ -105,7 +100,7 @@ public class ClientService {
    *
    * @param clientId technical identifier of Client
    * @param username user currently deleting Client
-   * @throws javax.persistence.EntityNotFoundException if Client wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if Client wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete Client
    */
   public void deleteClient(Long clientId, String username) throws EntityNotFoundException, IllegalAccessException {

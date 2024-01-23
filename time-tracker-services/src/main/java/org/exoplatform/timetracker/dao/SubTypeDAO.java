@@ -17,9 +17,6 @@
 package org.exoplatform.timetracker.dao;
 
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.timetracker.entity.FeatureEntity;
 import org.exoplatform.timetracker.entity.SubTypeEntity;
 
 /**
@@ -29,5 +26,4 @@ import org.exoplatform.timetracker.entity.SubTypeEntity;
  * @version $Id: $Id
  */
 public class SubTypeDAO extends GenericDAOJPAImpl<SubTypeEntity, Long> {
-  private static final Log LOG = ExoLogger.getLogger(SubTypeDAO.class);
 }

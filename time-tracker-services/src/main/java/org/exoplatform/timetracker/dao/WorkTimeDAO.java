@@ -17,8 +17,6 @@
 package org.exoplatform.timetracker.dao;
 
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.entity.WorkTimeEntity;
 
 /**
@@ -30,5 +28,4 @@ import org.exoplatform.timetracker.entity.WorkTimeEntity;
  * @version $Id: $Id
  */
 public class WorkTimeDAO extends GenericDAOJPAImpl<WorkTimeEntity, Long> {
-  private static final Log LOG = ExoLogger.getLogger(WorkTimeDAO.class);
 }

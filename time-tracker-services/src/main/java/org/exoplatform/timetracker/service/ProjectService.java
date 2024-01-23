@@ -18,15 +18,12 @@ package org.exoplatform.timetracker.service;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.storage.ProjectStorage;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * A Service to access and store Activities
@@ -35,8 +32,6 @@ import org.exoplatform.timetracker.storage.ProjectStorage;
  * @version $Id: $Id
  */
 public class ProjectService {
-
-  private static final Log      LOG = ExoLogger.getLogger(ProjectService.class);
 
   private final ProjectStorage projectStorage;
 
@@ -52,7 +47,7 @@ public class ProjectService {
 
   /**
    * Create new Project that will be available for all users. If the Project
-   * already exits an {@link javax.persistence.EntityExistsException} will be thrown.
+   * already exits an {@link jakarta.persistence.EntityExistsException} will be thrown.
    *
    * @param project Project to create
    * @return stored {@link org.exoplatform.timetracker.dto.Project} in datasource
@@ -73,7 +68,7 @@ public class ProjectService {
 
   /**
    * Update an existing Project on datasource. If the Project doesn't exit an
-   * {@link javax.persistence.EntityNotFoundException} will be thrown.
+   * {@link jakarta.persistence.EntityNotFoundException} will be thrown.
    *
    * @param Project dto to update on store
    * @param username username storing Project
@@ -105,7 +100,7 @@ public class ProjectService {
    *
    * @param projectId technical identifier of Project
    * @param username user currently deleting Project
-   * @throws javax.persistence.EntityNotFoundException if Project wasn't found
+   * @throws jakarta.persistence.EntityNotFoundException if Project wasn't found
    * @throws java.lang.IllegalAccessException if user is not allowed to delete Project
    */
   public void deleteProject(Long projectId, String username) throws EntityNotFoundException, IllegalAccessException {
