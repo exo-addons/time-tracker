@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ * Copyright (C) 2024 eXo Platform SAS.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+-->
+<page-set>
+  <page>
+    <name>time-tracking-management</name>
+    <title>Time tracking management</title>
+    <access-permissions>*:/platform/time-tracking-managers</access-permissions>
+    <edit-permission>manager:/platform/administrators</edit-permission>
+    <portlet-application>
+      <portlet>
+        <application-ref>time-tracker</application-ref>
+        <portlet-ref>activityManagement</portlet-ref>
+      </portlet>
+      <title>Activity management Portlet</title>
+      <access-permissions>*:/platform/time-tracking-managers</access-permissions>
+      <show-info-bar>false</show-info-bar>
+    </portlet-application>
+  </page>
+</page-set>
