@@ -11,7 +11,8 @@ const vuetify = new Vuetify({
 
 $(document).ready(() => {
   const lang = eXo && eXo.env && eXo.env.portal && eXo.env.portal.language;
-  const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale.addon.timeTracking-${lang}.json`;
+  const resourceBundleName = 'locale.portlet.TimeTracker';
+  const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${resourceBundleName}-${lang}.json`;
   
   exoi18n.loadLanguageAsync(lang, url).then(i18n => {
     new Vue({
