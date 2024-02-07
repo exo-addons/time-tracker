@@ -218,7 +218,7 @@
 
 <script>
 import filterDrawer from './FilterDrawer.vue';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import AddTrackingEntryDrawer from '../commons/AddTTEntryDrawer.vue';
 import EditTrackingEntryDrawer from '../commons/EditTTEntryDrawer.vue';
 export default {
