@@ -17,7 +17,12 @@
 package org.exoplatform.timetracker.dao;
 
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -25,11 +30,6 @@ import org.exoplatform.timetracker.entity.ActivityRecordEntity;
 
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>ActivityRecordDAO class.</p>
@@ -135,6 +135,16 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
         try {
             Date from = null;
             Date to = null;
+            List<Long> activityList = new ArrayList<>();
+            List<Long> typeList = new ArrayList<>();
+            List<Long> subTypeList = new ArrayList<>();
+            List<Long> activityCodeList = new ArrayList<>();
+            List<Long> subActivityCodeList = new ArrayList<>();
+            List<Long> clientList = new ArrayList<>();
+            List<Long> projectList = new ArrayList<>();
+            List<Long> featureList = new ArrayList<>();
+            List<String> locationList = new ArrayList<>();
+            List<String> officeList = new ArrayList<>();
             String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord";
             if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                     || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
@@ -149,46 +159,70 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     queryString = queryString + " and ";
                 }
                 if (StringUtils.isNotEmpty(activity )) {
-                    queryString = queryString + " activityRecord.activityEntity.id in (" + convert(activity) + ")";
-                    queryString = queryString + " and ";
+                    activityList = convertLongList(activity);
+                    if (!activityList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.id in :activityList";
+                        queryString = queryString + " and ";
+                    }
                 }
                 if (StringUtils.isNotEmpty(type )) {
-                    queryString = queryString + " activityRecord.activityEntity.typeEntity.id in (" + convert(type) + ")";
-                    queryString = queryString + " and ";
+                    typeList = convertLongList(type);
+                    if (!typeList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.typeEntity.id in :typeList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(subType) ) {
-                    queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in (" + convert(subType) + ")";
-                    queryString = queryString + " and ";
+                    subTypeList = convertLongList(subType);
+                    if (!subTypeList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in :subTypeList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
 
                 if (StringUtils.isNotEmpty(activityCode) ) {
-                    queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in (" + convert(activityCode) + ")";
-                    queryString = queryString + " and ";
+                    activityCodeList = convertLongList(activityCode);
+                    if (!activityCodeList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in :activityCodeList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
 
                 if (StringUtils.isNotEmpty(subActivityCode )) {
-                    queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in (" + convert(subActivityCode) + ")";
-                    queryString = queryString + " and ";
+                    subActivityCodeList = convertLongList(subActivityCode);
+                    if (!subActivityCodeList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in :subActivityCodeList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(client) ) {
-                    queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in (" + convert(client) + ")";
-                    queryString = queryString + " or activityRecord.clientEntity.id in (" + convert(client) + ")";
-                    queryString = queryString + " and ";
+                    clientList = convertLongList(client);
+                    if (!clientList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
+                        queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(project) ) {
-                    queryString = queryString + " activityRecord.activityEntity.projectEntity.id in (" + convert(project) + ")";
-                    queryString = queryString + " or activityRecord.projectEntity.id in (" + convert(project) + ")";
-                    queryString = queryString + " and ";
+                    projectList = convertLongList(project);
+                    if (!projectList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
+                        queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(feature) ) {
-                    queryString = queryString + " activityRecord.activityEntity.featureEntity.id in (" + convert(feature) + ")";
-                    queryString = queryString + " and ";
+                    featureList = convertLongList(feature);
+                    if (!featureList.isEmpty()) {
+                        queryString = queryString + " activityRecord.activityEntity.featureEntity.id in :featureList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
@@ -198,13 +232,19 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
 
                 if (StringUtils.isNotEmpty(location)) {
-                    queryString = queryString + " activityRecord.location in (" + convert(location)+ ")";
-                    queryString = queryString + " and ";
+                    locationList = Arrays.asList(location.split(","));
+                    if (!locationList.isEmpty()) {
+                        queryString = queryString + " activityRecord.location in :locationList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(office)) {
-                    queryString = queryString + " activityRecord.office in (" + convert(office) + ")";
-                    queryString = queryString + " and ";
+                    officeList = Arrays.asList(office.split(","));
+                    if (!officeList.isEmpty()) {
+                        queryString = queryString + " activityRecord.office in :officeList";
+                        queryString = queryString + " and ";
+                    }
                 }
 
 
@@ -251,6 +291,36 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
             }
             if (to != null) {
                 query.setParameter("toDate",to);
+            }
+            if (!activityList.isEmpty()) {
+                query.setParameter("activityList", activityList);
+            }
+            if (!typeList.isEmpty()) {
+                query.setParameter("typeList", typeList);
+            }
+            if (!subTypeList.isEmpty()) {
+                query.setParameter("subTypeList", subTypeList);
+            }
+            if (!activityCodeList.isEmpty()) {
+                query.setParameter("activityCodeList", activityCodeList);
+            }
+            if (!subActivityCodeList.isEmpty()) {
+                query.setParameter("subActivityCodeList", subActivityCodeList);
+            }
+            if (!clientList.isEmpty()) {
+                query.setParameter("clientList", clientList);
+            }
+            if (!projectList.isEmpty()) {
+                query.setParameter("projectList", projectList);
+            }
+            if (!featureList.isEmpty()) {
+                query.setParameter("featureList", featureList);
+            }
+            if (!locationList.isEmpty()) {
+                query.setParameter("locationList", locationList);
+            }
+            if (!officeList.isEmpty()) {
+                query.setParameter("officeList", officeList);
             }
             if (offset >= 0 && limit > 0) {
                 query.setFirstResult(offset).setMaxResults(limit);
@@ -300,6 +370,17 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
             try {
                 Date to = null;
                 Date from = null;
+                List<Long> activityList = new ArrayList<>();
+                List<Long> typeList = new ArrayList<>();
+                List<Long> subTypeList = new ArrayList<>();
+                List<Long> activityCodeList = new ArrayList<>();
+                List<Long> subActivityCodeList = new ArrayList<>();
+                List<Long> clientList = new ArrayList<>();
+                List<Long> projectList = new ArrayList<>();
+                List<Long> featureList = new ArrayList<>();
+                List<String> locationList = new ArrayList<>();
+                List<String> officeList = new ArrayList<>();
+
                 String queryString = "SELECT count(activityRecord.id) FROM  ActivityRecordEntity activityRecord";
                 if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                         || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
@@ -314,44 +395,70 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                         queryString = queryString + " and ";
                     }
                     if (StringUtils.isNotEmpty(activity )) {
-                        queryString = queryString + " activityRecord.activityEntity.id in (" + convert(activity) + ")";
-                        queryString = queryString + " and ";
+                        activityList = convertLongList(activity);
+                        if (!activityList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.id in :activityList";
+                            queryString = queryString + " and ";
+                        }
                     }
                     if (StringUtils.isNotEmpty(type )) {
-                        queryString = queryString + " activityRecord.activityEntity.typeEntity.id in (" + convert(type) + ")";
-                        queryString = queryString + " and ";
+                        typeList = convertLongList(type);
+                        if (!typeList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.typeEntity.id in :typeList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
                     if (StringUtils.isNotEmpty(subType) ) {
-                        queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in (" + convert(subType) + ")";
-                        queryString = queryString + " and ";
+                        subTypeList = convertLongList(subType);
+                        if (!subTypeList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.subTypeEntity.id in :subTypeList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
 
                     if (StringUtils.isNotEmpty(activityCode) ) {
-                        queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in (" + convert(activityCode) + ")";
-                        queryString = queryString + " and ";
+                        activityCodeList = convertLongList(activityCode);
+                        if (!activityCodeList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.activityCodeEntity.id in :activityCodeList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
 
                     if (StringUtils.isNotEmpty(subActivityCode )) {
-                        queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in (" + convert(subActivityCode) + ")";
-                        queryString = queryString + " and ";
+                        subActivityCodeList = convertLongList(subActivityCode);
+                        if (!subActivityCodeList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.subActivityCodeEntity.id in :subActivityCodeList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
                     if (StringUtils.isNotEmpty(client) ) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in (" + convert(client) + ")";
-                        queryString = queryString + " and ";
+                        clientList = convertLongList(client);
+                        if (!clientList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
+                            queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
                     if (StringUtils.isNotEmpty(project) ) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id in (" + convert(project) + ")";
-                        queryString = queryString + " and ";
+                        projectList = convertLongList(project);
+                        if (!projectList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
+                            queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
                     if (StringUtils.isNotEmpty(feature) ) {
-                        queryString = queryString + " activityRecord.activityEntity.featureEntity.id in (" + convert(feature) + ")";
-                        queryString = queryString + " and ";
+                        featureList = convertLongList(feature);
+                        if (!featureList.isEmpty()) {
+                            queryString = queryString + " activityRecord.activityEntity.featureEntity.id in :featureList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
                     if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
@@ -359,16 +466,21 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                         queryString = queryString + " and ";
                     }
 
-
                     if (StringUtils.isNotEmpty(location)) {
-                        queryString = queryString + " activityRecord.location in (" + convert(location)+ ")";
-                        queryString = queryString + " and ";
+                        locationList = Arrays.asList(location.split(","));
+                        if (!locationList.isEmpty()) {
+                            queryString = queryString + " activityRecord.location in :locationList";
+                            queryString = queryString + " and ";
+                        }
+                    }
+                    if (StringUtils.isNotEmpty(office)) {
+                        officeList = Arrays.asList(office.split(","));
+                        if (!officeList.isEmpty()) {
+                            queryString = queryString + " activityRecord.office in :officeList";
+                            queryString = queryString + " and ";
+                        }
                     }
 
-                    if (StringUtils.isNotEmpty(office)) {
-                        queryString = queryString + " activityRecord.office in (" + convert(office) + ")";
-                        queryString = queryString + " and ";
-                    }
                     if (StringUtils.isNotEmpty(fromDate)) {
                         try {
                             from = formatter.parse(fromDate);
@@ -404,19 +516,48 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 if (to != null) {
                     query.setParameter("toDate",to);
                 }
+                if (!activityList.isEmpty()) {
+                    query.setParameter("activityList", activityList);
+                }
+                if (!typeList.isEmpty()) {
+                    query.setParameter("typeList", typeList);
+                }
+                if (!subTypeList.isEmpty()) {
+                    query.setParameter("subTypeList", subTypeList);
+                }
+                if (!activityCodeList.isEmpty()) {
+                    query.setParameter("activityCodeList", activityCodeList);
+                }
+                if (!subActivityCodeList.isEmpty()) {
+                    query.setParameter("subActivityCodeList", subActivityCodeList);
+                }
+                if (!clientList.isEmpty()) {
+                    query.setParameter("clientList", clientList);
+                }
+                if (!projectList.isEmpty()) {
+                    query.setParameter("projectList", projectList);
+                }
+                if (!featureList.isEmpty()) {
+                    query.setParameter("featureList", featureList);
+                }
+                if (!locationList.isEmpty()) {
+                    query.setParameter("locationList", locationList);
+                }
+                if (!officeList.isEmpty()) {
+                    query.setParameter("officeList", officeList);
+                }
             return query.getSingleResult();
         } catch (Exception e) {
             LOG.warn("Exception while attempting to get activityRecords count.", e);
             throw e;
         }
     }
-    
-    boolean isNotEmpty (Long value){
-        if(value!=null  && value > 0) return true;
-        return false;
-    }
 
-    String convert(String field){
-        return "'"+field.replaceAll(",","','")+"'";
-    }
+    List<Long> convertLongList(String field) {
+        return Stream.of(field.split(","))
+                .map(String::trim)
+                .map(Long::parseLong).toList();
+
+    }    
+
 }
