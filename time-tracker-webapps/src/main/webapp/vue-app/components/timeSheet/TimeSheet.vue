@@ -609,6 +609,7 @@ export default {
         this.getTypes();
         this.getSubTypes();
         this.getActivities();
+        this.getFeatures();
         this.getFilters();
         this.getOffices();
         this.getLocations();
