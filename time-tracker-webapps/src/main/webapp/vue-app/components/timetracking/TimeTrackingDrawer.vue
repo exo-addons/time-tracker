@@ -216,7 +216,7 @@ export default {
     document.addEventListener('alert-message-dismissed', this.deleteItemConfirm);
   },
   mounted () {
-    $(this.$refs.timeTrackerDrawer.$el).click(()=> { 
+    this.$refs.timeTrackerDrawer.$el.click(()=> {
       if (this.activityRecordMenuDatePicker) {
         this.activityRecordMenuDatePicker = false;
       }
@@ -424,7 +424,6 @@ export default {
       this.formatDate(this.date);
     },
     addActivityRecord() {
-      console.log('Add Activity Record');
       this.$refs.addTTEntryDrawer.openAddTTEntryDrawer();
     },
     editActivityRecord(item) {

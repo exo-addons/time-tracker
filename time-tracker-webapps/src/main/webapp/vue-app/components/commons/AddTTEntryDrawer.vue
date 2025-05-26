@@ -314,7 +314,7 @@ export default {
     }
   },
   mounted () {
-    $(this.$refs.addTTEntryDrawer.$el).click(()=> { 
+    this.$refs.addTTEntryDrawer.$el.click(()=> {
       if (this.addTTEntryMenuDatePicker) {
         this.addTTEntryMenuDatePicker = false;
       }
