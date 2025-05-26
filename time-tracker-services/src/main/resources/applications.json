@@ -16,6 +16,30 @@
           "*:/spaces/exo_employees"
         ]
       }
+    },
+    {
+      "name": "timeTrackingDrawer",
+      "overrideMode": "merge",
+      "override": false,
+      "enabled": true,
+      "application": {
+        "title": "Time Tracking",
+        "icon": "fa-clock",
+        "type": "DRAWER",
+        "url": "timeTracker",
+        "mandatory": false,
+        "active": true,
+        "mobile": true,
+        "default": true,
+        "pwa": false,
+        "order": 10,
+        "permissions": [
+          "*:/spaces/exo_employees"
+        ]
+      }
     }
   ]
 }
+
+
+

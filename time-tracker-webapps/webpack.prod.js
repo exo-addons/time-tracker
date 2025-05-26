@@ -19,7 +19,9 @@ const config = merge(webpackCommonConfig, {
     entry: {
         activityManagement: './src/main/webapp/vue-app/activityManagement.js',
         timeTracking: './src/main/webapp/vue-app/timeTracking.js',
-        timeSheet: './src/main/webapp/vue-app/timeSheet.js'
+        timeSheet: './src/main/webapp/vue-app/timeSheet.js',
+        timeTrackerQuickAction: './src/main/webapp/vue-app/quick-actions/extensions.js',
+
     },
     output: {
         path: path.join(__dirname, 'target/time-tracker/'),
