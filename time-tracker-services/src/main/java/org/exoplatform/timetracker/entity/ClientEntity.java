@@ -16,15 +16,12 @@
  */
 package org.exoplatform.timetracker.entity;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
+import io.meeds.common.persistence.PortableSequence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -35,15 +32,13 @@ import lombok.Data;
  * @version $Id: $Id
  */
 @Entity(name = "ClientEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_CLIENT")
 @Data
 @NamedQueries({})
 public class ClientEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_CLIENT_ID", sequenceName = "SEQ_CLIENT_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_CLIENT_ID")
+  @PortableSequence(name = "SEQ_CLIENT_ID")
   @Column(name = "ID")
   private Long   id;
 

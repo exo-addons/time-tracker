@@ -16,17 +16,14 @@
  */
 package org.exoplatform.timetracker.entity;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
+import io.meeds.common.persistence.PortableSequence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -37,15 +34,13 @@ import lombok.Data;
  * @version $Id: $Id
  */
 @Entity(name = "SubTypeEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_SUB_TYPE")
 @Data
 @NamedQueries({})
 public class SubTypeEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_SUB_TYPE_ID", sequenceName = "SEQ_SUB_TYPE_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_SUB_TYPE_ID")
+  @PortableSequence(name = "SEQ_SUB_TYPE_ID")
   @Column(name = "ID")
   private Long   id;
 

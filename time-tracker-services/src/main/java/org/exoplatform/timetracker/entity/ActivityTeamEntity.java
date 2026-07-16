@@ -18,8 +18,6 @@ package org.exoplatform.timetracker.entity;
 
 import java.io.Serializable;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -34,7 +32,6 @@ import lombok.Data;
  * @author Krout MedAmine
  */
 @Entity(name = "ActivityTeamEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_ACTIVITY_TEAM")
 @Data
 @NamedQueries({

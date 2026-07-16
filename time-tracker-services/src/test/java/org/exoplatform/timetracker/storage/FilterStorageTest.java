@@ -9,7 +9,7 @@ import org.exoplatform.timetracker.entity.FilterEntity;
 import org.exoplatform.timetracker.entity.FilterFieldEntity;
 import org.junit.Before;
 
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 

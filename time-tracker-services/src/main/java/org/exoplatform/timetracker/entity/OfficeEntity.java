@@ -16,8 +16,6 @@
  */
 package org.exoplatform.timetracker.entity;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -34,7 +32,6 @@ import lombok.Data;
  * @version $Id: $Id
  */
 @Entity(name = "OfficeEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_OFFICE")
 @Data
 @NamedQueries({})
