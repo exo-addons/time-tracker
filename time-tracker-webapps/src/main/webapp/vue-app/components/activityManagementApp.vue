@@ -2,7 +2,7 @@
   <v-app
     id="activityManagementApp"
     class="VuetifyApp timeTrackingApp "
-    color="transaprent">
+    color="transparent">
     <main>
       <template>
         <v-tabs
@@ -243,12 +243,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getClients();
           this.displaySusccessMessage('client deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getClients();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -329,12 +327,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getProjects();
           this.displaySusccessMessage('project deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getProjects();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -415,12 +411,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getFeatures();
           this.displaySusccessMessage('feature deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getFeatures();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -501,12 +495,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getActivityCodes();
           this.displaySusccessMessage('activityCode deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getActivityCodes();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -587,12 +579,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getSubActivityCodes();
           this.displaySusccessMessage('subActivityCode deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getSubActivityCodes();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -673,12 +663,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getTypes();
           this.displaySusccessMessage('type deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getTypes();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -759,12 +747,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getSubTypes();
           this.displaySusccessMessage('subType deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getSubTypes();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -845,12 +831,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getTeams();
           this.displaySusccessMessage('team deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getTeams();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -931,12 +915,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getWorkTimePlans();
           this.displaySusccessMessage('workTimePlan deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getWorkTimePlans();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -1017,12 +999,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getLocations();
           this.displaySusccessMessage('location deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getLocations();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -1103,12 +1083,10 @@ export default {
           }
         })
         .then(() => {
-          this.confirmDialog = false;
           this.getOffices();
           this.displaySusccessMessage('office deleted');
         })
         .catch((result) => {
-          this.confirmDialog = false;
           this.getOffices();
           result.text().then((body) => {
             this.displayErrorMessage(body);
@@ -1225,7 +1203,7 @@ export default {
 
 <style>
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
@@ -1269,16 +1247,6 @@ select {
     min-width: 10px !important;
 }
 
-.drawerTitle {
-    font-size: 18px;
-    font-weight: bold;
-    color: @darkGrey;
-}
-
-.headerBorder {
-    border-color: #f0f4fe !important;
-}
-
 .drawersBtn {
     border: 1px solid #1976d27a !important;
     margin-right: 5px;
@@ -1288,15 +1256,11 @@ select {
     letter-spacing: .5px;
 }
 
-.drawerIcons {
-    flex-direction: row !important;
-}
-
-.infoContent {
+#activityManagementApp .infoContent {
     border-top: 1px solid #e1e8ee;
 }
 
-.inputFilter {
+#activityManagementApp .inputFilter {
           max-width: 250px !important;
         }
 </style>

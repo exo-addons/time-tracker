@@ -43,7 +43,7 @@
             @click="openEditTypeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteType(item)">
+          <v-icon small @click="confirmDeleteType(item)">
             delete
           </v-icon>
         </template>
@@ -96,7 +96,7 @@
             @click="openEditSubTypeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteSubType(item)">
+          <v-icon small @click="confirmDeleteSubType(item)">
             delete
           </v-icon>
         </template>
@@ -118,6 +118,13 @@
       ref="editSubTypeDrawer"
       :types="types"
       @save="editSubType" />
+    <exo-confirm-dialog
+      ref="deleteTypeConfirmDialog"
+      :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+      :title="$t('exo.timeTracker.confirmDialog.title')"
+      :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+      :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+      @ok="onConfirmDeleteType" />
   </div>
 </template>
 
@@ -147,6 +154,8 @@ export default {
     searchType: '',
     searchSubType: '',
     valid: true,
+    pendingDeleteItem: null,
+    pendingDeleteType: null,
     editedIndex: -1,
     editedItem: {
       code: '',
@@ -208,6 +217,23 @@ export default {
     }
   },
   methods: {
+    confirmDeleteType(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'type';
+      this.$refs.deleteTypeConfirmDialog.open();
+    },
+    confirmDeleteSubType(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'subType';
+      this.$refs.deleteTypeConfirmDialog.open();
+    },
+    onConfirmDeleteType() {
+      if (this.pendingDeleteType === 'type') {
+        this.deleteType(this.pendingDeleteItem);
+      } else {
+        this.deleteSubType(this.pendingDeleteItem);
+      }
+    },
     deleteType(item) {
       const index = this.types.indexOf(item);
       this.types.splice(index, 1);
@@ -251,26 +277,26 @@ export default {
 </script>
 
 <style>
-#codesManagementApp {
+#activityManagementApp {
     overflow: hidden;
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
-#codesManagementApp .v-input input {
+#activityManagementApp .v-input input {
     margin-bottom: 0;
     border: 0;
     box-shadow: none;
 }
 
-#codesManagementApp .v-toolbar .v-input {
+#activityManagementApp .v-toolbar .v-input {
     margin-left: 18px;
 }
 
-#codesManagementApp .v-data-table {
+#activityManagementApp .v-data-table {
     width: 100%;
 }
 </style>

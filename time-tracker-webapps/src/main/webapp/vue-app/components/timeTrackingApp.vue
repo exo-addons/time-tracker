@@ -2,7 +2,7 @@
   <v-app
     id="timeTrackingApp"
     class="VuetifyApp timeTrackingApp"
-    color="transaprent">
+    color="transparent">
     <main>
       <v-container px-0 py-0>
         <v-layout class="transparent">

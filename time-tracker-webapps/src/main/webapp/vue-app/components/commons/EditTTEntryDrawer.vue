@@ -93,7 +93,7 @@
               name="projectVersion"
               class="input-block-level ignore-vuetify-classes my-3">
           </div>
-          <div>
+          <div v-if="salesOrders.length > 0">
             <v-label for="salesOrder">
               {{ $t("exo.timeTracker.commons.TTEntryDrawer.label.salesOrder") }}
             </v-label>

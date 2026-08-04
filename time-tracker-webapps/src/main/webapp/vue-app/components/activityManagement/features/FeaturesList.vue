@@ -43,7 +43,7 @@
             @click="openEditDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
+          <v-icon small @click="confirmDeleteItem(item)">
             delete
           </v-icon>
         </template>
@@ -55,6 +55,13 @@
       ref="editFeatureDrawer"
       :feature="editedItem"
       @save="update" />
+    <exo-confirm-dialog
+      ref="deleteFeatureConfirmDialog"
+      :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+      :title="$t('exo.timeTracker.confirmDialog.title')"
+      :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+      :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+      @ok="deleteItem(pendingDeleteItem)" />
   </div>
 </template>
 
@@ -75,6 +82,7 @@ export default {
   data: () => ({
     search: '',
     valid: true,
+    pendingDeleteItem: null,
     editedIndex: -1,
     editedItem: {
       code: '',
@@ -125,6 +133,10 @@ export default {
     }
   },
   methods: {
+    confirmDeleteItem(item) {
+      this.pendingDeleteItem = item;
+      this.$refs.deleteFeatureConfirmDialog.open();
+    },
     deleteItem(item) {
       const index = this.features.indexOf(item);
       this.features.splice(index, 1);
@@ -150,26 +162,26 @@ export default {
 </script>
 
 <style>
-#featureManagementApp {
+#activityManagementApp {
     overflow: hidden;
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
-#featureManagementApp .v-input input {
+#activityManagementApp .v-input input {
     margin-bottom: 0;
     border: 0;
     box-shadow: none;
 }
 
-#featureManagementApp .v-toolbar .v-input {
+#activityManagementApp .v-toolbar .v-input {
     margin-left: 18px;
 }
 
-#featureManagementApp .v-data-table {
+#activityManagementApp .v-data-table {
     width: 100%;
 }
 </style>

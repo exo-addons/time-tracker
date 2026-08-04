@@ -43,7 +43,7 @@
             @click="openEditActivityCodeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteActivityCode(item)">
+          <v-icon small @click="confirmDeleteActivityCode(item)">
             delete
           </v-icon>
         </template>
@@ -95,7 +95,7 @@
             @click="openEditSubActivityCodeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteSubActivityCode(item)">
+          <v-icon small @click="confirmDeleteSubActivityCode(item)">
             delete
           </v-icon>
         </template>
@@ -108,6 +108,13 @@
     <add-sub-activity-code-drawer ref="addSubActivityCodeDrawer" @save="addSubActivityCode" />
     <edit-activity-code-drawer ref="editActivityCodeDrawer" @save="editActivityCode" />
     <edit-sub-activity-code-drawer ref="editSubActivityCodeDrawer" @save="editSubActivityCode" />
+    <exo-confirm-dialog
+      ref="deleteCodeConfirmDialog"
+      :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+      :title="$t('exo.timeTracker.confirmDialog.title')"
+      :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+      :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+      @ok="onConfirmDeleteCode" />
   </div>
 </template>
 
@@ -137,6 +144,8 @@ export default {
     searchActivities: '',
     searchSubActivities: '',
     valid: true,
+    pendingDeleteItem: null,
+    pendingDeleteType: null,
     editedIndex: -1,
     editedItem: {
       code: '',
@@ -193,6 +202,23 @@ export default {
     }
   },
   methods: {
+    confirmDeleteActivityCode(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'activityCode';
+      this.$refs.deleteCodeConfirmDialog.open();
+    },
+    confirmDeleteSubActivityCode(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'subActivityCode';
+      this.$refs.deleteCodeConfirmDialog.open();
+    },
+    onConfirmDeleteCode() {
+      if (this.pendingDeleteType === 'activityCode') {
+        this.deleteActivityCode(this.pendingDeleteItem);
+      } else {
+        this.deleteSubActivityCode(this.pendingDeleteItem);
+      }
+    },
     deleteActivityCode(item) {
       const index = this.activityCodes.indexOf(item);
       this.activityCodes.splice(index, 1);
@@ -236,26 +262,26 @@ export default {
 </script>
 
 <style>
-#codesManagementApp {
+#activityManagementApp {
     overflow: hidden;
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
-#codesManagementApp .v-input input {
+#activityManagementApp .v-input input {
     margin-bottom: 0;
     border: 0;
     box-shadow: none;
 }
 
-#codesManagementApp .v-toolbar .v-input {
+#activityManagementApp .v-toolbar .v-input {
     margin-left: 18px;
 }
 
-#codesManagementApp .v-data-table {
+#activityManagementApp .v-data-table {
     width: 100%;
 }
 </style>

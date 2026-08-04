@@ -10,9 +10,10 @@
       <template slot="titleIcons">
         <v-btn
           :href="`/portal/dw/time_sheet?date=${date}`"
+          :aria-label="$t('exo.timeTracker.timeTracking.timeTrackingDrawer.openTimeSheet')"
           icon>
           <v-icon
-            :title="$t('exoplatform.chat.open.chat')"
+            :title="$t('exo.timeTracker.timeTracking.timeTrackingDrawer.openTimeSheet')"
             class="my-auto">
             mdi-open-in-new
           </v-icon>
@@ -53,7 +54,10 @@
         </div>
 
         <div align="center" justify="center">
-          <v-list v-if="activityRecords.length > 0" class="actList">
+          <p v-if="!activityRecords.length" class="text-sub-title py-4">
+            {{ $t('exo.timeTracker.timeTracking.timeTrackingDrawer.noActivity') }}
+          </p>
+          <v-list v-else class="actList">
             <v-list-item
               v-for="(item,i) in activityRecords"
               :key="i"
@@ -198,6 +202,7 @@ export default {
     activityRecord: {},
     total: 0,
     deleteId: 0,
+    idToConfirmDelete: 0,
     isActivity: true,
     itemRowBackground: 'timeSheetTime-not-valid',
     menuItemIndex: -1,
@@ -216,7 +221,7 @@ export default {
     document.addEventListener('alert-message-dismissed', this.deleteItemConfirm);
   },
   mounted () {
-    this.$refs.timeTrackerDrawer.$el.click(()=> {
+    this.$refs.timeTrackerDrawer.$el.addEventListener('click', () => {
       if (this.activityRecordMenuDatePicker) {
         this.activityRecordMenuDatePicker = false;
       }
@@ -229,6 +234,16 @@ export default {
   },
   methods: {
     deleteConfirm(){
+      if (this.deleteId && this.deleteId !== this.idToConfirmDelete) {
+        // a different item's deletion is still pending its undo window:
+        // commit it now instead of letting this new one silently hijack it.
+        // Not calling closeAlert() here: it dispatches a document event that
+        // the alert component may handle synchronously by firing its own
+        // dismiss event back at us, which would re-enter this class of
+        // handler while state is still mid-update.
+        this.deleteActivity();
+      }
+      this.deleteId = this.idToConfirmDelete;
       this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageDelete'),true);
     },
     menuItemFunction(i){
@@ -271,12 +286,12 @@ export default {
         .then(resp => resp.json())
         .then(resp => {
           this.activityRecords = resp;
-          this.total=this.activityRecords.reduce((accum, item)=>{
+          this.total=Number(this.activityRecords.reduce((accum, item)=>{
             if (item.activity === null){
               this.isActivity = false ;
             }
             return accum + item.time;
-          },0);
+          },0).toFixed(2));
         });
       this.formatDate(this.date);
     },
@@ -431,7 +446,7 @@ export default {
       this.$refs.editTTEntryDrawer.open(item);
     },
     deleteActivityRecord(id) {
-      this.deleteId = id;
+      this.idToConfirmDelete = id;
       this.$refs.deleteTTEntryDrawer.open();
     },
     
@@ -441,11 +456,16 @@ export default {
     deleteItemConfirm() {
       if (this.deleteId) {
         this.deleteActivity();
+        this.deleteId = null;
       }
     },
     deleteItemCancel() {
-      this.closeAlert();
+      // clear the pending item before closeAlert(): the alert component may
+      // handle the resulting event synchronously and fire its own dismiss
+      // event straight back at us, which would otherwise re-read a
+      // not-yet-cleared deleteId and delete despite the undo
       this.deleteId = null;
+      this.closeAlert();
       this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageCancel'));
     },
     displaySusccessMessage(message,undo) {
@@ -484,7 +504,7 @@ export default {
 .actItem {
   background: #f6f7fa;
   margin-bottom: 5px;
-  border: 0.5px solid;
+  border: 1px solid;
   border-radius: 6px;
   border-color: #e1e8ee;
 }

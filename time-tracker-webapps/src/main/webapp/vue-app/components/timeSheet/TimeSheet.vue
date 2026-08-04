@@ -1,5 +1,7 @@
 <template>
-  <div ref="ttTimeSheetAplication">
+  <div
+    id="timeSheetApplication"
+    ref="ttTimeSheetAplication">
     <v-card elevation="0">
       <v-card-text>
         <v-layout>
@@ -16,7 +18,6 @@
             hide-default-footer>
             <template v-slot:top>
               <v-toolbar
-                color="white"
                 flat
                 id="TTAplicationToolbar">
                 <template>
@@ -172,10 +173,10 @@
     <template>
       <exo-confirm-dialog
         ref="deleteItemTeamsList"
-        message="Are you sure you want to delete this line?"
-        title="Confirmation"
-        cancel-label="Cancel"
-        ok-label="Yes"
+        :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+        :title="$t('exo.timeTracker.confirmDialog.title')"
+        :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+        :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
         @ok="deleteConfirm()" />
     </template>
     <add-tracking-entry-drawer
@@ -265,6 +266,7 @@ export default {
       'Project Version': 'projectVersion'
     },
     deleteItemTeams: {},
+    itemToConfirmDelete: {},
     dateParam: '',
     idMenuItemRef: '',
     date: [],
@@ -320,91 +322,91 @@ export default {
     headers() {
       return [
         {
-          text: 'Date',
+          text: this.$t('exo.timeTracker.timeSheet.headers.date'),
           align: 'center',
           sortable: true,
           value: 'activityDate'
         },
         {
-          text: 'Description',
+          text: this.$t('exo.timeTracker.timeSheet.headers.description'),
           align: 'center',
           sortable: true,
           value: 'description'
         },
         {
-          text: 'Location',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelLocation'),
           align: 'center',
           sortable: true,
           value: 'location'
         },
         {
-          text: 'Time',
+          text: this.$t('exo.timeTracker.timeSheet.headers.time'),
           align: 'center',
           sortable: true,
           value: 'time'
         },
         {
-          text: 'Office',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelOffice'),
           align: 'center',
           sortable: true,
           value: 'office'
         },
         {
-          text: 'Activity',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelActivity'),
           align: 'center',
           sortable: true,
           value: 'activity.label'
         },
         {
-          text: 'SO',
+          text: this.$t('exo.timeTracker.timeSheet.headers.salesOrder'),
           align: 'center',
           sortable: true,
           value: 'salesOrder.name'
         },
         {
-          text: 'Type',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelType'),
           align: 'center',
           sortable: true,
           value: 'activity.type.label'
         },
         {
-          text: 'Sub Type',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelSubType'),
           align: 'center',
           sortable: true,
           value: 'activity.subType.label'
         },
         {
-          text: 'Client',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelClient'),
           align: 'center',
           sortable: true,
           value: 'activity.project.client.label'
         },
         {
-          text: 'Project',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelProject'),
           align: 'center',
           sortable: true,
           value: 'activity.project.label'
         },
         {
-          text: 'Activity Code',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelActivityCode'),
           align: 'center',
           sortable: true,
           value: 'activity.activityCode.label'
         },
         {
-          text: 'Sub Activity Code',
+          text: this.$t('exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode'),
           align: 'center',
           sortable: true,
           value: 'activity.subActivityCode.label'
         },
         {
-          text: 'User',
+          text: this.$t('exo.timeTracker.timeSheet.headers.user'),
           align: 'center',
           sortable: true,
           value: 'userFullName'
         },
         {
-          text: 'Actions',
+          text: this.$t('exo.timeTracker.timeSheet.headers.actions'),
           align: 'center',
           sortable: true,
           value: 'action'
@@ -474,6 +476,16 @@ export default {
       } 
     },
     deleteConfirm(){
+      if (this.deleteItemTeams && this.deleteItemTeams.id && this.deleteItemTeams.id !== this.itemToConfirmDelete.id) {
+        // a different item's deletion is still pending its undo window:
+        // commit it now instead of letting this new one silently hijack it.
+        // Not calling closeAlert() here: it dispatches a document event that
+        // the alert component may handle synchronously by firing its own
+        // dismiss event back at us, which would re-enter this class of
+        // handler while state is still mid-update.
+        this.deleteItem();
+      }
+      this.deleteItemTeams = this.itemToConfirmDelete;
       this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageDelete'),true);
     },
     generateId() {
@@ -650,7 +662,7 @@ export default {
       }
     },
     openConfirmDialogDeleteTeam(item) {
-      this.deleteItemTeams = item;
+      this.itemToConfirmDelete = item;
       this.$refs.deleteItemTeamsList.open();
     },
     close() {
@@ -673,11 +685,16 @@ export default {
     deleteItemConfirm() {
       if (this.deleteItemTeams && this.deleteItemTeams.id) {
         this.deleteItem();
+        this.deleteItemTeams = null;
       }
     },
     deleteItemCancel() {
-      this.closeAlert();
+      // clear the pending item before closeAlert(): the alert component may
+      // handle the resulting event synchronously and fire its own dismiss
+      // event straight back at us, which would otherwise re-read a
+      // not-yet-cleared deleteItemTeams and delete despite the undo
       this.deleteItemTeams = null;
+      this.closeAlert();
       this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageCancel'));
     },
     displaySusccessMessage(message,undo) {
@@ -1219,11 +1236,11 @@ export default {
   position: relative;
 }
 
-.v-data-table__wrapper {
+#timeSheetApplication .v-data-table__wrapper {
   padding-top: 30px;
 }
 
-.v-data-table-header {
+#timeSheetApplication .v-data-table-header {
   border-bottom: solid #d0d0d0;
 }
 

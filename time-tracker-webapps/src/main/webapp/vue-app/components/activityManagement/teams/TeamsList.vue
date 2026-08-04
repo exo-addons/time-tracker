@@ -73,7 +73,7 @@
             </v-toolbar>
           </template>
           <template v-slot:item.action="{ item }">
-            <v-icon small @click="deleteTeamMember(item)">
+            <v-icon small @click="confirmDeleteTeamMember(item)">
               delete
             </v-icon>
           </template>
@@ -92,11 +92,18 @@
     <template>
       <exo-confirm-dialog
         ref="deleteItemTeamsList"
-        message="Are you sure you want to delete this line?"
-        title="Confirmation"
-        cancel-label="Cancel"
-        ok-label="Yes"
+        :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+        :title="$t('exo.timeTracker.confirmDialog.title')"
+        :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+        :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
         @ok="deleteItem()" />
+      <exo-confirm-dialog
+        ref="deleteTeamMemberConfirmDialog"
+        :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+        :title="$t('exo.timeTracker.confirmDialog.title')"
+        :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+        :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+        @ok="deleteTeamMember(pendingDeleteTeamMember)" />
     </template>
   </div>
 </template>
@@ -120,6 +127,7 @@ export default {
   data: () => ({
     menuItemUpdateIndex: -1,
     deleteItemTeams: {},
+    pendingDeleteTeamMember: null,
     menuItemUpdate: false,
     message: '',
     valid: true,
@@ -224,6 +232,10 @@ export default {
           this.members = resp;
         });
     },
+    confirmDeleteTeamMember(item) {
+      this.pendingDeleteTeamMember = item;
+      this.$refs.deleteTeamMemberConfirmDialog.open();
+    },
     deleteTeamMember(item) {
       fetch(`/portal/rest/timetracker/teamsmgn/teamMember?teamMemberId=${  item.id}`, {
         method: 'delete',
@@ -305,26 +317,26 @@ export default {
 </script>
 
 <style>
-#teamManagementApp {
+#activityManagementApp {
     overflow: hidden;
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
-#teamManagementApp .v-input input {
+#activityManagementApp .v-input input {
     margin-bottom: 0;
     border: 0;
     box-shadow: none;
 }
 
-#teamManagementApp .v-toolbar .v-input {
+#activityManagementApp .v-toolbar .v-input {
     margin-left: 18px;
 }
 
-#teamManagementApp .v-data-table {
+#activityManagementApp .v-data-table {
     width: 100%;
 }
 

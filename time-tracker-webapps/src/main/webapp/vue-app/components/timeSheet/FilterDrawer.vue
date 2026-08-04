@@ -328,11 +328,7 @@
             ref="timeTrackerDivAutoComplete"
             class="contactAutoComplete">
             <v-label for="project">
-              {{
-                $t(
-                  'exo.timeTracker.timeSheet.filterDrawer.labelSubActivityCode'
-                )
-              }}
+              {{ $t('exo.timeTracker.timeSheet.filterDrawer.labelProject') }}
             </v-label>
             <v-autocomplete
               ref="project"
@@ -623,7 +619,6 @@ export default {
 .filterDrawerlistFilter {
   max-width: 390px;
   max-height: 205px;
-  overflow-y: scroll;
-  background-color: white !important;
+  overflow-y: auto;
 }
 </style>

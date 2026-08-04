@@ -36,7 +36,7 @@
             @click="openEditOfficeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteOffice(item)">
+          <v-icon small @click="confirmDeleteOffice(item)">
             delete
           </v-icon>
         </template>
@@ -81,7 +81,7 @@
             @click="openEditLocationDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteLocation(item)">
+          <v-icon small @click="confirmDeleteLocation(item)">
             delete
           </v-icon>
         </template>
@@ -126,7 +126,7 @@
             @click="openEditWorkTimeDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteWorkTime(item)">
+          <v-icon small @click="confirmDeleteWorkTime(item)">
             delete
           </v-icon>
         </template>
@@ -210,6 +210,13 @@
       :offices="offices"
       :teams="teams"
       @save="editWorkTime" />
+    <exo-confirm-dialog
+      ref="deleteSettingConfirmDialog"
+      :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+      :title="$t('exo.timeTracker.confirmDialog.title')"
+      :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+      :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+      @ok="onConfirmDeleteSetting" />
   </div>
 </template>
 
@@ -257,6 +264,8 @@ export default {
   },
   data: () => ({
     valid: true,
+    pendingDeleteItem: null,
+    pendingDeleteType: null,
     editedIndex: -1,
     editedItem: {
       code: '',
@@ -385,6 +394,30 @@ export default {
           this.activities = resp;
         });
     },
+    confirmDeleteOffice(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'office';
+      this.$refs.deleteSettingConfirmDialog.open();
+    },
+    confirmDeleteLocation(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'location';
+      this.$refs.deleteSettingConfirmDialog.open();
+    },
+    confirmDeleteWorkTime(item) {
+      this.pendingDeleteItem = item;
+      this.pendingDeleteType = 'workTime';
+      this.$refs.deleteSettingConfirmDialog.open();
+    },
+    onConfirmDeleteSetting() {
+      if (this.pendingDeleteType === 'office') {
+        this.deleteOffice(this.pendingDeleteItem);
+      } else if (this.pendingDeleteType === 'location') {
+        this.deleteLocation(this.pendingDeleteItem);
+      } else {
+        this.deleteWorkTime(this.pendingDeleteItem);
+      }
+    },
     deleteOffice(item) {
       const index = this.offices.indexOf(item);
       this.offices.splice(index, 1);
@@ -452,26 +485,26 @@ export default {
 </script>
 
 <style>
-#codesManagementApp {
+#activityManagementApp {
     overflow: hidden;
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
-#codesManagementApp .v-input input {
+#activityManagementApp .v-input input {
     margin-bottom: 0;
     border: 0;
     box-shadow: none;
 }
 
-#codesManagementApp .v-toolbar .v-input {
+#activityManagementApp .v-toolbar .v-input {
     margin-left: 18px;
 }
 
-#codesManagementApp .v-data-table {
+#activityManagementApp .v-data-table {
     width: 100%;
 }
 

@@ -29,6 +29,20 @@
             </button>
           </v-toolbar>
         </template>
+        <template v-slot:item.teamNames="{ item }">
+          <v-tooltip v-if="item.teamNames" bottom max-width="300px">
+            <template v-slot:activator="{ on, attrs }">
+              <span
+                v-bind="attrs"
+                v-on="on"
+                class="text-truncate d-inline-block"
+                style="max-width: 140px; vertical-align: middle;">
+                {{ item.teamNames }}
+              </span>
+            </template>
+            <span>{{ item.teamNames }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.action="{ item }">
           <v-icon
             small
@@ -36,7 +50,7 @@
             @click="openEditDrawer(item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
+          <v-icon small @click="confirmDeleteItem(item)">
             delete
           </v-icon>
         </template>
@@ -66,6 +80,13 @@
       :teams="teams"
       :other-settings="otherSettings"
       @save="update" />
+    <exo-confirm-dialog
+      ref="deleteActivityConfirmDialog"
+      :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+      :title="$t('exo.timeTracker.confirmDialog.title')"
+      :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+      :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
+      @ok="deleteItem(pendingDeleteItem)" />
   </div>
 </template>
 
@@ -115,6 +136,7 @@ export default {
     search: '',
     message: '',
     valid: true,
+    pendingDeleteItem: null,
     activities: [],
     editedIndex: -1,
     editedItem: {
@@ -236,6 +258,10 @@ export default {
       this.editedIndex = this.activities.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+    },
+    confirmDeleteItem(item) {
+      this.pendingDeleteItem = item;
+      this.$refs.deleteActivityConfirmDialog.open();
     },
     deleteItem(item) {
       const index = this.activities.indexOf(item);
@@ -369,7 +395,7 @@ export default {
     padding: 10px 20px;
 }
 
-select {
+#activityManagementApp select {
     width: auto;
 }
 
