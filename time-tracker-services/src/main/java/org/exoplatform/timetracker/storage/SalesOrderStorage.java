@@ -19,7 +19,7 @@ package org.exoplatform.timetracker.storage;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.SalesOrderDAO;
 import org.exoplatform.timetracker.dto.SalesOrder;

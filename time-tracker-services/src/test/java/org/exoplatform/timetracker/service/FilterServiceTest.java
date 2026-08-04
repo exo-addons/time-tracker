@@ -55,7 +55,7 @@ public class FilterServiceTest extends TestCase {
     doNothing().when(filterStorage).deleteFilter(anyLong());
 
     // When
-    filterService.deleteFilter(1l);
+    filterService.deleteFilter(1l, "root");
 
     // Then
     verify(filterStorage, times(1)).getFilterById(anyLong());

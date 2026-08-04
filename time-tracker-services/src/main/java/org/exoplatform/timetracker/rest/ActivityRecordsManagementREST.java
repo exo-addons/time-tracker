@@ -72,6 +72,8 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
 
   private final String          portalContainerName = "portal";
 
+  private static final String   TIME_TRACKING_MANAGERS_GROUP = "/platform/time-tracking-managers";
+
   private final ActivityRecordService activityRecordService;
 
   private final TeamService teamService;
@@ -97,7 +99,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
    */
   @GET
   @Path("activityrecord")
-  @RolesAllowed("users")
+  @RolesAllowed("time-tracking-managers")
   @Produces(MediaType.APPLICATION_JSON)
   @Operation(summary = "Retrieves all available subresources of current endpoint", method = "GET")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
@@ -170,7 +172,10 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      if (StringUtils.isEmpty(userName)){
+      if (!isTimeTrackingManager()) {
+        userName = sourceIdentity.getRemoteId();
+        team = null;
+      } else if (StringUtils.isEmpty(userName)){
         userName=sourceIdentity.getRemoteId();
       }
 
@@ -213,7 +218,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if (sourceIdentity == null) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
-      if (StringUtils.isEmpty(userName)){
+      if (StringUtils.isEmpty(userName) || !isTimeTrackingManager()){
         userName=sourceIdentity.getRemoteId();
       }
       ActivityRecord result = activityRecordService.getLastActivityRecord(userName);
@@ -277,7 +282,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       if(activityRecord.getActivity()!= null && activityRecord.getActivity().getId()==null){
         activityRecord.setActivity(null);
       }
-      if(StringUtils.isEmpty(activityRecord.getUserName())){
+      if(StringUtils.isEmpty(activityRecord.getUserName()) || !isTimeTrackingManager()){
         activityRecord.setUserName(sourceIdentity.getRemoteId());
       }
       activityRecordService.createActivityRecord(activityRecord);
@@ -315,6 +320,9 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     } catch (IllegalAccessException e) {
       LOG.warn(e);
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
+    } catch (EntityNotFoundException e) {
+      LOG.warn(e);
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (EntityExistsException e) {
       LOG.warn(e);
       return Response.serverError().build();
@@ -351,7 +359,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting ActivityRecord", e);
       return Response.serverError().build();
@@ -364,6 +372,11 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
   private String getCurrentUserName() {
     ConversationState state = ConversationState.getCurrent();
     return state == null || state.getIdentity() == null ? null : state.getIdentity().getUserId();
+  }
+
+  private boolean isTimeTrackingManager() {
+    ConversationState state = ConversationState.getCurrent();
+    return state != null && state.getIdentity() != null && state.getIdentity().isMemberOf(TIME_TRACKING_MANAGERS_GROUP);
   }
 
 

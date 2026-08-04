@@ -190,7 +190,7 @@ public class ClientsManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting Client", e);
       return Response.serverError().build();

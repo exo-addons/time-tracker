@@ -25,7 +25,7 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ActivityRecordDAO;
 import org.exoplatform.timetracker.dto.ActivityRecord;

@@ -16,9 +16,7 @@
  */
 package org.exoplatform.timetracker.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.dto.TeamMember;
@@ -34,8 +32,6 @@ import jakarta.persistence.EntityNotFoundException;
  * @version $Id: $Id
  */
 public class TeamService {
-
-    private static  Map<String, List<Team>> teams = new HashMap<>();
 
     private final TeamStorage teamStorage;
 
@@ -121,13 +117,7 @@ public class TeamService {
      * @throws java.lang.Exception if any.
      */
     public List<Team> getTeamsList(String userName)  throws Exception {
-        if(teams.get(userName)!=null){
-            return teams.get(userName);
-        }else{
-           List<Team> teamList = teamStorage.getTeamsByUser(userName);
-           teams.put(userName,teamList);
-           return teamList;
-        }
+        return teamStorage.getTeamsByUser(userName);
     }
 
 
@@ -184,10 +174,6 @@ public class TeamService {
             throw new EntityExistsException("TeamMember Already exist");
         }
         teamStorage.createTeamMember(teamMember);
-        if(teams.get(teamMember.getUserName())!=null){
-            List<Team> teamList = teamStorage.getTeamsByUser(teamMember.getUserName());
-            teams.put(teamMember.getUserName(),teamList);
-        }
     }
 
 

@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.ActivityRecord;
@@ -63,6 +64,8 @@ public class ActivityRecordService {
   private final String DATE_FORMAT = "yyyy-MM-dd";
 
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
+  private static final String TIME_TRACKING_MANAGERS_GROUP = "/platform/time-tracking-managers";
 
   /**
    * <p>
@@ -123,6 +126,9 @@ public class ActivityRecordService {
     if (storedActivityRecord == null) {
       throw new EntityNotFoundException("ActivityRecord with id " + ActivityRecordId + " wasn't found");
     }
+    if (!isOwnerOrManager(storedActivityRecord, username)) {
+      throw new IllegalAccessException("User " + username + " is not allowed to update ActivityRecord " + ActivityRecordId);
+    }
     return activityRecordstorage.updateActivityRecord(activityRecord);
   }
 
@@ -150,7 +156,27 @@ public class ActivityRecordService {
     if (storedActivityRecord == null) {
       throw new EntityNotFoundException("ActivityRecord with id " + activityRecordId + " not found");
     }
+    if (!isOwnerOrManager(storedActivityRecord, username)) {
+      throw new IllegalAccessException("User " + username + " is not allowed to delete ActivityRecord " + activityRecordId);
+    }
     activityRecordstorage.deleteActivityRecord(activityRecordId);
+  }
+
+  /**
+   * Checks whether the given username is the owner of the ActivityRecord or
+   * belongs to the time-tracking-managers group.
+   *
+   * @param activityRecord record being accessed
+   * @param username user currently accessing the record
+   * @return true if username owns the record or is a time-tracking manager
+   */
+  private boolean isOwnerOrManager(ActivityRecord activityRecord, String username) {
+    if (username.equals(activityRecord.getUserName())) {
+      return true;
+    }
+    return ConversationState.getCurrent() != null
+        && ConversationState.getCurrent().getIdentity() != null
+        && ConversationState.getCurrent().getIdentity().isMemberOf(TIME_TRACKING_MANAGERS_GROUP);
   }
 
   /**

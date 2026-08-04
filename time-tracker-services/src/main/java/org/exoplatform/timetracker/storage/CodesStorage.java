@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import org.exoplatform.timetracker.dto.SubType;
 import org.exoplatform.timetracker.entity.SubTypeEntity;
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ActivityCodeDAO;
 import org.exoplatform.timetracker.dao.SubActivityCodeDAO;

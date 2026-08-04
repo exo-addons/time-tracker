@@ -193,7 +193,7 @@ public class CodesManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting ActivityCode", e);
       return Response.serverError().build();
@@ -320,7 +320,7 @@ public class CodesManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting SubActivityCode", e);
       return Response.serverError().build();
@@ -448,7 +448,7 @@ public class CodesManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting Type", e);
       return Response.serverError().build();
@@ -576,7 +576,7 @@ public class CodesManagementREST implements ResourceContainer {
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting SubType", e);
       return Response.serverError().build();

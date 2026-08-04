@@ -19,6 +19,7 @@ package org.exoplatform.timetracker.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,17 +85,24 @@ public class FilterService {
      * delete it.
      *
      * @param filterId technical identifier of Filter
+     * @param username user currently deleting Filter
      * @throws jakarta.persistence.EntityNotFoundException if Filter wasn't found
      * @throws java.lang.IllegalAccessException  if user is not allowed to delete Filter
      */
-    public void deleteFilter(Long filterId) throws EntityNotFoundException, IllegalAccessException {
+    public void deleteFilter(Long filterId, String username) throws EntityNotFoundException, IllegalAccessException {
         if (filterId == null || filterId <= 0) {
             throw new IllegalArgumentException("FilterId must be a positive integer");
+        }
+        if (StringUtils.isBlank(username)) {
+            throw new IllegalArgumentException("username is mandatory");
         }
 
         Filter storedFilter = filterStorage.getFilterById(filterId);
         if (storedFilter == null) {
             throw new EntityNotFoundException("Filter with id " + filterId + " not found");
+        }
+        if (!username.equals(storedFilter.getUserName())) {
+            throw new IllegalAccessException("User " + username + " is not allowed to delete Filter " + filterId);
         }
         filterStorage.deleteAllFilterFieldsByFilter(filterId);
         filterStorage.deleteFilter(filterId);

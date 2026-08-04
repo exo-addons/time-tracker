@@ -151,13 +151,13 @@ public class FiltersManagementREST implements ResourceContainer {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
-      filterService.deleteFilter(filterId);
+      filterService.deleteFilter(filterId, getCurrentUserName());
     } catch (IllegalAccessException e) {
       LOG.warn(e);
       return Response.status(HTTPStatus.UNAUTHORIZED).build();
     } catch (EntityNotFoundException e) {
       LOG.warn(e);
-      return Response.serverError().build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while deleting Filter", e);
       return Response.serverError().build();

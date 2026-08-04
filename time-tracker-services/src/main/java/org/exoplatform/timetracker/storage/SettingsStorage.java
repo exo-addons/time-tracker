@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.LocationDAO;
 import org.exoplatform.timetracker.dao.OfficeDAO;

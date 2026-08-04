@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentRequestLifecycle;
@@ -54,7 +54,6 @@ public class TeamStorage {
   private final OrganizationService organizationService;
   private final GroupHandler groupHandler;
   private final MembershipHandler membershipHandler;
-  private static Boolean requestStarted = false;
   private static final Log log = ExoLogger.getLogger(TeamStorage.class);
 
   /**
@@ -84,25 +83,23 @@ public class TeamStorage {
     if (team == null) {
       throw new IllegalArgumentException("Team is mandatory");
     }
+    boolean requestStarted = startRequest();
     try {
-    startRequest();
       Group groupParent = groupHandler.findGroupById(PARENT_GROUP);
-    Group group = groupHandler.createGroupInstance();
-    group.setId(team.getName().replaceAll(" ","_"));
-    group.setLabel(team.getName());
-    group.setGroupName(team.getName());
-    group.setDescription(team.getDescription());
-    group.setParentId(PARENT_GROUP);
-    groupHandler.addChild(groupParent, group, true);
-      endRequest();
+      Group group = groupHandler.createGroupInstance();
+      group.setId(team.getName().replaceAll(" ","_"));
+      group.setLabel(team.getName());
+      group.setGroupName(team.getName());
+      group.setDescription(team.getDescription());
+      group.setParentId(PARENT_GROUP);
+      groupHandler.addChild(groupParent, group, true);
       return toDTO(group);
     } catch (Exception e) {
-      //todo
+      log.error("Error creating team {}", team.getName(), e);
+      throw e;
     } finally {
-      endRequest();
+      endRequest(requestStarted);
     }
-
-    return null;
   }
 
   /**
@@ -111,27 +108,26 @@ public class TeamStorage {
    * @param team a {@link org.exoplatform.timetracker.dto.Team} object.
    * @return a {@link org.exoplatform.timetracker.dto.Team} object.
    */
-  public Team updateTeam(Team team) {
+  public Team updateTeam(Team team) throws Exception {
     if (team == null) {
       throw new IllegalArgumentException("Team is mandatory");
     }
     String teamId = team.getId();
-    Group group = null;
+    Group group = groupHandler.findGroupById(teamId);
+    if (group == null) {
+      throw new EntityNotFoundException("Group with id " + teamId + " wasn't found");
+    }
+    boolean requestStarted = startRequest();
     try {
-      group = groupHandler.findGroupById(teamId);
-      if (group == null) {
-        throw new EntityNotFoundException("Group with id " + teamId + " wasn't found");
-      }
-      startRequest();
       group.setLabel(team.getName());
       group.setGroupName(team.getName());
       group.setDescription(team.getDescription());
       groupHandler.saveGroup(group,true);
-      endRequest();
     } catch (Exception e) {
-      //todo
+      log.error("Error updating team {}", teamId, e);
+      throw e;
     } finally {
-      endRequest();
+      endRequest(requestStarted);
     }
 
     return toDTO(group);
@@ -144,21 +140,19 @@ public class TeamStorage {
    * @throws java.lang.Exception if any.
    */
   public void deleteTeam(String teamId) throws Exception {
-    try {
-      startRequest();
-
     Group group = groupHandler.findGroupById(teamId);
     if (group == null) {
-      throw new EntityNotFoundException("froup with id " + teamId + " not found");
+      throw new EntityNotFoundException("Group with id " + teamId + " not found");
     }
-
-    groupHandler.removeGroup(group,true);
-      endRequest();
-  } catch (Exception e) {
-    //todo
-  } finally {
-    endRequest();
-  }
+    boolean requestStarted = startRequest();
+    try {
+      groupHandler.removeGroup(group,true);
+    } catch (Exception e) {
+      log.error("Error deleting team {}", teamId, e);
+      throw e;
+    } finally {
+      endRequest(requestStarted);
+    }
   }
 
   /**
@@ -334,18 +328,19 @@ public class TeamStorage {
     if (teamMember == null) {
       throw new IllegalArgumentException("TeamMember is mandatory");
     }
+    boolean requestStarted = startRequest();
     try {
-      startRequest();
-    Group group = groupHandler.findGroupById(teamMember.getTeam().getId());
-    User user = organizationService.getUserHandler().findUserByName(teamMember.getUserName());
-    MembershipType membershipType = organizationService.getMembershipTypeHandler().findMembershipType("member");
-    membershipHandler.linkMembership(user,group,membershipType,true);
-      endRequest();
-  } catch (Exception e) {
-        //todo
-        } finally {
-        endRequest();
-        }
+      Group group = groupHandler.findGroupById(teamMember.getTeam().getId());
+      User user = organizationService.getUserHandler().findUserByName(teamMember.getUserName());
+      MembershipType membershipType = organizationService.getMembershipTypeHandler().findMembershipType("member");
+      membershipHandler.linkMembership(user,group,membershipType,true);
+    } catch (Exception e) {
+      log.error("Error creating team member {} for team {}", teamMember.getUserName(),
+          teamMember.getTeam() == null ? null : teamMember.getTeam().getId(), e);
+      throw e;
+    } finally {
+      endRequest(requestStarted);
+    }
   }
 
 
@@ -356,15 +351,15 @@ public class TeamStorage {
    * @throws java.lang.Exception if any.
    */
   public void deleteTeamMember(String teamMemberId) throws Exception {
+    boolean requestStarted = startRequest();
     try {
-      startRequest();
-    membershipHandler.removeMembership(teamMemberId,true);
-      endRequest();
-        } catch (Exception e) {
-        //todo
-        } finally {
-        endRequest();
-        }
+      membershipHandler.removeMembership(teamMemberId,true);
+    } catch (Exception e) {
+      log.error("Error deleting team member {}", teamMemberId, e);
+      throw e;
+    } finally {
+      endRequest(requestStarted);
+    }
   }
 
   /**
@@ -374,18 +369,18 @@ public class TeamStorage {
    * @throws java.lang.Exception if any.
    */
   public void deleteAllTeamMembersByTeam(String teamId) throws Exception {
+    boolean requestStarted = startRequest();
     try {
-      startRequest();
-    Group group = groupHandler.findGroupById(teamId);
-    for(Membership membership : membershipHandler.findAllMembershipsByGroup(group).load(0,-1)){
-      membershipHandler.removeMembership(membership.getId(),true);
+      Group group = groupHandler.findGroupById(teamId);
+      for(Membership membership : membershipHandler.findAllMembershipsByGroup(group).load(0,-1)){
+        membershipHandler.removeMembership(membership.getId(),true);
+      }
+    } catch (Exception e) {
+      log.error("Error deleting team members for team {}", teamId, e);
+      throw e;
+    } finally {
+      endRequest(requestStarted);
     }
-      endRequest();
-        } catch (Exception e) {
-        //todo
-        } finally {
-        endRequest();
-        }
   }
 
 
@@ -439,22 +434,22 @@ public class TeamStorage {
   }
 
 
-  private void endRequest() {
+  private void endRequest(boolean requestStarted) {
     if (requestStarted && organizationService instanceof ComponentRequestLifecycle) {
       try {
         ((ComponentRequestLifecycle) organizationService).endRequest(PortalContainer.getInstance());
       } catch (Exception e) {
         log.warn(e.getMessage(), e);
       }
-      requestStarted = false;
     }
   }
 
-  private void startRequest() {
+  private boolean startRequest() {
     if (organizationService instanceof ComponentRequestLifecycle) {
       ((ComponentRequestLifecycle) organizationService).startRequest(PortalContainer.getInstance());
-      requestStarted = true;
+      return true;
     }
+    return false;
   }
 
 }

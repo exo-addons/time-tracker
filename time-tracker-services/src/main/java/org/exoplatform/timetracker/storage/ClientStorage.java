@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.CommonsUtils;
-import org.gatein.api.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ClientDAO;
 import org.exoplatform.timetracker.dto.Client;

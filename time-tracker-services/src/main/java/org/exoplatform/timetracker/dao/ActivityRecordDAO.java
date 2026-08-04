@@ -48,6 +48,10 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
     /** Constant <code>quryDateFormatter</code> */
     public static final SimpleDateFormat quryDateFormatter = new SimpleDateFormat(QUERY_DATE_FORMAT);
 
+    private static final Set<String> SORTABLE_FIELDS = new HashSet<>(Arrays.asList(
+        "id", "userName", "activityDate", "activityTime", "description", "location",
+        "office", "time", "projectVersion", "createdDate"));
+
     /**
      * <p>getUserActivityRecordsList.</p>
      *
@@ -276,7 +280,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     queryString = queryString.substring(0, queryString.length() - 5);
                 }
             }
-            if (StringUtils.isNotEmpty(sortBy)) {
+            if (StringUtils.isNotEmpty(sortBy) && SORTABLE_FIELDS.contains(sortBy)) {
                 if (sortDesc) {
                     queryString = queryString + " ORDER BY activityRecord." + sortBy + " DESC";
                 } else {
