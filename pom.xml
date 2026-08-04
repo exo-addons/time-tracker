@@ -22,11 +22,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <parent>
         <artifactId>addons-exo-parent-pom</artifactId>
         <groupId>org.exoplatform.addons</groupId>
-        <version>20</version>
+        <version>21-M01</version>
     </parent>
     <groupId>org.exoplatform.addons.time-tracker</groupId>
     <artifactId>time-tracker</artifactId>
-    <version>1.2.x-SNAPSHOT</version>
+    <version>1.3.x-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Add-on:: Time Tracker - Parent POM</name>
     <description>Time Tracker Addon</description>
@@ -42,19 +42,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <io.meeds.commons.version>7.2.x-exo-SNAPSHOT</io.meeds.commons.version>
-        <io.meeds.social.version>7.2.x-exo-SNAPSHOT</io.meeds.social.version>
+        <io.meeds.social.version>7.3.x-SNAPSHOT</io.meeds.social.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <!-- Import versions from projects -->
-            <dependency>
-                <groupId>io.meeds.commons</groupId>
-                <artifactId>commons-component-common</artifactId>
-                <version>${io.meeds.commons.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>io.meeds.social</groupId>
                 <artifactId>social-component-core</artifactId>
