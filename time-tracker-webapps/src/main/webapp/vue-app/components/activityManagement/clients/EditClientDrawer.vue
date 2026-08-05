@@ -67,7 +67,7 @@
                 </v-icon>
               </div>
               <div v-else>
-                <span class="pr-2">There no Sales orders for this client</span>
+                <span class="pr-2">{{ $t('exo.timeTracker.clients.clientsList.textIfNoSalesOrders') }}</span>
                 <v-icon right @click="openAddSODrawer()">
                   mdi-plus
                 </v-icon>

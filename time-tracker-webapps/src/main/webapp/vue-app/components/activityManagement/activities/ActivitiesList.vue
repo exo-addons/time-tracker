@@ -17,7 +17,7 @@
               vertical />
             <v-text-field
               v-model="search"
-              placeholder="Filter"
+              :placeholder="$t('exo.timeTracker.timeSheet.filterDrawer.toolbarTitle')"
               prepend-inner-icon="fa-filter"
               class="inputFilter pa-0 mr-3 my-auto"
               clearable />                                            
@@ -54,7 +54,7 @@
             delete
           </v-icon>
         </template>
-        <template v-slot:no-data>{{ $t("exo.timeTracker.activities.activitiesList.TextIfNoActivities") }}</template>
+        <template v-slot:no-data>{{ $t("exo.timeTracker.activities.activitiesList.textIfNoActivities") }}</template>
       </v-data-table>
     </v-flex>
     <add-activity-drawer

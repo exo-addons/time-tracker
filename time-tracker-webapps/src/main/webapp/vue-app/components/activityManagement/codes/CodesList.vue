@@ -23,7 +23,7 @@
               vertical />
             <v-text-field
               v-model="searchActivities"
-              placeholder="Filter"
+              :placeholder="$t('exo.timeTracker.timeSheet.filterDrawer.toolbarTitle')"
               prepend-inner-icon="fa-filter"
               class="inputFilter pa-0 mr-3 my-auto"
               clearable />  
@@ -75,7 +75,7 @@
               vertical />
             <v-text-field
               v-model="searchSubActivities"
-              placeholder="Filter"
+              :placeholder="$t('exo.timeTracker.timeSheet.filterDrawer.toolbarTitle')"
               prepend-inner-icon="fa-filter"
               class="inputFilter pa-0 mr-3 my-auto"
               clearable />  

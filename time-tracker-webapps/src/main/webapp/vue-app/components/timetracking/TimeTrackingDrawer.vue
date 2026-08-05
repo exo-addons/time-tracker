@@ -171,10 +171,10 @@
     <template>
       <exo-confirm-dialog
         ref="deleteTTEntryDrawer"
-        message="Are you sure you want to delete this line?"
-        title="Confirmation"
-        cancel-label="Cancel"
-        ok-label="Yes"
+        :message="$t('exo.timeTracker.confirmDialog.deleteMessage')"
+        :title="$t('exo.timeTracker.confirmDialog.title')"
+        :cancel-label="$t('exo.timeTracker.drawerButtonCancel')"
+        :ok-label="$t('exo.timeTracker.confirmDialog.okLabel')"
         @ok="deleteConfirm()" />
     </template>
   </div>
