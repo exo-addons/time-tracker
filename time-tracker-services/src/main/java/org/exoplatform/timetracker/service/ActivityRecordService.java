@@ -38,6 +38,7 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.Activity;
 import org.exoplatform.timetracker.dto.ActivityRecord;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
 import org.exoplatform.timetracker.dto.Team;
@@ -66,6 +67,8 @@ public class ActivityRecordService {
   private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
   private static final String TIME_TRACKING_MANAGERS_GROUP = "/platform/time-tracking-managers";
+
+  private static final int MAX_DUPLICATION_RANGE_DAYS = 366;
 
   /**
    * <p>
@@ -97,6 +100,59 @@ public class ActivityRecordService {
       throw new IllegalArgumentException("ActivityRecord is mandatory");
     }
     return activityRecordstorage.createActivityRecord(activityRecord);
+  }
+
+  /**
+   * Create a copy of the given ActivityRecord on every day of a date range
+   * (both bounds included). The activityDate of the given record is ignored.
+   *
+   * @param activityRecord ActivityRecord to duplicate
+   * @param fromDate first day of the range (yyyy-MM-dd)
+   * @param toDate last day of the range (yyyy-MM-dd), inclusive
+   * @param includeWeekends whether records are also created on Saturdays and
+   *          Sundays
+   * @return number of created records
+   * @throws java.lang.Exception when an error occurs while creating a record
+   */
+  public int createActivityRecords(ActivityRecord activityRecord,
+                                   String fromDate,
+                                   String toDate,
+                                   boolean includeWeekends) throws Exception {
+    if (activityRecord == null) {
+      throw new IllegalArgumentException("ActivityRecord is mandatory");
+    }
+    LocalDate from;
+    LocalDate to;
+    try {
+      from = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(fromDate));
+      to = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(toDate));
+    } catch (Exception e) {
+      throw new IllegalArgumentException("fromDate and toDate must be valid yyyy-MM-dd dates");
+    }
+    if (to.isBefore(from)) {
+      throw new IllegalArgumentException("toDate must not be before fromDate");
+    }
+    if (ChronoUnit.DAYS.between(from, to) > MAX_DUPLICATION_RANGE_DAYS) {
+      throw new IllegalArgumentException("Date range must not exceed " + MAX_DUPLICATION_RANGE_DAYS + " days");
+    }
+    // the storage create resets the record's project/client depending on its
+    // activity: capture them so every day of the range gets the same input
+    Client client = activityRecord.getClient();
+    Project project = activityRecord.getProject();
+    int created = 0;
+    for (LocalDate day : getDatesBetween(from, to)) {
+      DayOfWeek dayOfWeek = day.getDayOfWeek();
+      if (!includeWeekends && (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)) {
+        continue;
+      }
+      activityRecord.setId(null);
+      activityRecord.setClient(client);
+      activityRecord.setProject(project);
+      activityRecord.setActivityDate(day.format(formatter));
+      createActivityRecord(activityRecord);
+      created++;
+    }
+    return created;
   }
 
   /**

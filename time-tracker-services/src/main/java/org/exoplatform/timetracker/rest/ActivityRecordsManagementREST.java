@@ -22,6 +22,7 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -298,6 +299,58 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
     }
     LOG.info("service=time-tracker operation=add-record parameters=\"user_social_id:{}\"", sourceIdentity.getId());
     return Response.noContent().build();
+  }
+
+  /**
+   * <p>createActivityRecords.</p>
+   *
+   * Duplicates the given ActivityRecord on every day of a date range.
+   *
+   * @param activityRecord a {@link org.exoplatform.timetracker.dto.ActivityRecord} object.
+   * @param fromDate first day of the range (yyyy-MM-dd).
+   * @param toDate last day of the range (yyyy-MM-dd), inclusive.
+   * @param includeWeekends whether records are also created on week-end days.
+   * @return a {@link javax.ws.rs.core.Response} object.
+   */
+  @POST
+  @Path("activityrecord/range")
+  @RolesAllowed("users")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Creates a copy of the given ActivityRecord on each day of a date range", method = "POST", description = "returns the number of created records")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "400", description = "Invalid query input"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response createActivityRecords(@Parameter(description = "ActivityRecord to duplicate", required = true) ActivityRecord activityRecord,
+                                        @QueryParam("fromDate") String fromDate,
+                                        @QueryParam("toDate") String toDate,
+                                        @QueryParam("includeWeekends") @DefaultValue("false") boolean includeWeekends) {
+    Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
+    if (sourceIdentity == null) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+    try {
+      if (activityRecord == null || StringUtils.isEmpty(fromDate) || StringUtils.isEmpty(toDate)) {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+      }
+      if (activityRecord.getActivity() != null && activityRecord.getActivity().getId() == null) {
+        activityRecord.setActivity(null);
+      }
+      if (StringUtils.isEmpty(activityRecord.getUserName()) || !isTimeTrackingManager()) {
+        activityRecord.setUserName(sourceIdentity.getRemoteId());
+      }
+      int created = activityRecordService.createActivityRecords(activityRecord, fromDate, toDate, includeWeekends);
+      LOG.info("service=time-tracker operation=duplicate-record parameters=\"user_social_id:{}, fromDate:{}, toDate:{}, created:{}\"",
+               sourceIdentity.getId(), fromDate, toDate, created);
+      return Response.ok("{\"created\":" + created + "}", MediaType.APPLICATION_JSON).build();
+    } catch (IllegalArgumentException e) {
+      LOG.warn("Invalid duplication range [{} - {}]: {}", fromDate, toDate, e.getMessage());
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    } catch (Exception e) {
+      LOG.error("Unknown error occurred while duplicating ActivityRecord", e);
+      return Response.serverError().build();
+    }
   }
 
   /**
