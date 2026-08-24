@@ -18,6 +18,7 @@ package org.exoplatform.timetracker.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +26,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.exoplatform.timetracker.dao.ActivityDAO;
 import org.exoplatform.timetracker.dao.ActivityTeamDAO;
 import org.exoplatform.timetracker.dto.Activity;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.Team;
 import org.exoplatform.timetracker.entity.ActivityEntity;
 import org.exoplatform.timetracker.entity.ActivityTeamEntity;
@@ -246,6 +248,36 @@ public class ActivityStorage {
                         projectStorage.toDTO(activityEntity.getProjectEntity()),
                         featureStorage.toDTO(activityEntity.getFeatureEntity()),
                         teamStorage.toDtos_(teams));
+  }
+
+  /**
+   * <p>toDTO with per-call caches, to avoid reloading the teams of the same
+   * activity and the sales orders of the same client for every converted
+   * record. A fresh Activity instance is still returned per call since callers
+   * may override its project/client per record.</p>
+   *
+   * @param activityEntity a {@link org.exoplatform.timetracker.entity.ActivityEntity} object.
+   * @param clientsById cache of already converted clients, keyed by client id.
+   * @param teamsByActivity cache of already loaded teams, keyed by activity id.
+   * @return a {@link org.exoplatform.timetracker.dto.Activity} object.
+   */
+  public Activity toDTO(ActivityEntity activityEntity, Map<Long, Client> clientsById, Map<Long, List<Team>> teamsByActivity) {
+    if (activityEntity == null || activityEntity.getId() == 0) {
+      return null;
+    }
+    List<Team> teams = teamsByActivity.computeIfAbsent(activityEntity.getId(), activityId -> {
+      List<ActivityTeamEntity> teamEntities = activityTeamDAO.getTeamsByActivity(activityId);
+      return teamStorage.toDtos_(teamEntities.stream().map(ActivityTeamEntity::getTeamId).collect(Collectors.toList()));
+    });
+    return new Activity(activityEntity.getId(),
+                        codesStorage.toTypeDTO(activityEntity.getTypeEntity()),
+                        codesStorage.toSubTypeDTO(activityEntity.getSubTypeEntity()),
+                        codesStorage.toActivityCodeDTO(activityEntity.getActivityCodeEntity()),
+                        codesStorage.toSubActivityCodeDTO(activityEntity.getSubActivityCodeEntity()),
+                        activityEntity.getLabel(),
+                        projectStorage.toDTO(activityEntity.getProjectEntity(), clientsById),
+                        featureStorage.toDTO(activityEntity.getFeatureEntity()),
+                        teams);
   }
 
   /**

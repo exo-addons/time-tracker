@@ -18,13 +18,17 @@ package org.exoplatform.timetracker.storage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.timetracker.dto.Activity;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
+import org.exoplatform.timetracker.dto.Team;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ActivityRecordDAO;
@@ -164,7 +168,7 @@ public class ActivityRecordStorage {
      */
     public List<ActivityRecord> getActivityRecords() {
         List<ActivityRecordEntity> applicatiions = activityRecordDAO.findAll();
-        return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
+        return toDTOs(applicatiions);
     }
 
     /**
@@ -176,7 +180,7 @@ public class ActivityRecordStorage {
      */
     public List<ActivityRecord> getUserActivityRecords(String day, String userName) {
         List<ActivityRecordEntity> applicatiions = activityRecordDAO.getUserActivityRecordsList(day, userName);
-        return applicatiions.stream().map(this::toDTO).collect(Collectors.toList());
+        return toDTOs(applicatiions);
     }
 
 
@@ -223,8 +227,13 @@ public class ActivityRecordStorage {
                                                     boolean sortDesc) {
         List<ActivityRecordEntity> applicatiions = activityRecordDAO.getActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, offset, limit, sortBy, sortDesc);
         RecordsAccessList recordsAccessList = new RecordsAccessList();
-        recordsAccessList.setActivityRecords(applicatiions.stream().map(this::toDTO).collect(Collectors.toList()));
-        recordsAccessList.setSize(activityRecordDAO.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office));
+        recordsAccessList.setActivityRecords(toDTOs(applicatiions));
+        if (offset >= 0 && limit > 0) {
+            recordsAccessList.setSize(activityRecordDAO.countActivityRecords(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office));
+        } else {
+            // no pagination applied: the list is complete, no need for a second count query
+            recordsAccessList.setSize((long) applicatiions.size());
+        }
         return recordsAccessList;
     }
 
@@ -300,6 +309,49 @@ public class ActivityRecordStorage {
                 salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity()),
                 activityRecordEntity.getCreatedDate(),identityManager.getOrCreateUserIdentity(activityRecordEntity.getUserName()).getProfile().getFullName(),
                 projectStorage.toDTO(activityRecordEntity.getProjectEntity()));
+    }
+
+    /**
+     * <p>Converts a list of entities to DTOs sharing per-call caches, so that
+     * the identity full name of a user, the teams of an activity and the sales
+     * orders of a client are loaded once per list instead of once per record.</p>
+     *
+     * @param activityRecordEntities a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
+    public List<ActivityRecord> toDTOs(List<ActivityRecordEntity> activityRecordEntities) {
+        Map<String, String> fullNamesByUser = new HashMap<>();
+        Map<Long, Client> clientsById = new HashMap<>();
+        Map<Long, List<Team>> teamsByActivity = new HashMap<>();
+        return activityRecordEntities.stream()
+                                     .map(entity -> toDTO(entity, fullNamesByUser, clientsById, teamsByActivity))
+                                     .collect(Collectors.toList());
+    }
+
+    private ActivityRecord toDTO(ActivityRecordEntity activityRecordEntity,
+                                 Map<String, String> fullNamesByUser,
+                                 Map<Long, Client> clientsById,
+                                 Map<Long, List<Team>> teamsByActivity) {
+        if (activityRecordEntity == null) {
+            return null;
+        }
+        IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
+        String fullName = fullNamesByUser.computeIfAbsent(activityRecordEntity.getUserName(),
+                userName -> identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName());
+        return new ActivityRecord(activityRecordEntity.getId(),
+                activityRecordEntity.getUserName(),
+                activityRecordEntity.getActivityDate(),
+                activityRecordEntity.getActivityTime(),
+                activityRecordEntity.getDescription(),
+                activityRecordEntity.getLocation(),
+                activityRecordEntity.getOffice(),
+                activityRecordEntity.getTime(),
+                activityRecordEntity.getProjectVersion(),
+                clientStorage.toDTO(activityRecordEntity.getClientEntity(), clientsById),
+                activityStorage.toDTO(activityRecordEntity.getActivityEntity(), clientsById, teamsByActivity),
+                salesOrderStorage.toDTO(activityRecordEntity.getSalesOrderEntity(), clientsById),
+                activityRecordEntity.getCreatedDate(), fullName,
+                projectStorage.toDTO(activityRecordEntity.getProjectEntity(), clientsById));
     }
 
     /**

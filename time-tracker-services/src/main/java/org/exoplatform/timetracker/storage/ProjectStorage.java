@@ -17,11 +17,13 @@
 package org.exoplatform.timetracker.storage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.ProjectDAO;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.entity.ProjectEntity;
 
@@ -152,6 +154,24 @@ public class ProjectStorage {
                         projectEntity.getCode(),
                         projectEntity.getLabel(),
                         clientStorage.toDTO(projectEntity.getClientEntity()));
+  }
+
+  /**
+   * <p>toDTO with a per-call client cache, to avoid reloading the sales orders
+   * of the same client for every converted record.</p>
+   *
+   * @param projectEntity a {@link org.exoplatform.timetracker.entity.ProjectEntity} object.
+   * @param clientsById cache of already converted clients, keyed by client id.
+   * @return a {@link org.exoplatform.timetracker.dto.Project} object.
+   */
+  public Project toDTO(ProjectEntity projectEntity, Map<Long, Client> clientsById) {
+    if (projectEntity == null) {
+      return null;
+    }
+    return new Project(projectEntity.getId(),
+                        projectEntity.getCode(),
+                        projectEntity.getLabel(),
+                        clientStorage.toDTO(projectEntity.getClientEntity(), clientsById));
   }
 
   /**

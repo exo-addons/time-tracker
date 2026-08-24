@@ -17,6 +17,7 @@
 package org.exoplatform.timetracker.storage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.CommonsUtils;
@@ -149,6 +150,21 @@ public class ClientStorage {
     SalesOrderStorage salesOrderStorage = CommonsUtils.getService(SalesOrderStorage.class);
 
     return new Client(clientEntity.getId(), clientEntity.getCode(), clientEntity.getLabel(),salesOrderStorage.getSalesOrderByClienId(clientEntity.getId()));
+  }
+
+  /**
+   * <p>toDTO with a per-call cache, to avoid reloading the sales orders of the
+   * same client for every converted record.</p>
+   *
+   * @param clientEntity a {@link org.exoplatform.timetracker.entity.ClientEntity} object.
+   * @param clientsById cache of already converted clients, keyed by client id.
+   * @return a {@link org.exoplatform.timetracker.dto.Client} object.
+   */
+  public Client toDTO(ClientEntity clientEntity, Map<Long, Client> clientsById) {
+    if (clientEntity == null) {
+      return null;
+    }
+    return clientsById.computeIfAbsent(clientEntity.getId(), id -> toDTO(clientEntity));
   }
 
   /**
