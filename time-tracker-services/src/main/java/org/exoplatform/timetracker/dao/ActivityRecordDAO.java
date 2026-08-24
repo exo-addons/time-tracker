@@ -149,7 +149,23 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
             List<Long> featureList = new ArrayList<>();
             List<String> locationList = new ArrayList<>();
             List<String> officeList = new ArrayList<>();
-            String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord";
+            // fetch joins load the whole graph needed by the DTO conversion in one
+            // SQL query instead of one lazy/eager select per record and relation
+            String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord"
+                    + " LEFT JOIN FETCH activityRecord.activityEntity recordActivity"
+                    + " LEFT JOIN FETCH recordActivity.typeEntity"
+                    + " LEFT JOIN FETCH recordActivity.subTypeEntity recordSubType"
+                    + " LEFT JOIN FETCH recordSubType.typeEntity"
+                    + " LEFT JOIN FETCH recordActivity.activityCodeEntity"
+                    + " LEFT JOIN FETCH recordActivity.subActivityCodeEntity"
+                    + " LEFT JOIN FETCH recordActivity.projectEntity recordActivityProject"
+                    + " LEFT JOIN FETCH recordActivityProject.clientEntity"
+                    + " LEFT JOIN FETCH recordActivity.featureEntity"
+                    + " LEFT JOIN FETCH activityRecord.clientEntity"
+                    + " LEFT JOIN FETCH activityRecord.projectEntity recordProject"
+                    + " LEFT JOIN FETCH recordProject.clientEntity"
+                    + " LEFT JOIN FETCH activityRecord.salesOrderEntity recordSalesOrder"
+                    + " LEFT JOIN FETCH recordSalesOrder.clientEntity";
             if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                     || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
                     || StringUtils.isNotEmpty(client)  || StringUtils.isNotEmpty(project)  || StringUtils.isNotEmpty(feature)  || StringUtils.isNotEmpty(fromDate) || StringUtils.isNotEmpty(toDate)

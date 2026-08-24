@@ -424,6 +424,9 @@ public class ActivityRecordService {
 
     RecordsAccessList recordsAccessList = getActivityRecordsList(search, activity, type, subType, activityCode, subActivityCode, client, project, feature, fromDate, toDate, userName, location, office, 0, 0, sortBy, sortDesc);
     IdentityManager identityManager = CommonsUtils.getService(IdentityManager.class);
+    // teams are loaded once per user then reused for every record, instead of
+    // querying the organization service for each record of the export
+    Map<String, List<Team>> teamsByUser = new HashMap<>();
 
     if(StringUtils.isNotEmpty(search)||StringUtils.isNotEmpty(activity)||StringUtils.isNotEmpty(type)||StringUtils.isNotEmpty(subType)||StringUtils.isNotEmpty(activityCode)||StringUtils.isNotEmpty(subActivityCode)||StringUtils.isNotEmpty(client)||StringUtils.isNotEmpty(project)||StringUtils.isNotEmpty(feature)||(StringUtils.isNotEmpty(userName)&&userName.equals("all"))){
       List<ActivityRecord> activityRecordList = recordsAccessList.getActivityRecords();
@@ -442,7 +445,7 @@ public class ActivityRecordService {
         }
         if (export) {
           try {
-            activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
+            activityRecord.setTsCode(generateTSCode(getUserTeams(activityRecord.getUserName(), teamsByUser), activityRecord, exportType));
           } catch (Exception e) {
             LOG.error("Cannot generate TScode for activity {}",activityRecord.getActivity().getLabel());
           }
@@ -470,6 +473,7 @@ public class ActivityRecordService {
         to_ = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(to));
       }
       String office_ = "";
+      String userFullName = identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName();
       for (LocalDate d : getDatesBetween(from_, to_)) {
         String day = d.format(formatter);
         act = recordsAccessList.getActivityRecords().stream().filter(c -> c.getActivityDate().equals(day)).collect(Collectors.toList());
@@ -491,7 +495,7 @@ public class ActivityRecordService {
               }
             }
             if (export) {
-              activityRecord.setTsCode(generateTSCode(teamService.getTeamsList(activityRecord.getUserName()), activityRecord, exportType));
+              activityRecord.setTsCode(generateTSCode(getUserTeams(activityRecord.getUserName(), teamsByUser), activityRecord, exportType));
             }
             if (StringUtils.isNotEmpty(activityRecord.getOffice())) {
               office_ = activityRecord.getOffice();
@@ -507,13 +511,13 @@ public class ActivityRecordService {
           Date actDate = Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant());
           DayOfWeek dayOfWeek = d.getDayOfWeek();
           if (dayOfWeek.getValue() == 6 || dayOfWeek.getValue() == 7) {
-            ActivityRecord weekEndRecord = new ActivityRecord(null, userName, day, actDate, "Week End", "", office_, null, "", null, weekEndActivity, null, null, identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(), null);
+            ActivityRecord weekEndRecord = new ActivityRecord(null, userName, day, actDate, "Week End", "", office_, null, "", null, weekEndActivity, null, null, userFullName, null);
             if (export) {
-              weekEndRecord.setTsCode(generateTSCode(teamService.getTeamsList(userName), weekEndRecord, exportType));
+              weekEndRecord.setTsCode(generateTSCode(getUserTeams(userName, teamsByUser), weekEndRecord, exportType));
             }
             activityRecordList.add(weekEndRecord);
           } else {
-            activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", null, "", null, null, null, null, identityManager.getOrCreateUserIdentity(userName).getProfile().getFullName(), null));
+            activityRecordList.add(new ActivityRecord(null, userName, day, actDate, "", "", "", null, "", null, null, null, null, userFullName, null));
           }
         }
       }
@@ -521,6 +525,17 @@ public class ActivityRecordService {
       LOG.error("Cannot parse from date, the to date filer will not applied to get the list of activityRecords");
     }
     return activityRecordList;
+  }
+
+  private List<Team> getUserTeams(String userName, Map<String, List<Team>> teamsByUser) {
+    return teamsByUser.computeIfAbsent(userName, user -> {
+      try {
+        return teamService.getTeamsList(user);
+      } catch (Exception e) {
+        LOG.error("Cannot get teams list of user {}", user, e);
+        return new ArrayList<>();
+      }
+    });
   }
 
   public static List<LocalDate> getDatesBetween(

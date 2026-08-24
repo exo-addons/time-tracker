@@ -17,11 +17,13 @@
 package org.exoplatform.timetracker.storage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 
 import org.exoplatform.timetracker.dao.SalesOrderDAO;
+import org.exoplatform.timetracker.dto.Client;
 import org.exoplatform.timetracker.dto.SalesOrder;
 import org.exoplatform.timetracker.entity.SalesOrderEntity;
 
@@ -165,6 +167,24 @@ public class SalesOrderStorage {
                         salesOrderEntity.getName(),
                         salesOrderEntity.getDescription(),
                         clientStorage.toDTO(salesOrderEntity.getClientEntity()));
+  }
+
+  /**
+   * <p>toDTO with a per-call client cache, to avoid reloading the sales orders
+   * of the same client for every converted record.</p>
+   *
+   * @param salesOrderEntity a {@link org.exoplatform.timetracker.entity.SalesOrderEntity} object.
+   * @param clientsById cache of already converted clients, keyed by client id.
+   * @return a {@link org.exoplatform.timetracker.dto.SalesOrder} object.
+   */
+  public SalesOrder toDTO(SalesOrderEntity salesOrderEntity, Map<Long, Client> clientsById) {
+    if (salesOrderEntity == null) {
+      return null;
+    }
+    return new SalesOrder(salesOrderEntity.getId(),
+                        salesOrderEntity.getName(),
+                        salesOrderEntity.getDescription(),
+                        clientStorage.toDTO(salesOrderEntity.getClientEntity(), clientsById));
   }
   public SalesOrder toDTOWoClient(SalesOrderEntity salesOrderEntity) {
     if (salesOrderEntity == null) {

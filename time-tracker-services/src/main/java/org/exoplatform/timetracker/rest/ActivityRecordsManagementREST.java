@@ -167,6 +167,7 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
                                          @QueryParam("sortdesc") Boolean sortDesc,
                                          @QueryParam("export") Boolean export,
                                          @QueryParam("exportType") String exportType) {
+    long startTime = System.currentTimeMillis();
     try {
       Identity sourceIdentity = Util.getAuthenticatedUserIdentity(portalContainerName);
       if (sourceIdentity == null) {
@@ -190,6 +191,8 @@ public class ActivityRecordsManagementREST implements ResourceContainer {
         }else{
         activityRecordList = activityRecordService.getUserActivityRecords(search,activity,type,subType,activityCode,subActivityCode,client,project,feature,fromDate,toDate,userName,location, office,sortBy, sortDesc, export, exportType);
       }
+      LOG.info("service=time-tracker operation=get-records-list parameters=\"user:{}, team:{}, export:{}, exportType:{}, fromDate:{}, toDate:{}\" records={} duration_ms={}",
+               userName, team, export, exportType, fromDate, toDate, activityRecordList.size(), System.currentTimeMillis() - startTime);
       return Response.ok(activityRecordList).build();
     } catch (Exception e) {
       LOG.error("Unknown error occurred while getting ActivityRecords", e);
