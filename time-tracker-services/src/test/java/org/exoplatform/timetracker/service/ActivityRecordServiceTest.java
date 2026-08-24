@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.timetracker.dto.ActivityRecord;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
 
 public class ActivityRecordServiceTest extends TestCase {
@@ -52,5 +53,38 @@ public class ActivityRecordServiceTest extends TestCase {
         assertNotNull(records);
         assertNotNull(records.getActivityRecords());
         assertNotNull(records.getSize());
+    }
+
+    public void testCreateActivityRecordsOverRange() throws Exception {
+        ActivityRecord record = new ActivityRecord();
+        record.setUserName("root");
+        record.setDescription("range duplication test");
+        record.setTime(8f);
+        record.setLocation("TUN");
+        record.setOffice("TUN");
+        record.setActivityDate("2020-01-06");
+
+        // 2020-01-06 is a Monday, 2020-01-12 a Sunday: 5 workdays, 7 with weekends
+        assertEquals(5, activityRecordService.createActivityRecords(record, "2020-01-06", "2020-01-12", false));
+        assertEquals(7, activityRecordService.createActivityRecords(record, "2020-01-06", "2020-01-12", true));
+
+        try {
+            activityRecordService.createActivityRecords(record, "2020-01-12", "2020-01-06", false);
+            fail("reversed range should be rejected");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            activityRecordService.createActivityRecords(record, "2020-01-06", "2021-02-06", false);
+            fail("range over a year should be rejected");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+        try {
+            activityRecordService.createActivityRecords(record, "not-a-date", "2020-01-06", false);
+            fail("invalid date should be rejected");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
     }
 }

@@ -186,7 +186,8 @@
       :locations="locations"
       :clients="clients"
       :projects="projects"
-      @save="save" />
+      @save="save"
+      @saveRange="saveRange" />
     <edit-tracking-entry-drawer
       ref="editTTEntryDrawer"
       :activities="activities"
@@ -979,6 +980,39 @@ export default {
           this.getActivityRecords().then(data => {
             this.activityRecordsList = data.items;
             this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageAdd'));
+          });
+        })
+        .catch(result => {
+          this.getActivityRecords().then(data => {
+            this.activityRecordsList = data.items;
+          });
+          result.text().then(body => {
+            this.displayErrorMessage(body);
+          });
+        });
+    },
+    saveRange(activityRecord, fromDate, toDate, includeWeekends) {
+      fetch(
+        `/portal/rest/timetracker/activityRecordrecordsmgn/activityrecord/range?fromDate=${fromDate}&toDate=${toDate}&includeWeekends=${includeWeekends}`,
+        {
+          method: 'post',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(activityRecord)
+        }
+      )
+        .then(result => {
+          if (!result.ok) {
+            throw result;
+          }
+          return result.json();
+        })
+        .then(resp => {
+          this.getActivityRecords().then(data => {
+            this.activityRecordsList = data.items;
+            this.displaySusccessMessage(this.$t('exo.timeTracker.label.displaySusccessMessageDuplicate').replace('{0}', resp.created));
           });
         })
         .catch(result => {

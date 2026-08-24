@@ -26,12 +26,26 @@
                   v-bind="attrs"
                   v-on="on" />
               </template>
-              <v-date-picker 
+              <v-date-picker
+                v-if="isDuplicate"
+                v-model="dates"
+                range
+                :locale="localeLanguage"
+                :first-day-of-week="1"
+                @input="onDatesInput" />
+              <v-date-picker
+                v-else
                 v-model="date"
                 :locale="localeLanguage"
                 :first-day-of-week="1"
                 @input="addTTEntryMenuDatePicker = false" />
             </v-menu>
+            <v-checkbox
+              v-if="isDuplicate && isRange"
+              v-model="includeWeekends"
+              :label="$t('exo.timeTracker.commons.TTEntryDrawer.label.includeWeekends')"
+              class="mt-0"
+              hide-details />
           </div>
           <div>
             <v-label for="description">
@@ -223,6 +237,9 @@ export default {
   },
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
+    dates: [],
+    isDuplicate: false,
+    includeWeekends: false,
     localeLanguage: eXo.env.portal.language,
     dateRangeText: '',
     cont: 0,
@@ -239,6 +256,9 @@ export default {
     hiddenauto: false
   }),
   computed: {
+    isRange: function() {
+      return this.dates.length === 2 && this.dates[0] !== this.dates[1];
+    },
     isDisabled: function() {
       const isEmptyDescription = this.isNotEmpty(
         this.activityRecord.description
@@ -311,6 +331,9 @@ export default {
     },
     'date' (val){
       this.formatDate(val);
+    },
+    'dates' (val){
+      this.formatDates(val);
     }
   },
   mounted () {
@@ -353,12 +376,21 @@ export default {
       return str != null && str !== '';
     },
     save() {
-      this.activityRecord.activityDate = this.date;
       this.activityRecord.userName = this.userName;
       if (this.activityRecord.activity && !this.activityRecord.activity.id) {
         this.activityRecord.activity = { id: this.activityRecord.activity };
       }
-      this.$emit('save', this.activityRecord);
+      if (this.isDuplicate && this.isRange) {
+        const sortedDates = [...this.dates].sort();
+        this.activityRecord.activityDate = sortedDates[0];
+        this.$emit('saveRange', this.activityRecord, sortedDates[0], sortedDates[1], this.includeWeekends);
+      } else {
+        if (this.isDuplicate && this.dates.length) {
+          this.date = this.dates[0];
+        }
+        this.activityRecord.activityDate = this.date;
+        this.$emit('save', this.activityRecord);
+      }
       this.activityRecord = {};
       this.$refs.addTTEntryDrawer.close();
     },
@@ -366,6 +398,9 @@ export default {
       this.$refs.addTTEntryDrawer.close();
     },
     openAddTTEntryDrawer(){
+      this.isDuplicate = false;
+      this.includeWeekends = false;
+      this.dates = [];
       this.getLastActivityRecord().then(data => {
         if (data.item) {
           this.activityRecord = data.item;
@@ -386,6 +421,9 @@ export default {
       if (showDPicker) {
         this.showDPicker = true;
       }
+      this.isDuplicate = !!isDuplicate;
+      this.includeWeekends = false;
+      this.dates = isDuplicate && timeRecord && timeRecord.activityDate ? [timeRecord.activityDate] : [];
       if (timeRecord) {
         this.timeRecord = JSON.parse(JSON.stringify(timeRecord));
         this.activityRecord = this.timeRecord;
@@ -426,15 +464,26 @@ export default {
       const element = document.getElementById('timeTrackerAddDivAutoCompleteIdteam');
       element.classList.remove('v-input--is-focused');
     },
-    formatDate(val){
+    toDisplayDate(val){
       if (String(val).includes('-')){
         const [year, month, day] = val.split('-');
-        this.dateRangeText= `${year}/${month}/${day}`;
         if (this.localeLanguage === 'fr'){
-          this.dateRangeText= `${day}/${month}/${year}`;
-        } 
-      } else {
-        this.dateRangeText = val;
+          return `${day}/${month}/${year}`;
+        }
+        return `${year}/${month}/${day}`;
+      }
+      return val;
+    },
+    formatDate(val){
+      this.dateRangeText = this.toDisplayDate(val);
+    },
+    formatDates(val){
+      const sortedDates = [...val].sort();
+      this.dateRangeText = sortedDates.map(d => this.toDisplayDate(d)).join(' ~ ');
+    },
+    onDatesInput() {
+      if (this.dates.length === 2) {
+        this.addTTEntryMenuDatePicker = false;
       }
     }
   }
