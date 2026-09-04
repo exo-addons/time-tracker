@@ -1,0 +1,16 @@
+org.exoplatform.timetracker.entity.ActivityEntity
+org.exoplatform.timetracker.entity.ActivityCodeEntity
+org.exoplatform.timetracker.entity.ActivityRecordEntity
+org.exoplatform.timetracker.entity.ActivityTeamEntity
+org.exoplatform.timetracker.entity.ClientEntity
+org.exoplatform.timetracker.entity.FeatureEntity
+org.exoplatform.timetracker.entity.FilterEntity
+org.exoplatform.timetracker.entity.FilterFieldEntity
+org.exoplatform.timetracker.entity.LocationEntity
+org.exoplatform.timetracker.entity.OfficeEntity
+org.exoplatform.timetracker.entity.ProjectEntity
+org.exoplatform.timetracker.entity.SalesOrderEntity
+org.exoplatform.timetracker.entity.SubActivityCodeEntity
+org.exoplatform.timetracker.entity.SubTypeEntity
+org.exoplatform.timetracker.entity.TypeEntity
+org.exoplatform.timetracker.entity.WorkTimeEntity

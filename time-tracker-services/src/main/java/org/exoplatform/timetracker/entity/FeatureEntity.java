@@ -18,7 +18,7 @@ package org.exoplatform.timetracker.entity;
 
 import jakarta.persistence.*;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
+import io.meeds.common.persistence.PortableSequence;
 
 import lombok.Data;
 
@@ -29,15 +29,13 @@ import lombok.Data;
  * @version $Id: $Id
  */
 @Entity(name = "FeatureEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_FEATURE")
 @Data
 @NamedQueries({})
 public class FeatureEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_FEATURE_ID", sequenceName = "SEQ_FEATURE_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_FEATURE_ID")
+  @PortableSequence(name = "SEQ_FEATURE_ID")
   @Column(name = "ID")
   private Long   id;
 

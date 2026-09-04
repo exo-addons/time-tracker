@@ -16,18 +16,15 @@
  */
 package org.exoplatform.timetracker.entity;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
+import io.meeds.common.persistence.PortableSequence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -38,7 +35,6 @@ import lombok.Data;
  * @version $Id: $Id
  */
 @Entity(name = "ActivityEntity")
-@ExoEntity
 @Table(name = "ADDONS_TT_ACTIVITY")
 @Data
 @NamedQueries({
@@ -47,8 +43,7 @@ import lombok.Data;
 public class ActivityEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_PROJECT_ID", sequenceName = "SEQ_PROJECT_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_PROJECT_ID")
+  @PortableSequence(name = "SEQ_PROJECT_ID")
   @Column(name = "ID")
   private Long          id;
 
