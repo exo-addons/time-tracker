@@ -20,6 +20,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="dateRangeText"
+                  :placeholder="isDuplicate ? $t('exo.timeTracker.commons.TTEntryDrawer.label.selectPeriod') : ''"
                   centered
                   prepend-icon="event"
                   readonly
@@ -272,7 +273,7 @@ export default {
         this.activityRecord.time >= 0 &&
         this.activityRecord.time <= 8 &&
         isEmptyDescription
-      );
+      ) || (this.isDuplicate && this.dates.length === 0);
     }
   },
   watch: {
@@ -330,7 +331,10 @@ export default {
       }
     },
     'date' (val){
-      this.formatDate(val);
+      // in duplicate mode the text field is driven by the range selection only
+      if (!this.isDuplicate) {
+        this.formatDate(val);
+      }
     },
     'dates' (val){
       this.formatDates(val);
@@ -423,7 +427,9 @@ export default {
       }
       this.isDuplicate = !!isDuplicate;
       this.includeWeekends = false;
-      this.dates = isDuplicate && timeRecord && timeRecord.activityDate ? [timeRecord.activityDate] : [];
+      // start with an empty selection: the first click picks the start of the
+      // range and keeps the picker open, the second click picks the end
+      this.dates = [];
       if (timeRecord) {
         this.timeRecord = JSON.parse(JSON.stringify(timeRecord));
         this.activityRecord = this.timeRecord;
@@ -452,7 +458,9 @@ export default {
           }
         });
       }
-      if (this.date){
+      if (this.isDuplicate) {
+        this.dateRangeText = '';
+      } else if (this.date){
         this.formatDate(this.date);
       }
       this.$refs.addTTEntryDrawer.open();
