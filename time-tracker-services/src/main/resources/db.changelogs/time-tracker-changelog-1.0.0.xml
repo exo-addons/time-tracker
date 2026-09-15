@@ -29,8 +29,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql" />
 
   <changeSet author="timeTracker" id="1.0.0-1">
-  
-  
+    <validCheckSum>ANY</validCheckSum>
     <createTable tableName="ADDONS_TT_TYPE">
       <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TYPE_ID" />
@@ -211,7 +210,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
     <modifySql dbms="mysql">
-      <append value=" ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_general_ci" />
+      <append value=" ENGINE=INNODB CHARSET=UTF8MB4 COLLATE utf8mb4_0900_ai_ci" />
     </modifySql>
   </changeSet>
 
@@ -229,14 +228,15 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </changeSet>
 
   <changeSet author="timeTracker" id="1.0.0-3">
+    <validCheckSum>ANY</validCheckSum>
     <createTable tableName="ADDONS_TT_FILTER">
       <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_FILTER_ID" />
       </column>
-      <column name="NAME" type="NVARCHAR(250)">
+      <column name="NAME" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
-      <column name="USER_NAME" type="NVARCHAR(250)">
+      <column name="USER_NAME" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -245,10 +245,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_FILTER_FIELD_ID" />
       </column>
-      <column name="NAME" type="NVARCHAR(250)">
+      <column name="NAME" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
-      <column name="VALUE" type="NVARCHAR(250)">
+      <column name="VALUE" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
       <column name="FILTER_ID" type="BIGINT">
@@ -256,21 +256,23 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                      references="ADDONS_TT_FILTER(ID)"/>
       </column>
     </createTable>
+  </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-3.1" dbms="oracle,postgresql">
     <createSequence sequenceName="SEQ_FILTER_ID" startValue="1"/>
     <createSequence sequenceName="SEQ_FILTER_VALUE_ID" startValue="1"/>
   </changeSet>
 
-
-
   <changeSet author="timeTracker" id="1.0.0-4">
+    <validCheckSum>ANY</validCheckSum>
     <createTable tableName="ADDONS_TT_TEAM">
       <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TEAM_ID" />
       </column>
-      <column name="NAME" type="NVARCHAR(250)">
+      <column name="NAME" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
-      <column name="DESCRIPTION" type="NVARCHAR(250)">
+      <column name="DESCRIPTION" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
     </createTable>
@@ -279,10 +281,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <column name="ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_TEAM_MEMBER_ID" />
       </column>
-      <column name="USER_NAME" type="NVARCHAR(250)">
+      <column name="USER_NAME" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
-      <column name="ROLE" type="NVARCHAR(250)">
+      <column name="ROLE" type="VARCHAR(250)">
         <constraints nullable="false"/>
       </column>
       <column name="TEAM_ID" type="BIGINT">
@@ -290,14 +292,18 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                      references="ADDONS_TT_TEAM(ID)"/>
       </column>
     </createTable>
+  </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-4.1" dbms="oracle,postgresql">
     <createSequence sequenceName="SEQ_TEAM_ID" startValue="1"/>
     <createSequence sequenceName="SEQ_TEAM_MEMBER_ID" startValue="1"/>
   </changeSet>
 
   <changeSet author="timeTracker" id="1.0.0-5">
+    <validCheckSum>ANY</validCheckSum>
     <createTable tableName="ADDONS_TT_ACTIVITY_TEAM">
 
-      <column name="TEAM_ID" type="NVARCHAR(250)">
+      <column name="TEAM_ID" type="VARCHAR(250)">
       </column>
       <column name="ACTIVITY_ID" type="BIGINT">
         <constraints foreignKeyName="FK_TT_TEAM_ACTIVITY_ACTIVITY"
@@ -313,6 +319,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </changeSet>
 
   <changeSet author="timeTracker" id="1.0.0-7">
+    <validCheckSum>9:8b3acf9dd6502ae4a191ad89b598c405</validCheckSum>
     <createTable tableName="ADDONS_TT_LOCATION">
       <column name="CODE" type="VARCHAR(50)">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TT_LOCATION_CODE" />
@@ -352,6 +359,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <column name="DEFAULT_TIME" type="BOOLEAN">
       </column>
     </createTable>
+  </changeSet>
+
+  <changeSet author="timeTracker" id="1.0.0-7.1" dbms="oracle,postgresql">
     <createSequence sequenceName="SEQ_WORK_TIME_ID" startValue="1"/>
   </changeSet>
 
@@ -395,5 +405,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <createSequence sequenceName="SEQ_SUB_ACTIVITY_CODE_ID" startValue="1" />
     <createSequence sequenceName="SEQ_TYPE_ID" startValue="1" />
     <createSequence sequenceName="SEQ_SUB_TYPE_ID" startValue="1" />
+  </changeSet>
+  <changeSet author="timeTracker" id="1.0.0-10">
+    <sql dbms="mysql">
+      ALTER TABLE ADDONS_TT_ACTIVITY_RECORD CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+    </sql>
   </changeSet>
 </databaseChangeLog>
