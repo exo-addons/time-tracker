@@ -24,7 +24,7 @@
                   <button
                     class="btn btn-primary pull-left"
                     type="button"
-                    @click="openAddTTEntryDrawer">
+                    @click="openNewTTEntryDrawer">
                     <i class="uiIconSocSimplePlus uiIconSocWhite"></i>
                     {{
                       $t(
@@ -585,6 +585,9 @@ export default {
     },
     toggleFilterDrawer() {
       this.$refs.filterDrawer.open();
+    },
+    openNewTTEntryDrawer() {
+      this.$refs.addTTEntryDrawer.openAddTTEntryDrawer(true);
     },
     openAddTTEntryDrawer(item, isDuplicate) {
       if (this.existingActicitiesUser !== item.userName) {

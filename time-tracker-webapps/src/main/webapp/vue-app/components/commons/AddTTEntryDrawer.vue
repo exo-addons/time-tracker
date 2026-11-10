@@ -376,6 +376,11 @@ export default {
           });
       });
     },
+    getToday() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    },
     isNotEmpty(str) {
       return str != null && str !== '';
     },
@@ -401,7 +406,8 @@ export default {
     cancel() {
       this.$refs.addTTEntryDrawer.close();
     },
-    openAddTTEntryDrawer(){
+    openAddTTEntryDrawer(showDPicker){
+      this.showDPicker = !!showDPicker;
       this.isDuplicate = false;
       this.includeWeekends = false;
       this.dates = [];
@@ -413,9 +419,16 @@ export default {
           this.activityRecord.salesOrder =  null;
           this.activityRecord.activityTime =  null;
           this.activityRecord.activityDate =  null;
-          this.date = '';
+          // with the date picker shown, a new entry starts on today's date
+          this.date = this.showDPicker ? this.getToday() : '';
           this.cont=0;
           this.contProject=0;
+        }
+        if (this.showDPicker) {
+          if (!this.date) {
+            this.date = this.getToday();
+          }
+          this.formatDate(this.date);
         }
       }).then(() =>
         this.$refs.addTTEntryDrawer.open()
