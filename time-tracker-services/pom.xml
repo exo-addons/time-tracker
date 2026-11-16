@@ -65,6 +65,12 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!-- MCP Server API (used by the time tracker MCP tools exposed to the AI agent) -->
+    <dependency>
+      <groupId>io.meeds.mcp-server</groupId>
+      <artifactId>mcp-server-tools</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!--swagger-->
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
@@ -142,6 +148,16 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <build>
     <finalName>time-tracker-services</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>
+            <!-- Required so MCP tool method parameter names are retained and bound by name -->
+            <arg>-parameters</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

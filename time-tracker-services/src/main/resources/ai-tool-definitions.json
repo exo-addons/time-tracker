@@ -1,0 +1,383 @@
+{
+  "tools": [
+    {
+      "name": "get_time_tracker_activities",
+      "title": "List time tracking activities",
+      "description": "Lists the activities the current user can book time on (those of the user's teams). Use an activity_id from this list to create a time entry.",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_time_tracker_clients",
+      "title": "List clients",
+      "description": "Lists the clients an entry can be attached to.",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_time_tracker_projects",
+      "title": "List projects",
+      "description": "Lists the projects an entry can be attached to, optionally only those of one client.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "integer",
+            "description": "Only the projects of this client."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_time_tracker_sales_orders",
+      "title": "List sales orders",
+      "description": "Lists the sales orders an entry can be attached to, optionally only those of one client.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "integer",
+            "description": "Only the sales orders of this client."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_time_tracker_locations",
+      "title": "List locations and offices",
+      "description": "Lists the locations and offices (codes and labels) an entry can use.",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_time_tracker_teams",
+      "title": "List teams",
+      "description": "Lists all the time tracking teams. Reserved to time-tracking managers.",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_time_entries",
+      "title": "List my time entries",
+      "description": "Lists timesheet entries, newest first, with the total hours of the returned page. Defaults to the current user's own; time-tracking managers can pass username or team_id.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "from_date": {
+            "type": "string",
+            "description": "First day, yyyy-MM-dd (inclusive). Optional."
+          },
+          "to_date": {
+            "type": "string",
+            "description": "Last day, yyyy-MM-dd (inclusive). Optional."
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of entries to return (default 10, max 100)."
+          },
+          "username": {
+            "type": "string",
+            "description": "Manager only: list this user's entries instead of the current user's."
+          },
+          "team_id": {
+            "type": "string",
+            "description": "Manager only: list the entries of every member of this team (id from list_time_tracker_teams). Takes precedence over username."
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_last_time_entry",
+      "title": "Get my last time entry",
+      "description": "Returns the current user's most recent time entry, handy to repeat or duplicate it.",
+      "input_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_timesheet_summary",
+      "title": "Summarise a timesheet",
+      "description": "Totals a timesheet over a date range (max 366 days): hours per day, activity, project and client, plus Monday-to-Friday days with no entry and, when expected_daily_hours is given, weekdays below it. Use it to find what is missing to fill.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "from_date": {
+            "type": "string",
+            "description": "First day, yyyy-MM-dd."
+          },
+          "to_date": {
+            "type": "string",
+            "description": "Last day, yyyy-MM-dd, inclusive."
+          },
+          "expected_daily_hours": {
+            "type": "number",
+            "description": "Hours expected per weekday, e.g. 8. Optional."
+          },
+          "username": {
+            "type": "string",
+            "description": "Manager only: summarise this user's timesheet instead of the current user's."
+          }
+        },
+        "required": [
+          "from_date",
+          "to_date"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "create_time_entry",
+      "title": "Create a time entry",
+      "description": "Books time for the current user on an activity for a given day.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "activity_id": {
+            "type": "integer",
+            "description": "Id of an activity returned by get_time_tracker_activities."
+          },
+          "date": {
+            "type": "string",
+            "description": "Day of the entry, yyyy-MM-dd."
+          },
+          "hours": {
+            "type": "number",
+            "description": "Time spent, in hours (greater than 0, at most 24). 0.5 is half an hour."
+          },
+          "description": {
+            "type": "string",
+            "description": "What was done."
+          },
+          "location": {
+            "type": "string",
+            "description": "Work location (a code from get_time_tracker_locations)."
+          },
+          "office": {
+            "type": "string",
+            "description": "Office (a code from get_time_tracker_locations)."
+          },
+          "client_id": {
+            "type": "integer",
+            "description": "Client id, from list_time_tracker_clients. Needed when the activity is booked on a client."
+          },
+          "project_id": {
+            "type": "integer",
+            "description": "Project id, from list_time_tracker_projects."
+          },
+          "sales_order_id": {
+            "type": "integer",
+            "description": "Sales order id, from list_time_tracker_sales_orders."
+          },
+          "project_version": {
+            "type": "string",
+            "description": "Project version."
+          }
+        },
+        "required": [
+          "activity_id",
+          "date",
+          "hours"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "require_approval": true
+    },
+    {
+      "name": "update_time_entry",
+      "title": "Update a time entry",
+      "description": "Changes one of the current user's timesheet entries. Only the given fields change. Changing the activity clears the entry's client and project.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "entry_id": {
+            "type": "integer",
+            "description": "Id of the entry, as returned by list_time_entries."
+          },
+          "activity_id": {
+            "type": "integer",
+            "description": "New activity id, from get_time_tracker_activities."
+          },
+          "date": {
+            "type": "string",
+            "description": "New day, yyyy-MM-dd."
+          },
+          "hours": {
+            "type": "number",
+            "description": "New time in hours (greater than 0, at most 24)."
+          },
+          "description": {
+            "type": "string",
+            "description": "New description. An empty string clears it."
+          },
+          "location": {
+            "type": "string",
+            "description": "New location."
+          },
+          "office": {
+            "type": "string",
+            "description": "New office."
+          },
+          "client_id": {
+            "type": "integer",
+            "description": "Client id, from list_time_tracker_clients. Needed when the activity is booked on a client."
+          },
+          "project_id": {
+            "type": "integer",
+            "description": "Project id, from list_time_tracker_projects."
+          },
+          "sales_order_id": {
+            "type": "integer",
+            "description": "Sales order id, from list_time_tracker_sales_orders."
+          },
+          "project_version": {
+            "type": "string",
+            "description": "Project version."
+          }
+        },
+        "required": [
+          "entry_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "require_approval": true
+    },
+    {
+      "name": "duplicate_time_entry",
+      "title": "Duplicate a time entry over a date range",
+      "description": "Copies one of the current user's entries onto every day from from_date to to_date (both included, at most 366 days). Weekends are skipped unless include_weekends is true. Not idempotent: running it twice creates the copies twice.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "entry_id": {
+            "type": "integer",
+            "description": "Id of the entry, as returned by list_time_entries."
+          },
+          "from_date": {
+            "type": "string",
+            "description": "First day, yyyy-MM-dd."
+          },
+          "to_date": {
+            "type": "string",
+            "description": "Last day, yyyy-MM-dd, inclusive."
+          },
+          "include_weekends": {
+            "type": "boolean",
+            "description": "Also create entries on Saturdays and Sundays (default false)."
+          }
+        },
+        "required": [
+          "entry_id",
+          "from_date",
+          "to_date"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "require_approval": true
+    },
+    {
+      "name": "delete_time_entry",
+      "title": "Delete a time entry",
+      "description": "Deletes one of the current user's timesheet entries.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "entry_id": {
+            "type": "integer",
+            "description": "Id of the entry, as returned by list_time_entries."
+          }
+        },
+        "required": [
+          "entry_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "require_approval": true
+    }
+  ]
+}
