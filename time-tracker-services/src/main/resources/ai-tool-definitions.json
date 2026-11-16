@@ -216,11 +216,11 @@
           },
           "location": {
             "type": "string",
-            "description": "Work location (a code from get_time_tracker_locations)."
+            "description": "Work location, a code from get_time_tracker_locations. Defaults to the location of the user's last entry; mandatory when there is none and locations are configured."
           },
           "office": {
             "type": "string",
-            "description": "Office (a code from get_time_tracker_locations)."
+            "description": "Office, a code from get_time_tracker_locations. Defaults to the office of the user's last entry; mandatory when there is none and offices are configured."
           },
           "client_id": {
             "type": "integer",

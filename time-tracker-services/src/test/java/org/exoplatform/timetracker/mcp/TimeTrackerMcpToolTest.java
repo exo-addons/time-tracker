@@ -225,9 +225,10 @@ public class TimeTrackerMcpToolTest {
   @Test
   public void lastEntryAndMissingLastEntry() throws Exception {
     when(recordService.getLastActivityRecord("john")).thenReturn(entry(3L, "john"));
-    assertEquals(Long.valueOf(3L), tool.getLastTimeEntry().id());
+    assertEquals(true, tool.getLastTimeEntry().get("found"));
+    assertEquals(Long.valueOf(3L), ((TimeEntryModel) tool.getLastTimeEntry().get("entry")).id());
     when(recordService.getLastActivityRecord("john")).thenReturn(null);
-    assertThrows(org.exoplatform.commons.exception.ObjectNotFoundException.class, () -> tool.getLastTimeEntry());
+    assertEquals(false, tool.getLastTimeEntry().get("found"));
   }
 
   @Test
@@ -276,5 +277,28 @@ public class TimeTrackerMcpToolTest {
     assertEquals(2, r.total());
     assertEquals(1, r.entries().size());
     assertEquals("bob", r.entries().get(0).username());
+  }
+
+  @Test
+  public void createRequiresValidLocationAndOfficeWhenConfigured() throws Exception {
+    when(recordService.createActivityRecord(any())).thenAnswer(i -> i.getArgument(0));
+    org.exoplatform.timetracker.dto.Location paris = new org.exoplatform.timetracker.dto.Location("PAR", "Paris");
+    org.exoplatform.timetracker.dto.Office hq = new org.exoplatform.timetracker.dto.Office("HQ", "Head office");
+    when(settingsService.getLocationsList()).thenReturn(List.of(paris));
+    when(settingsService.getOfficesList()).thenReturn(List.of(hq));
+    // nothing given and no previous entry: asked for
+    assertThrows(IllegalArgumentException.class, () -> tool.createTimeEntry(5L, "2026-11-16", 1f, null, null, null, null, null, null, null));
+    // not a configured code
+    assertThrows(IllegalArgumentException.class, () -> tool.createTimeEntry(5L, "2026-11-16", 1f, null, "NYC", "HQ", null, null, null, null));
+    // valid codes
+    TimeEntryModel e = tool.createTimeEntry(5L, "2026-11-16", 1f, null, "PAR", "HQ", null, null, null, null);
+    assertEquals("PAR", e.location());
+    // missing ones come from the last entry
+    ActivityRecord last = entry(1L, "john");
+    last.setLocation("PAR");
+    last.setOffice("HQ");
+    when(recordService.getLastActivityRecord("john")).thenReturn(last);
+    e = tool.createTimeEntry(5L, "2026-11-17", 1f, null, null, null, null, null, null, null);
+    assertEquals("HQ", e.office());
   }
 }

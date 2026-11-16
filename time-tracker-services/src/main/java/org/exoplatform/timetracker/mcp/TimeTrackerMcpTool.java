@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -232,14 +233,21 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     return new TimeEntryCollectionModel(entries, total, safeOffset, safeLimit, totalHours);
   }
 
-  /** Returns the current user's most recent entry. */
-  @SneakyThrows
-  public TimeEntryModel getLastTimeEntry() {
+  /**
+   * Returns the current user's most recent entry. Having none yet is a normal
+   * answer, not an error.
+   */
+  public Map<String, Object> getLastTimeEntry() {
     ActivityRecord last = activityRecordService.getLastActivityRecord(getCurrentUserName());
+    Map<String, Object> result = new LinkedHashMap<>();
     if (last == null) {
-      throw new ObjectNotFoundException("The user has no time entry yet");
+      result.put("found", false);
+      result.put("message", "The user has no time entry yet");
+    } else {
+      result.put("found", true);
+      result.put("entry", toEntryModel(last));
     }
-    return toEntryModel(last);
+    return result;
   }
 
   /**
@@ -338,8 +346,16 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     record.setActivityDate(day);
     record.setTime(hours);
     record.setDescription(description);
-    record.setLocation(location);
-    record.setOffice(office);
+    // both columns are mandatory in the database
+    ActivityRecord last = activityRecordService.getLastActivityRecord(getCurrentUserName());
+    record.setLocation(resolveLocationOrOffice(location,
+                                               "location",
+                                               safe(settingsService.getLocationsList()).stream().map(l -> l.getCode()).toList(),
+                                               last == null ? null : last.getLocation()));
+    record.setOffice(resolveLocationOrOffice(office,
+                                             "office",
+                                             safe(settingsService.getOfficesList()).stream().map(o -> o.getCode()).toList(),
+                                             last == null ? null : last.getOffice()));
     record.setProjectVersion(projectVersion);
     Activity ref = new Activity();
     ref.setId(activity.getId());
@@ -506,6 +522,26 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
 
   private <T> List<T> safe(List<T> list) {
     return list == null ? Collections.emptyList() : list;
+  }
+
+  /**
+   * A given value must be one of the configured codes, when any are configured;
+   * a missing one falls back to the user's last entry, then to an empty value
+   * when nothing is configured, otherwise it is asked for.
+   */
+  private String resolveLocationOrOffice(String value, String name, List<String> allowed, String fromLastEntry) {
+    if (StringUtils.isNotBlank(value)) {
+      if (!allowed.isEmpty() && !allowed.contains(value)) {
+        throw new IllegalArgumentException("'%s' must be one of %s".formatted(name, allowed));
+      }
+      return value;
+    } else if (StringUtils.isNotBlank(fromLastEntry)) {
+      return fromLastEntry;
+    } else if (allowed.isEmpty()) {
+      return "";
+    } else {
+      throw new IllegalArgumentException("'%s' is mandatory, one of %s".formatted(name, allowed));
+    }
   }
 
   private void checkHours(Float hours) {
