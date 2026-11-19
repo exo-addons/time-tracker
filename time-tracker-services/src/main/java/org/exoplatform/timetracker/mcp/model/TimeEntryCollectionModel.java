@@ -22,6 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A page of timesheet entries as exposed to the AI agent.
+ *
+ * @param entries the entries of this page
+ * @param total number of entries matching, all pages together
+ * @param offset offset of this page
+ * @param limit page size
+ * @param totalHours sum of the hours of this page
  */
 public record TimeEntryCollectionModel(List<TimeEntryModel> entries,
                                        long total,

@@ -125,11 +125,11 @@
           },
           "username": {
             "type": "string",
-            "description": "Manager only: list this user's entries instead of the current user's."
+            "description": "Manager only: list this user's entries instead of the current user's. A plain account name. Requires from_date and to_date (at most 366 days apart)."
           },
           "team_id": {
             "type": "string",
-            "description": "Manager only: list the entries of every member of this team (id from list_time_tracker_teams). Takes precedence over username."
+            "description": "Manager only: list the entries of every member of this team (id from list_time_tracker_teams). Takes precedence over username. Requires from_date and to_date (at most 366 days apart)."
           }
         }
       },
@@ -256,7 +256,7 @@
     {
       "name": "update_time_entry",
       "title": "Update a time entry",
-      "description": "Changes one of the current user's timesheet entries. Only the given fields change. Changing the activity clears the entry's client and project.",
+      "description": "Changes one of the current user's timesheet entries. Only the given fields change. Changing the activity clears the entry's client, project and sales order.",
       "input_schema": {
         "type": "object",
         "properties": {

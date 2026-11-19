@@ -112,6 +112,37 @@ public class TimeTrackerMcpToolTest {
     assertEquals(declared, defined);
   }
 
+  /**
+   * The server binds the arguments of a call to the method parameters by name
+   * (snake_case of the Java name): a parameter missing from the schema can
+   * never be given, and one that is only in the schema is silently ignored.
+   */
+  @Test
+  public void everyToolParameterIsDescribedByItsSchemaAndViceVersa() throws Exception {
+    JsonNode tools;
+    try (InputStream in = getClass().getClassLoader().getResourceAsStream("ai-tool-definitions.json")) {
+      tools = new ObjectMapper().readTree(in).get("tools");
+    }
+    for (JsonNode tool : tools) {
+      String name = tool.get("name").asText();
+      Method method = Stream.of(TimeTrackerMcpTool.class.getDeclaredMethods())
+                            .filter(m -> Modifier.isPublic(m.getModifiers()) && toSnakeCase(m.getName()).equals(name))
+                            .findFirst()
+                            .orElseThrow(() -> new AssertionError("no method for tool " + name));
+      Set<String> parameters = Stream.of(method.getParameters())
+                                     .map(p -> toSnakeCase(p.getName()))
+                                     .collect(Collectors.toCollection(TreeSet::new));
+      Set<String> described = new TreeSet<>();
+      tool.get("input_schema").get("properties").fieldNames().forEachRemaining(described::add);
+      assertEquals("parameters of " + name, parameters, described);
+      if (tool.get("input_schema").has("required")) {
+        for (JsonNode required : tool.get("input_schema").get("required")) {
+          assertTrue(name + " requires an unknown parameter " + required.asText(), described.contains(required.asText()));
+        }
+      }
+    }
+  }
+
   @Test
   public void createTimeEntryAssignsCurrentUser() throws Exception {
     when(recordService.createActivityRecord(any())).thenAnswer(i -> {

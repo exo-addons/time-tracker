@@ -22,6 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * An activity a user can book time on, as exposed to the AI agent.
+ *
+ * @param id activity id
+ * @param code activity code
+ * @param label activity label
+ * @param project label of the project of the activity
+ * @param client label of the client of the project
  */
 @JsonInclude(Include.NON_EMPTY)
 public record TimeActivityModel(@JsonProperty("activity_id") Long id,

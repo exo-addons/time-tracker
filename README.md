@@ -19,9 +19,11 @@ Every tool acts as the signed-in user.
 | `create_time_entry` | Book time on an activity | yes |
 | `update_time_entry` | Change only the given fields of an entry | yes |
 | `duplicate_time_entry` | Copy an entry over a date range (weekends skipped by default) | yes |
-| `delete_time_entry` | Delete an entry (owner, or a time-tracking manager as in the UI) | yes |
+| `delete_time_entry` | Delete one of the user's own entries | yes |
 | `list_time_tracker_teams` | All teams (managers only) | |
 
-Writes only concern the user's own timesheet. Time-tracking managers (`/platform/time-tracking-managers`) can also pass
-`username` or `team_id` to `list_time_entries`, and `username` to `get_timesheet_summary`, to read other people's time.
+Writes (create, update, duplicate, delete) only concern the user's own timesheet, even for a time-tracking manager.
+Time-tracking managers (`/platform/time-tracking-managers`) can also pass `username` or `team_id` to `list_time_entries`
+(with a `from_date` / `to_date` range of at most 366 days), and `username` to `get_timesheet_summary`, to read other people's
+time. A `username` must be a plain account name.
 Exports and the administration of clients, projects, activities and teams are not exposed.
