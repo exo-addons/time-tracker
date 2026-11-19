@@ -100,6 +100,9 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
    * its query from this value, so nothing else than a plain account name may
    * reach it, whatever the agent was asked to type.
    */
+  /** Value the data layer reads as "every user". */
+  private static final String         ALL_USERS           = "all";
+
   private static final Pattern        USERNAME_PATTERN    = Pattern.compile("^[A-Za-z0-9._@-]{1,100}$");
 
   private final ActivityRecordService activityRecordService;
@@ -296,7 +299,9 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     for (ActivityRecord r : safe(records)) {
       float h = r.getTime() == null ? 0f : r.getTime();
       total += h;
-      byDay.merge(r.getActivityDate(), h, Float::sum);
+      if (r.getActivityDate() != null) {
+        byDay.merge(r.getActivityDate(), h, Float::sum);
+      }
       addTo(byActivity, r.getActivity() == null ? null : r.getActivity().getLabel(), h);
       addTo(byProject, r.getProject() == null ? null : r.getProject().getLabel(), h);
       addTo(byClient, r.getClient() == null ? null : r.getClient().getLabel(), h);
@@ -311,7 +316,8 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       if (hours == null) {
         empty.add(d.toString());
       }
-      if (expectedDailyHours != null && (hours == null || hours < expectedDailyHours)) {
+      // compared as displayed: 2.2 + 2.8 + 3 must not read as shorter than 8
+      if (expectedDailyHours != null && (hours == null || round(hours) < expectedDailyHours)) {
         under.add(d.toString());
       }
     }
@@ -363,11 +369,11 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     ActivityRecord last = activityRecordService.getLastActivityRecord(getCurrentUserName());
     record.setLocation(resolveLocationOrOffice(location,
                                                "location",
-                                               safe(settingsService.getLocationsList()).stream().map(l -> l.getCode()).toList(),
+                                               locationCodes(),
                                                last == null ? null : last.getLocation()));
     record.setOffice(resolveLocationOrOffice(office,
                                              "office",
-                                             safe(settingsService.getOfficesList()).stream().map(o -> o.getCode()).toList(),
+                                             officeCodes(),
                                              last == null ? null : last.getOffice()));
     record.setProjectVersion(projectVersion);
     Activity ref = new Activity();
@@ -416,10 +422,10 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       record.setDescription(description);
     }
     if (location != null) {
-      record.setLocation(location);
+      record.setLocation(checkConfiguredCode(location, "location", locationCodes()));
     }
     if (office != null) {
-      record.setOffice(office);
+      record.setOffice(checkConfiguredCode(office, "office", officeCodes()));
     }
     if (projectVersion != null) {
       record.setProjectVersion(projectVersion);
@@ -439,6 +445,10 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     String from = checkDate(fromDate, "from_date");
     String to = checkDate(toDate, "to_date");
     ActivityRecord source = getOwnEntry(entryId);
+    if (source.getActivity() != null && source.getActivity().getId() != null) {
+      // the user may have left the team of the activity since the entry was made
+      getAllowedActivity(source.getActivity().getId());
+    }
     TimeEntryModel sourceModel = toEntryModel(source);
     int created = activityRecordService.createActivityRecords(source, from, to, Boolean.TRUE.equals(includeWeekends));
     return new TimeEntryDuplicationModel(sourceModel, created, from, to);
@@ -464,6 +474,10 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
   // ==========================================================================
 
   private RecordsAccessList queryEntries(String from, String to, String user, int offset, int limit) {
+    if (ALL_USERS.equalsIgnoreCase(user)) {
+      // the data layer reads this value as "no user filter"
+      throw new IllegalArgumentException("'%s' is not a user name that can be queried".formatted(user));
+    }
     return activityRecordService.getActivityRecordsList(null, null, null, null, null, null, null, null, null,
                                                         from, to, user, null, null, offset, limit, SORT_FIELD, true);
   }
@@ -486,7 +500,8 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       Set<String> users = new LinkedHashSet<>();
       for (TeamMember member : safe(teamService.getMembersList(teamId))) {
         // a blank name would mean "everybody" to the data layer
-        if (member.getUserName() != null && USERNAME_PATTERN.matcher(member.getUserName()).matches()) {
+        if (member.getUserName() != null && USERNAME_PATTERN.matcher(member.getUserName()).matches()
+            && !ALL_USERS.equalsIgnoreCase(member.getUserName())) {
           users.add(member.getUserName());
         }
       }
@@ -583,6 +598,24 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     } else {
       throw new IllegalArgumentException("'%s' is mandatory, one of %s".formatted(name, allowed));
     }
+  }
+
+  private List<String> locationCodes() {
+    return safe(settingsService.getLocationsList()).stream().map(l -> l.getCode()).toList();
+  }
+
+  private List<String> officeCodes() {
+    return safe(settingsService.getOfficesList()).stream().map(o -> o.getCode()).toList();
+  }
+
+  /** A location or office that is changed must be a real value: the columns are mandatory and filtered on by code. */
+  private String checkConfiguredCode(String value, String name, List<String> allowed) {
+    if (StringUtils.isBlank(value)) {
+      throw new IllegalArgumentException("'%s' must not be blank".formatted(name));
+    } else if (!allowed.isEmpty() && !allowed.contains(value)) {
+      throw new IllegalArgumentException("'%s' must be one of %s".formatted(name, allowed));
+    }
+    return value;
   }
 
   private void checkHours(Float hours) {

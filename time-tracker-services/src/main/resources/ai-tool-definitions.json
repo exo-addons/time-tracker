@@ -320,7 +320,7 @@
     {
       "name": "duplicate_time_entry",
       "title": "Duplicate a time entry over a date range",
-      "description": "Copies one of the current user's entries onto every day from from_date to to_date (both included, at most 366 days). Weekends are skipped unless include_weekends is true. Not idempotent: running it twice creates the copies twice.",
+      "description": "Copies one of the current user's entries onto every day from from_date to to_date (both included, at most 366 days). Weekends are skipped unless include_weekends is true. The copies are made one by one: if the call fails, list the entries of the range before trying again, or the ones already made are duplicated. Not idempotent: running it twice creates the copies twice.",
       "input_schema": {
         "type": "object",
         "properties": {

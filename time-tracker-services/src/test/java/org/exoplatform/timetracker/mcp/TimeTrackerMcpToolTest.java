@@ -398,4 +398,61 @@ public class TimeTrackerMcpToolTest {
     TimeEntryCollectionModel l = tool.listTimeEntries("2026-11-16", "2026-11-17", null, null, null, null);
     assertEquals(7.6f, l.totalHours(), 0f);
   }
+
+  @Test
+  public void updateValidatesALocationOrOfficeThatIsChanged() throws Exception {
+    when(settingsService.getLocationsList()).thenReturn(List.of(new org.exoplatform.timetracker.dto.Location("PAR", "Paris")));
+    when(recordService.getActivityRecordById(3L)).thenReturn(entry(3L, "john"));
+    when(recordService.updateActivityRecord(any(), org.mockito.ArgumentMatchers.eq("john"))).thenAnswer(i -> i.getArgument(0));
+    assertThrows(IllegalArgumentException.class, () -> tool.updateTimeEntry(3L, null, null, null, null, "", null, null, null, null, null));
+    assertThrows(IllegalArgumentException.class, () -> tool.updateTimeEntry(3L, null, null, null, null, "NYC", null, null, null, null, null));
+    assertThrows(IllegalArgumentException.class, () -> tool.updateTimeEntry(3L, null, null, null, null, null, " ", null, null, null, null));
+    assertEquals("PAR", tool.updateTimeEntry(3L, null, null, null, null, "PAR", null, null, null, null, null).location());
+  }
+
+  @Test
+  public void theWildcardUserOfTheDataLayerIsNeverQueried() throws Exception {
+    asManager();
+    assertThrows(IllegalArgumentException.class,
+                 () -> tool.listTimeEntries("2026-11-01", "2026-11-30", null, null, "all", null));
+    assertThrows(IllegalArgumentException.class, () -> tool.getTimesheetSummary("2026-11-01", "2026-11-30", null, "ALL"));
+    TeamMember all = new TeamMember();
+    all.setUserName("all");
+    when(teamService.getMembersList("t1")).thenReturn(List.of(all));
+    assertEquals(0, tool.listTimeEntries("2026-11-01", "2026-11-30", null, null, null, "t1").total());
+    // an account that happens to be named like the wildcard must not read everybody's time either
+    ConversationState.setCurrent(new ConversationState(new Identity("all")));
+    assertThrows(IllegalArgumentException.class, () -> tool.listTimeEntries(null, null, null, null, null, null));
+    verify(recordService, never()).getActivityRecordsList(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                                                          any(), any(), any(), any(), org.mockito.ArgumentMatchers.anyInt(),
+                                                          org.mockito.ArgumentMatchers.anyInt(), any(),
+                                                          org.mockito.ArgumentMatchers.anyBoolean());
+  }
+
+  @Test
+  public void aDayIsComparedWithTheExpectedHoursAsDisplayed() throws Exception {
+    when(recordService.getActivityRecordsList(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                                              any(), any(), any(), org.mockito.ArgumentMatchers.anyInt(),
+                                              org.mockito.ArgumentMatchers.anyInt(), any(),
+                                              org.mockito.ArgumentMatchers.anyBoolean())).thenReturn(page(dayEntry(1, "2026-11-16", 2.2f, "john"),
+                                                                                                           dayEntry(2, "2026-11-16", 2.8f, "john"),
+                                                                                                           dayEntry(3, "2026-11-16", 3f, "john"),
+                                                                                                           dayEntry(4, null, 1f, "john")));
+    TimesheetSummaryModel s = tool.getTimesheetSummary("2026-11-16", "2026-11-16", 8f, null);
+    assertEquals(8f, s.hoursByDay().get("2026-11-16"), 0f);
+    assertTrue("8.0 displayed is not below 8", s.underExpectedWeekdays().isEmpty());
+    // a record without a date neither breaks the summary nor is lost from the totals
+    assertEquals(9f, s.totalHours(), 0f);
+  }
+
+  @Test
+  public void duplicateChecksThatTheActivityIsStillAllowed() throws Exception {
+    ActivityRecord source = entry(3L, "john");
+    Activity gone = new Activity();
+    gone.setId(99L);
+    source.setActivity(gone);
+    when(recordService.getActivityRecordById(3L)).thenReturn(source);
+    assertThrows(IllegalAccessException.class, () -> tool.duplicateTimeEntry(3L, "2026-11-16", "2026-11-20", false));
+    verify(recordService, never()).createActivityRecords(any(), any(), any(), org.mockito.ArgumentMatchers.anyBoolean());
+  }
 }
