@@ -140,10 +140,19 @@ public class TimeTrackerMcpToolTest {
   }
 
   @Test
-  public void deleteGoesThroughOwnershipCheckAsCurrentUser() throws Exception {
+  public void deleteOnlyOwnEntriesAsCurrentUser() throws Exception {
+    when(recordService.getActivityRecordById(3L)).thenReturn(entry(3L, "john"));
     tool.deleteTimeEntry(3L);
     verify(recordService).deleteActivityRecord(3L, "john");
     assertTrue(true);
+  }
+
+  @Test
+  public void deleteRefusesSomeoneElsesEntryEvenForAManager() throws Exception {
+    asManager();
+    when(recordService.getActivityRecordById(4L)).thenReturn(entry(4L, "mary"));
+    assertThrows(IllegalAccessException.class, () -> tool.deleteTimeEntry(4L));
+    verify(recordService, never()).deleteActivityRecord(any(), any());
   }
 
   private ActivityRecord entry(long id, String user) {
@@ -273,7 +282,7 @@ public class TimeTrackerMcpToolTest {
                                               org.mockito.ArgumentMatchers.eq("bob"), any(), any(),
                                               org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.anyInt(),
                                               any(), org.mockito.ArgumentMatchers.anyBoolean())).thenReturn(page(dayEntry(2, "2026-11-12", 2f, "bob")));
-    TimeEntryCollectionModel r = tool.listTimeEntries(null, null, 0, 1, null, "t1");
+    TimeEntryCollectionModel r = tool.listTimeEntries("2026-11-01", "2026-11-30", 0, 1, null, "t1");
     assertEquals(2, r.total());
     assertEquals(1, r.entries().size());
     assertEquals("bob", r.entries().get(0).username());
@@ -300,5 +309,62 @@ public class TimeTrackerMcpToolTest {
     when(recordService.getLastActivityRecord("john")).thenReturn(last);
     e = tool.createTimeEntry(5L, "2026-11-17", 1f, null, null, null, null, null, null, null);
     assertEquals("HQ", e.office());
+  }
+
+  @Test
+  public void usernameThatIsNotAPlainAccountNameNeverReachesTheDataLayer() throws Exception {
+    asManager();
+    // the data layer concatenates the user name into its query
+    for (String evil : new String[] { "x' OR '1'='1", "mary'--", "a b", "mary;", "ma\"ry" }) {
+      assertThrows("rejected: " + evil,
+                   IllegalArgumentException.class,
+                   () -> tool.listTimeEntries("2026-11-01", "2026-11-30", null, null, evil, null));
+      assertThrows("rejected: " + evil,
+                   IllegalArgumentException.class,
+                   () -> tool.getTimesheetSummary("2026-11-01", "2026-11-30", null, evil));
+    }
+    verify(recordService, never()).getActivityRecordsList(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                                                          any(), any(), any(), any(), org.mockito.ArgumentMatchers.anyInt(),
+                                                          org.mockito.ArgumentMatchers.anyInt(), any(),
+                                                          org.mockito.ArgumentMatchers.anyBoolean());
+  }
+
+  @Test
+  public void teamMembersWithBlankOrOddNamesAreSkipped() throws Exception {
+    asManager();
+    TeamMember blank = new TeamMember();
+    blank.setUserName("");
+    TeamMember nul = new TeamMember();
+    TeamMember odd = new TeamMember();
+    odd.setUserName("x' OR '1'='1");
+    when(teamService.getMembersList("t1")).thenReturn(List.of(blank, nul, odd));
+    assertEquals(0, tool.listTimeEntries("2026-11-01", "2026-11-30", null, null, null, "t1").total());
+    verify(recordService, never()).getActivityRecordsList(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                                                          any(), any(), any(), any(), org.mockito.ArgumentMatchers.anyInt(),
+                                                          org.mockito.ArgumentMatchers.anyInt(), any(),
+                                                          org.mockito.ArgumentMatchers.anyBoolean());
+  }
+
+  @Test
+  public void otherUsersAndTeamsNeedABoundedDateRange() throws Exception {
+    asManager();
+    assertThrows(IllegalArgumentException.class, () -> tool.listTimeEntries(null, null, null, null, "mary", null));
+    assertThrows(IllegalArgumentException.class, () -> tool.listTimeEntries("2020-01-01", "2026-11-30", null, null, "mary", null));
+    assertThrows(IllegalArgumentException.class, () -> tool.listTimeEntries("2026-11-30", "2026-11-01", null, null, "mary", null));
+  }
+
+  @Test
+  public void hoursAreRoundedToTwoDecimals() throws Exception {
+    when(recordService.getActivityRecordsList(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                                              any(), any(), any(), org.mockito.ArgumentMatchers.anyInt(),
+                                              org.mockito.ArgumentMatchers.anyInt(), any(),
+                                              org.mockito.ArgumentMatchers.anyBoolean())).thenReturn(page(dayEntry(1, "2026-11-16", 0.1f, "john"),
+                                                                                                           dayEntry(2, "2026-11-16", 0.2f, "john"),
+                                                                                                           dayEntry(3, "2026-11-17", 7.3f, "john")));
+    TimesheetSummaryModel s = tool.getTimesheetSummary("2026-11-16", "2026-11-17", null, null);
+    assertEquals(7.6f, s.totalHours(), 0f);
+    assertEquals(0.3f, s.hoursByDay().get("2026-11-16"), 0f);
+    TimeEntryCollectionModel l = tool.listTimeEntries("2026-11-16", "2026-11-17", null, null, null, null);
+    assertEquals(7.6f, l.totalHours(), 0f);
   }
 }

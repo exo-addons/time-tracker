@@ -16,6 +16,8 @@
  */
 package org.exoplatform.timetracker.mcp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +94,13 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
   private static final int            MAX_RANGE_DAYS      = 366;
 
   private static final float          MAX_HOURS_PER_ENTRY = 24f;
+
+  /**
+   * What a user name looks like. The data layer of the add-on builds part of
+   * its query from this value, so nothing else than a plain account name may
+   * reach it, whatever the agent was asked to type.
+   */
+  private static final Pattern        USERNAME_PATTERN    = Pattern.compile("^[A-Za-z0-9._@-]{1,100}$");
 
   private final ActivityRecordService activityRecordService;
 
@@ -220,16 +230,19 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       entries = safe(result.getActivityRecords()).stream().map(this::toEntryModel).toList();
       total = result.getSize() == null ? entries.size() : result.getSize();
     } else {
+      List<String> users = resolveUsers(username, teamId);
+      // everything is loaded then paged here: the range must be bounded
+      checkBoundedRange(from, to);
       List<ActivityRecord> all = new ArrayList<>();
-      for (String user : resolveUsers(username, teamId)) {
-        all.addAll(queryEntries(from, to, user, 0, 0).getActivityRecords());
+      for (String user : users) {
+        all.addAll(safe(queryEntries(from, to, user, 0, 0).getActivityRecords()));
       }
       all.sort(Comparator.comparing(ActivityRecord::getActivityDate, Comparator.nullsLast(Comparator.reverseOrder()))
                          .thenComparing(ActivityRecord::getId, Comparator.nullsLast(Comparator.reverseOrder())));
       total = all.size();
       entries = all.stream().skip(safeOffset).limit(safeLimit).map(this::toEntryModel).toList();
     }
-    float totalHours = (float) entries.stream().mapToDouble(TimeEntryModel::hours).sum();
+    float totalHours = round(entries.stream().mapToDouble(TimeEntryModel::hours).sum());
     return new TimeEntryCollectionModel(entries, total, safeOffset, safeLimit, totalHours);
   }
 
@@ -305,12 +318,12 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
     return new TimesheetSummaryModel(user,
                                      from.toString(),
                                      to.toString(),
-                                     total,
+                                     round(total),
                                      safe(records).size(),
-                                     byDay,
-                                     byActivity,
-                                     byProject,
-                                     byClient,
+                                     rounded(byDay),
+                                     rounded(byActivity),
+                                     rounded(byProject),
+                                     rounded(byClient),
                                      empty,
                                      expectedDailyHours == null ? null : under);
   }
@@ -436,11 +449,10 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
    */
   @SneakyThrows
   public void deleteTimeEntry(Long entryId) {
-    if (entryId == null || entryId <= 0) {
-      throw new IllegalArgumentException("Parameter 'entry_id' is mandatory");
-    }
+    // like update and duplicate: the agent only ever deletes its own user's
+    // entries, even for a time-tracking manager who could in the UI
+    getOwnEntry(entryId);
     try {
-      // Same rule as the UI: the owner, or a time-tracking manager, may delete
       activityRecordService.deleteActivityRecord(entryId, getCurrentUserName());
     } catch (EntityNotFoundException e) {
       throw new ObjectNotFoundException("Time entry with id %s not found".formatted(entryId));
@@ -473,9 +485,15 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       checkManager();
       Set<String> users = new LinkedHashSet<>();
       for (TeamMember member : safe(teamService.getMembersList(teamId))) {
-        users.add(member.getUserName());
+        // a blank name would mean "everybody" to the data layer
+        if (member.getUserName() != null && USERNAME_PATTERN.matcher(member.getUserName()).matches()) {
+          users.add(member.getUserName());
+        }
       }
       return new ArrayList<>(users);
+    }
+    if (username == null || !USERNAME_PATTERN.matcher(username).matches()) {
+      throw new IllegalArgumentException("'username' must be a valid user name");
     }
     if (!getCurrentUserName().equals(username)) {
       checkManager();
@@ -514,6 +532,29 @@ public class TimeTrackerMcpTool implements McpToolPlugin {
       ref.setId(order.getId());
       record.setSalesOrder(ref);
     }
+  }
+
+  private void checkBoundedRange(String from, String to) {
+    if (from == null || to == null) {
+      throw new IllegalArgumentException("'from_date' and 'to_date' are mandatory to read another user's or a team's time");
+    }
+    long days = ChronoUnit.DAYS.between(LocalDate.parse(from), LocalDate.parse(to));
+    if (days < 0) {
+      throw new IllegalArgumentException("'to_date' must not be before 'from_date'");
+    } else if (days > MAX_RANGE_DAYS) {
+      throw new IllegalArgumentException("The date range must not exceed %s days".formatted(MAX_RANGE_DAYS));
+    }
+  }
+
+  /** Hours are summed as floats: keep two decimals so 0.1 + 0.2 reads 0.3. */
+  private float round(double hours) {
+    return BigDecimal.valueOf(hours).setScale(2, RoundingMode.HALF_UP).floatValue();
+  }
+
+  private Map<String, Float> rounded(Map<String, Float> hours) {
+    Map<String, Float> result = new LinkedHashMap<>();
+    hours.forEach((k, v) -> result.put(k, round(v)));
+    return result;
   }
 
   private void addTo(Map<String, Float> map, String key, float hours) {
