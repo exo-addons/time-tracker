@@ -72,7 +72,7 @@ public class WorkTime implements Serializable {
    * @param to a {@link Date} WorkTime from date.
    * @param fromDate a {@link Date} WorkTime from date .
    * @param toDate a {@link Date} WorkTime from date.
-   * @param time a {@link float} number of hours.
+   * @param time a {@code float} number of hours.
    * @param period a {@link String} period type can be week, day or mounth.
    * @param team a {@link String} related team.
    * @param userId a {@link String} rlated user id.
