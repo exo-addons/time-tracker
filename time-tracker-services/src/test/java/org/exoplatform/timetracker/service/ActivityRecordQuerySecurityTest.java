@@ -16,14 +16,22 @@
  */
 package org.exoplatform.timetracker.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.timetracker.dto.Activity;
+import org.exoplatform.timetracker.dto.ActivityCode;
 import org.exoplatform.timetracker.dto.ActivityRecord;
+import org.exoplatform.timetracker.dto.Client;
+import org.exoplatform.timetracker.dto.Project;
 import org.exoplatform.timetracker.dto.RecordsAccessList;
+import org.exoplatform.timetracker.dto.SubActivityCode;
+import org.exoplatform.timetracker.dto.SubType;
+import org.exoplatform.timetracker.dto.Type;
 
 import junit.framework.TestCase;
 
@@ -78,6 +86,34 @@ public class ActivityRecordQuerySecurityTest extends TestCase {
                                     .isEmpty());
   }
 
+  /**
+   * The client and project filters (each is an OR between two columns) must not
+   * escape the user filter either: here the records of both users belong to the
+   * client through their activity.
+   */
+  public void testClientAndProjectFiltersDoNotEscapeTheUserFilter() throws Exception {
+    Client client = CommonsUtils.getService(ClientService.class).createClient(newClient("SECCL" + System.nanoTime()));
+    Project project = CommonsUtils.getService(ProjectService.class).createProject(newProject(client));
+    Activity activity = newActivity(project);
+    createWithActivity(ALICE, "alice zzactivitytoken", activity);
+    createWithActivity(BOB, "bob zzactivitytoken", activity);
+
+    for (boolean byClient : new boolean[] { true, false }) {
+      String clientId = byClient ? String.valueOf(client.getId()) : null;
+      String projectId = byClient ? null : String.valueOf(project.getId());
+      List<String> users = activityRecordService.getActivityRecordsList(null, null, null, null, null, null, clientId, projectId,
+                                                                         null, null, null, BOB, null, null, 0, 0, null, false)
+                                                .getActivityRecords()
+                                                .stream()
+                                                .map(ActivityRecord::getUserName)
+                                                .collect(Collectors.toList());
+      assertEquals("only the records of the asked user", List.of(BOB), users);
+      assertEquals(1L,
+                   activityRecordService.countActivityRecords(null, null, null, null, null, null, clientId, projectId, null,
+                                                              null, null, BOB, null, null));
+    }
+  }
+
   /** A user name is a value, never a piece of query. */
   public void testUserNameInjectionFindsNothing() {
     for (String evil : new String[] { "x' OR '1'='1", "' OR 1=1 OR userName='", BOB + "' OR '1'='1" }) {
@@ -112,6 +148,51 @@ public class ActivityRecordQuerySecurityTest extends TestCase {
   private long count(String search, String userName) {
     return activityRecordService.countActivityRecords(search, null, null, null, null, null, null, null, null, null, null,
                                                       userName, null, null);
+  }
+
+  private Client newClient(String code) {
+    Client client = new Client();
+    client.setCode(code);
+    client.setLabel("Security test client");
+    return client;
+  }
+
+  private Project newProject(Client client) {
+    Project project = new Project();
+    project.setCode("SECPRJ" + System.nanoTime());
+    project.setLabel("Security test project");
+    project.setClient(client);
+    return project;
+  }
+
+  private Activity newActivity(Project project) throws Exception {
+    CodesService codes = CommonsUtils.getService(CodesService.class);
+    long n = System.nanoTime();
+    Type type = codes.createType(new Type(null, "T" + n, "type"));
+    SubType subType = codes.createSubType(new SubType(null, "ST" + n, "sub type", type));
+    ActivityCode activityCode = codes.createActivityCode(new ActivityCode(null, "AC" + n, "activity code"));
+    SubActivityCode subActivityCode = codes.createSubActivityCode(new SubActivityCode(null, "SAC" + n, "sub activity code"));
+    Activity activity = new Activity();
+    activity.setLabel("Security test activity");
+    activity.setProject(project);
+    activity.setType(type);
+    activity.setSubType(subType);
+    activity.setActivityCode(activityCode);
+    activity.setSubActivityCode(subActivityCode);
+    activity.setTeams(new ArrayList<>());
+    return CommonsUtils.getService(ActivityService.class).createActivity(activity);
+  }
+
+  private void createWithActivity(String user, String description, Activity activity) throws Exception {
+    ActivityRecord record = new ActivityRecord();
+    record.setActivity(activity);
+    record.setUserName(user);
+    record.setDescription(description);
+    record.setTime(1f);
+    record.setLocation("TUN");
+    record.setOffice("TUN");
+    record.setActivityDate("2020-03-03");
+    activityRecordService.createActivityRecord(record);
   }
 
   private void create(String user, String description) throws Exception {

@@ -42,7 +42,6 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
     private final String DATE_FORMAT = "yyyy-MM-dd";
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
     /** Constant <code>QUERY_DATE_FORMAT="yyyy-MM-dd HH:mm:ss"</code> */
     public static final String QUERY_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /** Constant <code>quryDateFormatter</code> */
@@ -225,8 +224,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 if (StringUtils.isNotEmpty(client) ) {
                     clientList = convertLongList(client);
                     if (!clientList.isEmpty()) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
-                        queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                        // parenthesized: the OR must not escape the filters that follow
+                        queryString = queryString + " (activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList"
+                                + " or activityRecord.clientEntity.id in :clientList)";
                         queryString = queryString + " and ";
                     }
                 }
@@ -234,8 +234,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 if (StringUtils.isNotEmpty(project) ) {
                     projectList = convertLongList(project);
                     if (!projectList.isEmpty()) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
-                        queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                        // parenthesized: the OR must not escape the filters that follow
+                        queryString = queryString + " (activityRecord.activityEntity.projectEntity.id in :projectList"
+                                + " or activityRecord.projectEntity.id in :projectList)";
                         queryString = queryString + " and ";
                     }
                 }
@@ -273,7 +274,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                 if (StringUtils.isNotEmpty(fromDate)) {
                     try {
-                        from = formatter.parse(fromDate);
+                        from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
                         queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                         queryString = queryString + " and ";
                     } catch (Exception e) {
@@ -282,7 +283,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
                 if (StringUtils.isNotEmpty(toDate)) {
                     try {
-                        to = formatter.parse(toDate);
+                        to = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(to);
                         cal.set(Calendar.MINUTE, 59);
@@ -300,13 +301,14 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
             }
             if (StringUtils.isNotEmpty(sortBy) && SORTABLE_FIELDS.contains(sortBy)) {
+                // the id breaks the ties, so that paging never repeats or skips a record
                 if (sortDesc) {
-                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " DESC";
+                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " DESC, activityRecord.id DESC";
                 } else {
-                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " ASC";
+                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " ASC, activityRecord.id ASC";
                 }
             } else {
-                queryString = queryString + " ORDER BY activityRecord.activityTime DESC";
+                queryString = queryString + " ORDER BY activityRecord.activityTime DESC, activityRecord.id DESC";
             }
             TypedQuery<ActivityRecordEntity> query = getEntityManager().createQuery(queryString, ActivityRecordEntity.class);
             if (searchPattern != null) {
@@ -470,8 +472,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     if (StringUtils.isNotEmpty(client) ) {
                         clientList = convertLongList(client);
                         if (!clientList.isEmpty()) {
-                            queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
-                            queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                            // parenthesized: the OR must not escape the filters that follow
+                            queryString = queryString + " (activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList"
+                                    + " or activityRecord.clientEntity.id in :clientList)";
                             queryString = queryString + " and ";
                         }
                     }
@@ -479,8 +482,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     if (StringUtils.isNotEmpty(project) ) {
                         projectList = convertLongList(project);
                         if (!projectList.isEmpty()) {
-                            queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
-                            queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                            // parenthesized: the OR must not escape the filters that follow
+                            queryString = queryString + " (activityRecord.activityEntity.projectEntity.id in :projectList"
+                                    + " or activityRecord.projectEntity.id in :projectList)";
                             queryString = queryString + " and ";
                         }
                     }
@@ -515,7 +519,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                     if (StringUtils.isNotEmpty(fromDate)) {
                         try {
-                            from = formatter.parse(fromDate);
+                            from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
                             queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                             queryString = queryString + " and ";
                         } catch (Exception e) {
@@ -524,7 +528,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     }
                     if (StringUtils.isNotEmpty(toDate)) {
                         try {
-                            to = formatter.parse(toDate);
+                            to = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(to);
                             cal.set(Calendar.MINUTE, 59);
