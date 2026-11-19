@@ -30,6 +30,13 @@
   <artifactId>time-tracker-webapps</artifactId>
   <packaging>war</packaging>
   <name>Add-on:: Time Tracker - Webapp</name>
+    <dependencies>
+        <dependency>
+            <groupId>io.meeds.social</groupId>
+            <artifactId>social-component-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <build>
         <finalName>time-tracker</finalName>
         <plugins>

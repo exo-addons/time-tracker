@@ -189,6 +189,20 @@ public class ActivityRecordService {
   }
 
   /**
+   * Retrieves an ActivityRecord by its id, without any permission check.
+   *
+   * @param activityRecordId technical identifier of ActivityRecord
+   * @return the {@link org.exoplatform.timetracker.dto.ActivityRecord}, or null
+   *         when it doesn't exist
+   */
+  public ActivityRecord getActivityRecordById(Long activityRecordId) {
+    if (activityRecordId == null || activityRecordId <= 0) {
+      throw new IllegalArgumentException("ActivityRecordId must be a positive integer");
+    }
+    return activityRecordstorage.getActivityRecordById(activityRecordId);
+  }
+
+  /**
    * Delete ActivityRecord identified by its id and check if username has
    * permission to delete it.
    *
