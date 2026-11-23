@@ -46,6 +46,7 @@
     "material-design-icons-iconfont": "^4.0.4",
     "npm": "^8.19.2",
     "prettier": "1.15.3",
+    "terser-webpack-plugin": "^1.4.6",
     "v-uploader": "^1.8.0",
     "vue": "^2.5.16",
     "vue-avatar": "^2.1.7",
