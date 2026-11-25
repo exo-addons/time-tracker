@@ -42,7 +42,6 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
     private final String DATE_FORMAT = "yyyy-MM-dd";
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
     /** Constant <code>QUERY_DATE_FORMAT="yyyy-MM-dd HH:mm:ss"</code> */
     public static final String QUERY_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /** Constant <code>quryDateFormatter</code> */
@@ -149,6 +148,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
             List<Long> featureList = new ArrayList<>();
             List<String> locationList = new ArrayList<>();
             List<String> officeList = new ArrayList<>();
+            String searchPattern = null;
             // fetch joins load the whole graph needed by the DTO conversion in one
             // SQL query instead of one lazy/eager select per record and relation
             String queryString = "SELECT activityRecord FROM ActivityRecordEntity activityRecord"
@@ -172,9 +172,11 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                 queryString = queryString + " where ";
                 if (StringUtils.isNotEmpty(search)) {
-                    search = search.toLowerCase();
-                    queryString = queryString + " lower(activityRecord.description) LIKE '%' || '" + search
-                            + "'|| '%' or lower(activityRecord.userName) LIKE '%' || '" + search + "' || '%'";
+                    // a value, bound as a parameter, and parenthesized: the OR must not
+                    // escape the filters that follow (user, dates...)
+                    searchPattern = "%" + search.toLowerCase() + "%";
+                    queryString = queryString + " (lower(activityRecord.description) LIKE :search"
+                            + " or lower(activityRecord.userName) LIKE :search)";
 
                     queryString = queryString + " and ";
                 }
@@ -222,8 +224,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 if (StringUtils.isNotEmpty(client) ) {
                     clientList = convertLongList(client);
                     if (!clientList.isEmpty()) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
-                        queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                        // parenthesized: the OR must not escape the filters that follow
+                        queryString = queryString + " (activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList"
+                                + " or activityRecord.clientEntity.id in :clientList)";
                         queryString = queryString + " and ";
                     }
                 }
@@ -231,8 +234,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 if (StringUtils.isNotEmpty(project) ) {
                     projectList = convertLongList(project);
                     if (!projectList.isEmpty()) {
-                        queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
-                        queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                        // parenthesized: the OR must not escape the filters that follow
+                        queryString = queryString + " (activityRecord.activityEntity.projectEntity.id in :projectList"
+                                + " or activityRecord.projectEntity.id in :projectList)";
                         queryString = queryString + " and ";
                     }
                 }
@@ -246,7 +250,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
 
                 if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
-                    queryString = queryString + " activityRecord.userName = '" + userName + "'";
+                    queryString = queryString + " activityRecord.userName = :userName";
                     queryString = queryString + " and ";
                 }
 
@@ -270,7 +274,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                 if (StringUtils.isNotEmpty(fromDate)) {
                     try {
-                        from = formatter.parse(fromDate);
+                        from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
                         queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                         queryString = queryString + " and ";
                     } catch (Exception e) {
@@ -279,7 +283,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
                 if (StringUtils.isNotEmpty(toDate)) {
                     try {
-                        to = formatter.parse(toDate);
+                        to = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(to);
                         cal.set(Calendar.MINUTE, 59);
@@ -297,15 +301,22 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 }
             }
             if (StringUtils.isNotEmpty(sortBy) && SORTABLE_FIELDS.contains(sortBy)) {
+                // the id breaks the ties, so that paging never repeats or skips a record
                 if (sortDesc) {
-                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " DESC";
+                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " DESC, activityRecord.id DESC";
                 } else {
-                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " ASC";
+                    queryString = queryString + " ORDER BY activityRecord." + sortBy + " ASC, activityRecord.id ASC";
                 }
             } else {
-                queryString = queryString + " ORDER BY activityRecord.activityTime DESC";
+                queryString = queryString + " ORDER BY activityRecord.activityTime DESC, activityRecord.id DESC";
             }
             TypedQuery<ActivityRecordEntity> query = getEntityManager().createQuery(queryString, ActivityRecordEntity.class);
+            if (searchPattern != null) {
+                query.setParameter("search", searchPattern);
+            }
+            if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
+                query.setParameter("userName", userName);
+            }
             if (from != null) {
                 query.setParameter("fromDate",from);
             }
@@ -401,6 +412,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                 List<String> locationList = new ArrayList<>();
                 List<String> officeList = new ArrayList<>();
 
+                String searchPattern = null;
                 String queryString = "SELECT count(activityRecord.id) FROM  ActivityRecordEntity activityRecord";
                 if (StringUtils.isNotEmpty(search) || StringUtils.isNotEmpty(activity)  || StringUtils.isNotEmpty(type)  || StringUtils.isNotEmpty(userName)
                         || StringUtils.isNotEmpty(subType)  || StringUtils.isNotEmpty(activityCode)  || StringUtils.isNotEmpty(subActivityCode)
@@ -408,9 +420,11 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                         || StringUtils.isNotEmpty(location) || StringUtils.isNotEmpty(office)) {
                     queryString = queryString + " where ";
                     if (StringUtils.isNotEmpty(search)) {
-                        search = search.toLowerCase();
-                        queryString = queryString + " lower(activityRecord.description) LIKE '%' || '" + search
-                                + "'|| '%' or lower(activityRecord.userName) LIKE '%' || '" + search + "' || '%'";
+                        // a value, bound as a parameter, and parenthesized: the OR must not
+                        // escape the filters that follow (user, dates...)
+                        searchPattern = "%" + search.toLowerCase() + "%";
+                        queryString = queryString + " (lower(activityRecord.description) LIKE :search"
+                                + " or lower(activityRecord.userName) LIKE :search)";
 
                         queryString = queryString + " and ";
                     }
@@ -458,8 +472,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     if (StringUtils.isNotEmpty(client) ) {
                         clientList = convertLongList(client);
                         if (!clientList.isEmpty()) {
-                            queryString = queryString + " activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList";
-                            queryString = queryString + " or activityRecord.clientEntity.id in :clientList";
+                            // parenthesized: the OR must not escape the filters that follow
+                            queryString = queryString + " (activityRecord.activityEntity.projectEntity.clientEntity.id in :clientList"
+                                    + " or activityRecord.clientEntity.id in :clientList)";
                             queryString = queryString + " and ";
                         }
                     }
@@ -467,8 +482,9 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     if (StringUtils.isNotEmpty(project) ) {
                         projectList = convertLongList(project);
                         if (!projectList.isEmpty()) {
-                            queryString = queryString + " activityRecord.activityEntity.projectEntity.id in :projectList";
-                            queryString = queryString + " or activityRecord.projectEntity.id in :projectList";
+                            // parenthesized: the OR must not escape the filters that follow
+                            queryString = queryString + " (activityRecord.activityEntity.projectEntity.id in :projectList"
+                                    + " or activityRecord.projectEntity.id in :projectList)";
                             queryString = queryString + " and ";
                         }
                     }
@@ -482,7 +498,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     }
 
                     if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
-                        queryString = queryString + " activityRecord.userName = '" + userName + "'";
+                        queryString = queryString + " activityRecord.userName = :userName";
                         queryString = queryString + " and ";
                     }
 
@@ -503,7 +519,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
 
                     if (StringUtils.isNotEmpty(fromDate)) {
                         try {
-                            from = formatter.parse(fromDate);
+                            from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
                             queryString = queryString + " activityRecord.activityTime >=  :fromDate";
                             queryString = queryString + " and ";
                         } catch (Exception e) {
@@ -512,7 +528,7 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     }
                     if (StringUtils.isNotEmpty(toDate)) {
                         try {
-                            to = formatter.parse(toDate);
+                            to = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(to);
                             cal.set(Calendar.MINUTE, 59);
@@ -530,6 +546,12 @@ public class ActivityRecordDAO extends GenericDAOJPAImpl<ActivityRecordEntity, L
                     }
                 }
                 TypedQuery<Long> query = getEntityManager().createQuery(queryString, Long.class);
+                if (searchPattern != null) {
+                    query.setParameter("search", searchPattern);
+                }
+                if (StringUtils.isNotEmpty(userName) && !userName.equals("all")) {
+                    query.setParameter("userName", userName);
+                }
                 if (from != null) {
                    query.setParameter("fromDate",from);
                 }
